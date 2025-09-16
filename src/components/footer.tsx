@@ -7,8 +7,16 @@ import { Code2 } from 'lucide-react';
 import { Separator } from './ui/separator';
 import { useState, useEffect } from 'react';
 
+interface LocationInfo {
+  ip: string;
+  city: string;
+  region: string;
+  country_name: string;
+}
+
 export function Footer() {
   const [currentDateTime, setCurrentDateTime] = useState<Date | null>(null);
+  const [locationInfo, setLocationInfo] = useState<LocationInfo | null>(null);
 
   useEffect(() => {
     // Set the initial time on the client
@@ -18,6 +26,12 @@ export function Footer() {
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 1000);
+
+    // Fetch location info
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json())
+      .then(data => setLocationInfo(data))
+      .catch(error => console.error('Error fetching location:', error));
 
     // Clean up the interval on component unmount
     return () => {
@@ -52,8 +66,17 @@ export function Footer() {
              Crafting secure and intelligent digital experiences with a passion for code.
           </p>
           <Separator className="w-1/4 my-2" />
-          <div className="text-xs text-muted-foreground">
-              {formattedDateTime ? formattedDateTime : <span className="h-4 w-48 inline-block bg-muted rounded animate-pulse" />}
+          <div className="text-xs text-muted-foreground space-y-1">
+              <div>
+                {formattedDateTime ? formattedDateTime : <span className="h-4 w-48 inline-block bg-muted rounded animate-pulse" />}
+              </div>
+              <div>
+                {locationInfo ? (
+                    <span>{`${locationInfo.ip} - ${locationInfo.city}, ${locationInfo.region}, ${locationInfo.country_name}`}</span>
+                ) : (
+                    <span className="h-4 w-64 inline-block bg-muted rounded animate-pulse" />
+                )}
+              </div>
           </div>
           <div className="flex space-x-6">
             <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
