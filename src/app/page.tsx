@@ -12,6 +12,7 @@ import { Education } from '@/components/sections/education';
 import { AnimatedSection } from '@/components/animated-section';
 import { Services } from '@/components/sections/services';
 import { Testimonials } from '@/components/sections/testimonials';
+import { ClientInfo } from '@/components/client-info';
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
         <AnimatedSection id="testimonials"><Testimonials /></AnimatedSection>
         <AnimatedSection id="blog"><Blog /></AnimatedSection>
         <AnimatedSection id="proposal"><ProposalGenerator /></AnimatedSection>
+        <AnimatedSection id="client-info"><ClientInfo /></AnimatedSection>
         <AnimatedSection id="contact"><Contact /></AnimatedSection>
     </div>
   );
