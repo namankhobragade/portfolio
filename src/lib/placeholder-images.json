@@ -47,6 +47,18 @@
       "description": "A developer working at a multi-monitor setup.",
       "imageUrl": "https://picsum.photos/seed/7/600/400",
       "imageHint": "developer setup"
+    },
+    {
+      "id": "blog-4",
+      "description": "A diagram of a CI/CD pipeline.",
+      "imageUrl": "https://picsum.photos/seed/9/600/400",
+      "imageHint": "CI CD pipeline"
+    },
+    {
+      "id": "blog-5",
+      "description": "A robot brain with a lock icon.",
+      "imageUrl": "https://picsum.photos/seed/10/600/400",
+      "imageHint": "AI security"
     }
   ]
 }

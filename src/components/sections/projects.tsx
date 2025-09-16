@@ -8,6 +8,7 @@ import { ArrowUpRight, Github } from "lucide-react";
 import { PROJECTS_DATA } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AnimatedItem } from "../animated-item";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export function Projects() {
   return (
@@ -21,55 +22,69 @@ export function Projects() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
-          {PROJECTS_DATA.map((project, index) => {
-             const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
-            return (
-              <AnimatedItem key={project.title} delay={index * 0.1}>
-                <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
-                  {projectImage && (
-                    <Image
-                      src={projectImage.imageUrl}
-                      alt={projectImage.description}
-                      data-ai-hint={projectImage.imageHint}
-                      width={600}
-                      height={400}
-                      className="aspect-video w-full object-cover"
-                    />
-                  )}
-                  <CardHeader>
-                    <CardTitle className="font-headline">{project.title}</CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">Tech Stack:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {project.techStack.map((tech) => (
-                          <Badge key={tech} variant="secondary">{tech}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Security Focus:</h4>
-                      <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    {project.githubUrl && (
-                      <Button asChild variant="outline" className="w-full">
-                        <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                          <Github className="mr-2 h-4 w-4" />
-                          View on GitHub
-                          <ArrowUpRight className="ml-auto h-4 w-4" />
-                        </Link>
-                      </Button>
-                    )}
-                  </CardFooter>
-                </Card>
-              </AnimatedItem>
-            )
-          })}
+        <div className="py-12">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: PROJECTS_DATA.length > 2,
+              }}
+              className="w-full max-w-6xl mx-auto"
+            >
+              <CarouselContent>
+                {PROJECTS_DATA.map((project, index) => {
+                  const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
+                  return (
+                    <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
+                      <AnimatedItem delay={index * 0.1} className="h-full p-2">
+                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+                          {projectImage && (
+                            <Image
+                              src={projectImage.imageUrl}
+                              alt={projectImage.description}
+                              data-ai-hint={projectImage.imageHint}
+                              width={600}
+                              height={400}
+                              className="aspect-video w-full object-cover"
+                            />
+                          )}
+                          <CardHeader>
+                            <CardTitle className="font-headline">{project.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent className="flex-grow space-y-4">
+                            <p className="text-sm text-muted-foreground">{project.description}</p>
+                            <div>
+                              <h4 className="font-semibold mb-2 text-sm">Tech Stack:</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {project.techStack.map((tech) => (
+                                  <Badge key={tech} variant="secondary">{tech}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="font-semibold mb-2 text-sm">Security Focus:</h4>
+                              <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
+                            </div>
+                          </CardContent>
+                          <CardFooter>
+                            {project.githubUrl && (
+                              <Button asChild variant="outline" className="w-full">
+                                <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                                  <Github className="mr-2 h-4 w-4" />
+                                  View on GitHub
+                                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                                </Link>
+                              </Button>
+                            )}
+                          </CardFooter>
+                        </Card>
+                      </AnimatedItem>
+                    </CarouselItem>
+                  )
+                })}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
+            </Carousel>
         </div>
       </div>
     </section>
