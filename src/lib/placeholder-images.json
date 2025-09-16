@@ -4,13 +4,13 @@
     {
       "id": "profile-picture-hero",
       "description": "Professional headshot of the portfolio owner for the hero section.",
-      "imageUrl": "https://picsum.photos/seed/hero/400/400",
+      "imageUrl": "/images/profile-hero.jpg",
       "imageHint": "professional headshot"
     },
     {
       "id": "profile-picture",
       "description": "Professional headshot of the portfolio owner for the about section.",
-      "imageUrl": "https://picsum.photos/seed/about/300/300",
+      "imageUrl": "/images/profile-about.jpg",
       "imageHint": "professional portrait"
     },
     {
