@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getAllPosts } from "@/lib/blog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { BlogSummary } from "@/components/sections/blog-summary";
 import { format } from "date-fns";
 import { AnimatedItem } from "@/components/animated-item";
 import { AnimatedSection } from "@/components/animated-section";
@@ -54,7 +53,7 @@ export default async function AllBlogsPage() {
                             </p>
                         </CardHeader>
                         <CardContent className="flex-grow">
-                            <BlogSummary content={post.content} />
+                            <p className="text-muted-foreground">{post.frontmatter.description}</p>
                         </CardContent>
                         <CardFooter>
                             <Button asChild variant="link" className="p-0 h-auto">

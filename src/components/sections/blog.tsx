@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { getAllPosts } from "@/lib/blog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { BlogSummary } from "./blog-summary";
 import { format } from "date-fns";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { AnimatedItem } from "../animated-item";
@@ -56,7 +55,7 @@ export async function Blog() {
                             </p>
                           </CardHeader>
                           <CardContent className="flex-grow">
-                            <BlogSummary content={post.content} />
+                            <p className="text-muted-foreground">{post.frontmatter.description}</p>
                           </CardContent>
                           <CardFooter>
                             <Button asChild variant="link" className="p-0 h-auto">
