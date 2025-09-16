@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,9 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
-import { subscribeToNewsletter } from '@/app/actions';
-import { Loader2, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -21,30 +18,9 @@ const formSchema = z.object({
 const NEWSLETTER_SUBSCRIBED_KEY = 'devsec_newsletter_subscribed';
 const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 
-
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" disabled={pending} className="w-full">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Subscribing...
-                </>
-            ) : (
-                <>
-                    <Mail className="mr-2 h-4 w-4" />
-                    Subscribe
-                </>
-            )}
-        </Button>
-    );
-}
-
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const { toast } = useToast();
-  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://devsec-portfolio.vercel.app';
   
   useEffect(() => {
     const isSubscribed = localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === 'true';
@@ -69,26 +45,16 @@ export function NewsletterModal() {
     defaultValues: { email: "" },
   });
 
-  useEffect(() => {
-    if (state.message) {
-        toast({
-            description: state.message,
-            variant: state.success ? "default" : "destructive",
-        });
-        if (state.success) {
-            localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
-            setIsOpen(false);
-            form.reset();
-        }
-    }
-  }, [state, toast, form]);
-
-
   const handleOpenChange = (open: boolean) => {
     if (!open) {
       localStorage.setItem(LAST_PROMPT_KEY, String(Date.now()));
     }
     setIsOpen(open);
+  };
+
+  const onSubmit = () => {
+    localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
+    setIsOpen(false);
   };
 
   return (
@@ -102,9 +68,16 @@ export function NewsletterModal() {
         </DialogHeader>
         <Form {...form}>
           <form 
-            action={formAction}
+            action="https://formsubmit.co/572490408448a3aca5b3e65283573777"
+            method="POST"
+            onSubmit={() => onSubmit()}
             className="space-y-4"
           >
+            <input type="hidden" name="_next" value={`${siteUrl}/#`}/>
+            <input type="hidden" name="_subject" value="New Newsletter Subscription!" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="text" name="_honey" style={{display: 'none'}} />
+
             <FormField
               control={form.control}
               name="email"
@@ -112,14 +85,17 @@ export function NewsletterModal() {
                 <FormItem>
                   <FormLabel className="sr-only">Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="you@example.com" {...field} />
+                    <Input type="email" placeholder="you@example.com" {...field} required />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-                <SubmitButton />
+               <Button type="submit" className="w-full">
+                    <Mail className="mr-2 h-4 w-4" />
+                    Subscribe
+                </Button>
             </DialogFooter>
           </form>
         </Form>
