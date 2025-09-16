@@ -16,6 +16,12 @@ export default {
       },
     },
     extend: {
+       backgroundImage: {
+        'grid-pattern': "linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)",
+      },
+      backgroundSize: {
+        'grid-pattern': "40px 40px",
+      },
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Space Grotesk', 'sans-serif'],
