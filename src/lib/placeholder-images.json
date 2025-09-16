@@ -32,6 +32,48 @@
       "imageHint": "code screen"
     },
     {
+      "id": "project-4",
+      "description": "A cloud security dashboard with charts and alerts.",
+      "imageUrl": "https://picsum.photos/seed/project4/600/400",
+      "imageHint": "cloud security"
+    },
+    {
+      "id": "project-5",
+      "description": "A digital vault with a glowing keyhole, representing encryption.",
+      "imageUrl": "https://picsum.photos/seed/project5/600/400",
+      "imageHint": "digital encryption"
+    },
+    {
+      "id": "project-6",
+      "description": "A CI/CD pipeline with security gates.",
+      "imageUrl": "https://picsum.photos/seed/project6/600/400",
+      "imageHint": "DevSecOps pipeline"
+    },
+    {
+      "id": "project-7",
+      "description": "An email inbox with a shield icon highlighting a safe email.",
+      "imageUrl": "https://picsum.photos/seed/project7/600/400",
+      "imageHint": "email security"
+    },
+    {
+      "id": "project-8",
+      "description": "Architectural diagram of a multi-tenant application.",
+      "imageUrl": "https://picsum.photos/seed/project8/600/400",
+      "imageHint": "SaaS architecture"
+    },
+    {
+      "id": "project-9",
+      "description": "A network of connected smart home devices.",
+      "imageUrl": "https://picsum.photos/seed/project9/600/400",
+      "imageHint": "IoT network"
+    },
+    {
+      "id": "project-10",
+      "description": "A blockchain visualization with interconnected blocks.",
+      "imageUrl": "https://picsum.photos/seed/project10/600/400",
+      "imageHint": "blockchain technology"
+    },
+    {
       "id": "blog-1",
       "description": "A padlock symbolizing digital security.",
       "imageUrl": "https://picsum.photos/seed/blog1/600/400",
