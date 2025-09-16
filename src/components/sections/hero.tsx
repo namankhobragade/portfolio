@@ -45,7 +45,7 @@ export function Hero() {
                 data-ai-hint={profileImage.imageHint}
                 width={400}
                 height={400}
-                className="mx-auto aspect-square overflow-hidden rounded-full object-cover w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] lg:order-last"
+                className="mx-auto aspect-square overflow-hidden object-cover w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] lg:order-last rounded-lg"
               />
           )}
         </div>

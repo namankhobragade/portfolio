@@ -26,7 +26,7 @@ export function About() {
                 data-ai-hint={profileImage.imageHint}
                 width={300}
                 height={300}
-                className="mx-auto aspect-square overflow-hidden rounded-full object-cover"
+                className="mx-auto aspect-square overflow-hidden object-cover rounded-lg"
               />
           )}
           </div>
