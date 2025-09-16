@@ -4,61 +4,61 @@
     {
       "id": "profile-picture-hero",
       "description": "Professional headshot of the portfolio owner for the hero section.",
-      "imageUrl": "/images/profile-hero.jpg",
+      "imageUrl": "https://placehold.co/400x400/222222/FFFFFF?text=Sunil",
       "imageHint": "professional headshot"
     },
     {
       "id": "profile-picture",
       "description": "Professional headshot of the portfolio owner for the about section.",
-      "imageUrl": "/images/profile-about.jpg",
+      "imageUrl": "https://placehold.co/300x300/222222/FFFFFF?text=Sunil",
       "imageHint": "professional portrait"
     },
     {
       "id": "project-1",
       "description": "Abstract visualization of a secure network.",
-      "imageUrl": "/images/project-proffid.jpg",
+      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+1",
       "imageHint": "secure network"
     },
     {
       "id": "project-2",
       "description": "Futuristic AI dashboard interface.",
-      "imageUrl": "/images/project-e-learning.jpg",
+      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+2",
       "imageHint": "AI dashboard"
     },
     {
       "id": "project-3",
       "description": "Lines of code on a dark screen.",
-      "imageUrl": "/images/project-soc-assistant.jpg",
+      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+3",
       "imageHint": "code screen"
     },
     {
       "id": "blog-1",
       "description": "A padlock symbolizing digital security.",
-      "imageUrl": "/images/blog-passwordless-auth.jpg",
+      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
       "imageHint": "digital security"
     },
     {
       "id": "blog-2",
       "description": "An illustration of a neural network.",
-      "imageUrl": "/images/blog-ai-threat-intel.jpg",
+      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
       "imageHint": "neural network"
     },
     {
       "id": "blog-3",
       "description": "A developer working at a multi-monitor setup.",
-      "imageUrl": "/images/blog-secure-javascript.jpg",
+      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
       "imageHint": "developer setup"
     },
     {
       "id": "blog-4",
       "description": "A diagram of a CI/CD pipeline.",
-      "imageUrl": "/images/blog-devsecops.jpg",
+      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
       "imageHint": "CI CD pipeline"
     },
     {
       "id": "blog-5",
       "description": "A robot brain with a lock icon.",
-      "imageUrl": "/images/blog-llm-injection.jpg",
+      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
       "imageHint": "AI security"
     }
   ]
