@@ -9,8 +9,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { SmoothScroll } from '@/components/smooth-scroll';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { ScrollProgress } from '@/components/scroll-progress';
+import { GoogleAnalytics } from '@/components/google-analytics';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -88,6 +90,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {GA_MEASUREMENT_ID && <GoogleAnalytics />}
         <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
