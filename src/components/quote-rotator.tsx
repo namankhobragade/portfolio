@@ -11,18 +11,21 @@ export function QuoteRotator() {
 
   useEffect(() => {
     // Set initial quote
-    setCurrentQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
+    const initialQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    setCurrentQuote(initialQuote);
 
     const interval = setInterval(() => {
-      let newQuote;
-      do {
-        newQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-      } while (newQuote === currentQuote);
-      setCurrentQuote(newQuote);
+        setCurrentQuote(prevQuote => {
+            let newQuote;
+            do {
+                newQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+            } while (newQuote === prevQuote);
+            return newQuote;
+        });
     }, 60000); // 1 minute
 
     return () => clearInterval(interval);
-  }, [currentQuote]);
+  }, []);
 
   return (
     <motion.div
