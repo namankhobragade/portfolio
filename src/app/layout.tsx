@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
     description: 'A seasoned Full-stack Developer and Technical Lead specializing in secure, scalable web applications.',
     url: siteUrl,
-    siteName: 'Securefolio',
+    siteName: 'DevSec',
     images: [
       {
         url: '/og-image.png',
@@ -67,7 +67,7 @@ const personSchema = {
   "jobTitle": "Technical Lead & Full-Stack Developer",
   "sameAs": [
     "https://www.linkedin.com/in/sunilkhobragade",
-    "https://github.com/yourusername" // Replace with your GitHub profile
+    "https://github.com/naman-mahi"
   ]
 };
 
@@ -75,7 +75,7 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "url": siteUrl,
-  "name": "Securefolio",
+  "name": "DevSec",
   "publisher": personSchema,
 };
 

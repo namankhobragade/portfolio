@@ -1,8 +1,8 @@
-# Securefolio: AI-Powered Next.js Portfolio
+# DevSec: AI-Powered Next.js Portfolio
 
-Welcome to Securefolio, a modern, feature-rich, and secure portfolio website built with Next.js, TypeScript, and Tailwind CSS. This project is designed to showcase the skills of a cybersecurity professional and full-stack developer, with a special focus on integrating AI-powered tools.
+Welcome to DevSec, a modern, feature-rich, and secure portfolio website built with Next.js, TypeScript, and Tailwind CSS. This project is designed to showcase the skills of a cybersecurity professional and full-stack developer, with a special focus on integrating AI-powered tools.
 
-![Securefolio Screenshot](public/screenshot.png)
+![DevSec Screenshot](public/screenshot.png)
 
 ## ✨ Features
 
@@ -37,8 +37,8 @@ Welcome to Securefolio, a modern, feature-rich, and secure portfolio website bui
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/securefolio.git
-    cd securefolio
+    git clone https://github.com/naman-mahi/devsec.git
+    cd devsec
     ```
 
 2.  **Install dependencies:**

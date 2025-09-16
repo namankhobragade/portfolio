@@ -1,4 +1,4 @@
-# Customizing Your Securefolio
+# Customizing Your DevSec Portfolio
 
 This guide provides detailed instructions on how to personalize your portfolio website. Most customizations can be done by editing data files, replacing images, or writing Markdown, with no complex coding required.
 

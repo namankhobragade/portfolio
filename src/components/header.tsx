@@ -27,7 +27,7 @@ export function Header() {
       <div className="container flex h-14 max-w-screen-2xl items-center">
         <Link href="/" className="mr-6 flex items-center space-x-2">
           <Code2 className="h-6 w-6 text-accent" />
-          <span className="font-bold font-headline">Securefolio</span>
+          <span className="font-bold font-headline">DevSec</span>
         </Link>
         <nav className="hidden flex-1 items-center space-x-6 text-sm font-medium md:flex">
           {navLinks.map(({ href, label }) => (
@@ -58,7 +58,7 @@ export function Header() {
               <div className="flex flex-col space-y-6 pt-6">
                 <Link href="/" className="flex items-center space-x-2" onClick={closeSheet}>
                   <Code2 className="h-6 w-6 text-accent" />
-                  <span className="font-bold font-headline">Securefolio</span>
+                  <span className="font-bold font-headline">DevSec</span>
                 </Link>
                 <nav className="flex flex-col space-y-4">
                   {navLinks.map(({ href, label }) => (

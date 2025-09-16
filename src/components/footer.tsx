@@ -11,13 +11,13 @@ export function Footer() {
         <div className="flex justify-between items-center flex-col gap-6 sm:flex-row">
           <div className="flex items-center space-x-2">
             <Code2 className="h-6 w-6 text-accent" />
-            <span className="font-bold font-headline">Securefolio</span>
+            <span className="font-bold font-headline">DevSec</span>
           </div>
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} Sunil Khobragade. All rights reserved.
           </p>
           <div className="flex space-x-4">
-            <Link href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
+            <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
               <Github className="h-6 w-6" />
               <span className="sr-only">GitHub</span>
             </Link>

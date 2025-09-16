@@ -79,7 +79,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": "Securefolio",
+      "name": "DevSec",
       "logo": {
         "@type": "ImageObject",
         "url": `${siteUrl}/favicon.svg`
