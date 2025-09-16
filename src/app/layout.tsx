@@ -10,8 +10,27 @@ import { SmoothScroll } from '@/components/smooth-scroll';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { ScrollProgress } from '@/components/scroll-progress';
 import { GoogleAnalytics } from '@/components/google-analytics';
+import { Inter, Space_Grotesk, Source_Code_Pro } from 'next/font/google';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+});
+
+const sourceCodePro = Source_Code_Pro({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-source-code-pro',
+});
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://devsec-portfolio.vercel.app';
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
@@ -24,6 +43,12 @@ export const metadata: Metadata = {
   keywords: ['Sunil Khobragade', 'Technical Lead', 'Full-Stack Developer', 'Cybersecurity', 'AI', 'Laravel', 'Next.js', 'Portfolio'],
   authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
   creator: 'Sunil Khobragade',
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/',
+    },
+  },
   openGraph: {
     title: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
     description: 'A seasoned Full-stack Developer and Technical Lead specializing in secure, scalable web applications.',
@@ -44,7 +69,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
     description: 'A seasoned Full-stack Developer and Technical Lead specializing in secure, scalable web applications.',
-    creator: '@yourtwitterhandle', // Replace with your Twitter handle
+    creator: '@naman-mahi',
     images: [`${siteUrl}/og-image.png`],
   },
   robots: {
@@ -88,7 +113,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${spaceGrotesk.variable} ${sourceCodePro.variable}`}>
       <head>
         {GA_MEASUREMENT_ID && <GoogleAnalytics />}
         <script
@@ -102,9 +127,6 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Source+Code+Pro:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('bg-background font-body text-foreground antialiased')}>
         <ThemeProvider>

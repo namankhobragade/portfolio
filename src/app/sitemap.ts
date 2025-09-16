@@ -1,8 +1,9 @@
+
 // src/app/sitemap.ts
 import { getAllPosts } from '@/lib/blog';
 import { MetadataRoute } from 'next';
 
-const URL = 'https://your-domain.com'; // IMPORTANT: Replace with your actual domain
+const URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://devsec-portfolio.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
