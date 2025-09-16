@@ -71,6 +71,32 @@ Your blog is powered by Markdown files located in the `content/blog` directory.
 
 3.  Write your content using standard Markdown syntax. The site automatically handles syntax highlighting for code blocks.
 
+### Adding Images to Blog Posts
+
+There are two ways to add images to your blog:
+
+**A. Featured Image (the banner at the top):**
+
+The `imageId` in the frontmatter (as shown above) sets the main image for the post.
+
+1.  Add your image to the `public/images/` folder.
+2.  Add a corresponding entry for it in `src/lib/placeholder-images.json`.
+3.  Use the `id` from the JSON file as the `imageId` in your post's frontmatter.
+
+**B. Inline Images (within the article content):**
+
+To add more images within the body of your article, use the standard Markdown syntax.
+
+1.  Place your image in the `public/images/` folder (you can create a subfolder like `public/images/blog/` to stay organized).
+2.  In your markdown file, add the following line where you want the image to appear:
+
+    ```markdown
+    ![This is the alt text for the image](/images/blog/your-image-name.jpg)
+    ```
+
+This gives you the flexibility to have a main featured image and as many additional images as you need throughout your post.
+
+
 ## 4. Theme and Styling
 
 ### Colors
