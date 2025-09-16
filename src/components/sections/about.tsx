@@ -5,7 +5,7 @@ export function About() {
   const profileImage = PlaceHolderImages.find(p => p.id === 'profile-picture');
 
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-4">

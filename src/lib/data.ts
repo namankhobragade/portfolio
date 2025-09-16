@@ -1,4 +1,3 @@
-
 import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings } from 'lucide-react';
 
 export const SKILLS_DATA = [
@@ -85,7 +84,7 @@ export const PROJECTS_DATA = [
     description: 'A secure, plug-and-play user authentication layer for SaaS applications.',
     techStack: ['Laravel', 'MongoDB'],
     securityFocus: 'Role-based auth, JWT, session hardening.',
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/naman-mahi',
     demoUrl: '#',
     imageId: 'project-1',
   },
@@ -94,7 +93,7 @@ export const PROJECTS_DATA = [
     description: 'Full-stack platform with live classes, integrated billing, and secure student/teacher dashboards.',
     techStack: ['CodeIgniter 4', 'MySQLi', 'BigBlueButton'],
     securityFocus: 'CSRF protection, access control, tokenization.',
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/naman-mahi',
     demoUrl: '#',
     imageId: 'project-2',
   },
@@ -103,7 +102,7 @@ export const PROJECTS_DATA = [
     description: 'Prototype chatbot for automated alert triage using LLMs. Goal: Parse security logs and respond with mitigation suggestions.',
     techStack: ['Python', 'LLM', 'FastAPI'],
     securityFocus: 'Automated Security Analysis, Prompt Injection Defense.',
-    githubUrl: 'https://github.com',
+    githubUrl: 'https://github.com/naman-mahi',
     demoUrl: '#',
     imageId: 'project-3',
   },

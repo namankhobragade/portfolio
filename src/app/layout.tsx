@@ -132,8 +132,8 @@ export default function RootLayout({
         <ThemeProvider>
             <SmoothScroll />
             <ScrollProgress />
+            <Header />
             <div className="relative flex min-h-dvh flex-col">
-                <Header />
                 <main className="flex-1">{children}</main>
                 <Footer />
             </div>
