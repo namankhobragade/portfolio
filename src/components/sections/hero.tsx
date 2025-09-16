@@ -13,10 +13,10 @@ export function Hero() {
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline">
                 Sunil Khobragade
               </h1>
-              <p className="text-xl text-primary font-medium">
+              <p className="text-lg text-primary font-medium sm:text-xl">
                 Technical Lead | Full-Stack Developer | CEH-Certified Cybersecurity Researcher
               </p>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
@@ -45,7 +45,7 @@ export function Hero() {
                 data-ai-hint={profileImage.imageHint}
                 width={400}
                 height={400}
-                className="mx-auto aspect-square overflow-hidden rounded-full object-cover sm:w-[400px] lg:order-last"
+                className="mx-auto aspect-square overflow-hidden rounded-full object-cover w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] lg:order-last"
               />
           )}
         </div>

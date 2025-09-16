@@ -29,13 +29,13 @@ export async function Blog() {
                 align: "start",
                 loop: posts.length > 3,
               }}
-              className="w-full max-w-6xl mx-auto"
+              className="w-full max-w-sm md:max-w-3xl lg:max-w-6xl mx-auto"
             >
               <CarouselContent>
                 {posts.map((post, index) => {
                   const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
                   return (
-                    <CarouselItem key={post.slug} className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={post.slug} className="sm:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2">
                         <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
                           {postImage && (
@@ -55,7 +55,7 @@ export async function Blog() {
                             </p>
                           </CardHeader>
                           <CardContent className="flex-grow">
-                            <p className="text-muted-foreground">{post.frontmatter.description}</p>
+                            <p className="text-muted-foreground line-clamp-3">{post.frontmatter.description}</p>
                           </CardContent>
                           <CardFooter>
                             <Button asChild variant="link" className="p-0 h-auto">
@@ -71,8 +71,8 @@ export async function Blog() {
                   )
                 })}
               </CarouselContent>
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselNext className="hidden md:flex" />
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
         </div>
         <div className="text-center">

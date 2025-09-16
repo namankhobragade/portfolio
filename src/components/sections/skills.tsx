@@ -22,8 +22,8 @@ export function Skills() {
             <AnimatedItem key={skill.name} delay={index * 0.05}>
               <Card className="h-full glow-card flex flex-col items-center justify-center p-4 text-center">
                 <CardContent className="p-2 flex flex-col items-center justify-center gap-3">
-                    <skill.icon className="h-10 w-10 text-accent" />
-                    <span className="font-bold text-sm">{skill.name}</span>
+                    <skill.icon className="h-8 w-8 sm:h-10 sm:w-10 text-accent" />
+                    <span className="font-bold text-xs sm:text-sm">{skill.name}</span>
                 </CardContent>
               </Card>
             </AnimatedItem>
