@@ -2,6 +2,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SERVICES_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { Briefcase } from "lucide-react";
 
 export function Services() {
   return (
@@ -15,7 +18,7 @@ export function Services() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-4">
+        <div className="mx-auto grid max-w-5xl items-stretch gap-8 py-12 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-4">
           {SERVICES_DATA.map((service, index) => (
             <AnimatedItem key={service.title} delay={index * 0.1}>
               <Card className="flex h-full flex-col items-start text-left p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border">
@@ -31,6 +34,14 @@ export function Services() {
               </Card>
             </AnimatedItem>
           ))}
+        </div>
+         <div className="text-center">
+            <Button asChild size="lg">
+                <Link href="/#contact">
+                    <Briefcase className="mr-2 h-4 w-4" />
+                    Hire Me
+                </Link>
+            </Button>
         </div>
       </div>
     </section>
