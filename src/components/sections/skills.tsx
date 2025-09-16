@@ -15,28 +15,28 @@ export function Skills() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-6xl gap-12 py-12">
+        <div className="mx-auto grid justify-center gap-8 py-12 lg:grid-cols-2 xl:grid-cols-3">
           {SKILLS_DATA.map((category, index) => (
-            <AnimatedItem key={category.category} delay={index * 0.2}>
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold font-headline text-center">{category.category}</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 justify-center">
-                  {category.skills.map((skill, skillIndex) => (
-                    <AnimatedItem key={skill.name} delay={skillIndex * 0.05}>
-                      <Card className="flex flex-col items-center justify-center text-center p-4 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
-                        <CardHeader className="p-0 mb-3">
+            <AnimatedItem key={category.category} delay={index * 0.1}>
+              <Card className="h-full">
+                <CardHeader>
+                  <CardTitle className="font-headline text-center">{category.category}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 justify-center">
+                    {category.skills.map((skill, skillIndex) => (
+                      <AnimatedItem key={skill.name} delay={skillIndex * 0.05}>
+                        <div className="flex flex-col items-center text-center gap-2 p-2 rounded-lg transition-all hover:bg-secondary">
                           <div className="bg-accent/10 text-accent rounded-full p-3">
                             <skill.icon className="h-6 w-6" />
                           </div>
-                        </CardHeader>
-                        <CardContent className="p-0">
-                          <CardTitle className="text-sm font-medium">{skill.name}</CardTitle>
-                        </CardContent>
-                      </Card>
-                    </AnimatedItem>
-                  ))}
-                </div>
-              </div>
+                          <p className="text-sm font-medium">{skill.name}</p>
+                        </div>
+                      </AnimatedItem>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </AnimatedItem>
           ))}
         </div>
