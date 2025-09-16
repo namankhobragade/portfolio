@@ -103,7 +103,7 @@
 
 @layer components {
   .glow-card {
-    @apply relative overflow-hidden border border-transparent;
+    @apply relative overflow-hidden;
   }
   .glow-card::before {
     content: '';
@@ -124,5 +124,22 @@
   .glow-card > * {
       position: relative;
       z-index: 2;
+  }
+
+  .fill-hover-button {
+    @apply relative overflow-hidden;
+  }
+  .fill-hover-button > * {
+    @apply relative z-10;
+  }
+  .fill-hover-button::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-full bg-primary -z-0 scale-x-0 origin-left transition-transform duration-300 ease-out;
+  }
+  .fill-hover-button:hover::before {
+    @apply scale-x-100;
+  }
+  .fill-hover-button:hover {
+    @apply text-primary-foreground;
   }
 }
