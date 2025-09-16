@@ -22,7 +22,7 @@ export function Footer() {
           </div>
           <p className="text-sm text-muted-foreground max-w-md">
              &copy; {new Date().getFullYear()} Sunil Khobragade. All rights reserved. 
-             Built with Next.js and a passion for secure, intelligent code.
+             Crafting secure and intelligent digital experiences with a passion for code.
           </p>
           <Separator className="w-1/4 my-2" />
           <div className="flex space-x-6">
