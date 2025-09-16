@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CERTIFICATIONS_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";

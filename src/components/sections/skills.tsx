@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SKILLS_DATA } from "@/lib/data";
@@ -19,7 +20,7 @@ export function Skills() {
         </div>
         <div className="mx-auto grid max-w-6xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 py-12">
           {allSkills.map((skill, index) => (
-            <AnimatedItem key={skill.name} delay={index * 0.05}>
+            <AnimatedItem key={skill.name} delay={index * 0.05} direction={index % 2 === 0 ? 'left' : 'right'}>
               <Card className="h-full glow-card flex flex-col items-center justify-center p-4 text-center">
                 <CardContent className="p-2 flex flex-col items-center justify-center gap-3">
                     <skill.icon className="h-8 w-8 sm:h-10 sm:w-10 text-accent" />

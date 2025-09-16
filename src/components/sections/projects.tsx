@@ -35,7 +35,7 @@ export function Projects() {
                   const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
                   return (
                     <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
-                      <AnimatedItem delay={index * 0.1} className="h-full p-2">
+                      <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
                         <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
                           {projectImage && (
                             <Image
