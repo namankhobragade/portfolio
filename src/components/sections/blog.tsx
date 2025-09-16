@@ -33,7 +33,7 @@ export async function Blog() {
               className="w-full max-w-sm md:max-w-3xl lg:max-w-6xl mx-auto"
             >
               <CarouselContent>
-                {posts.map((post, index) => {
+                {posts.slice(0, 5).map((post, index) => {
                   const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
                   return (
                     <CarouselItem key={post.slug} className="sm:basis-1/2 lg:basis-1/3">

@@ -67,7 +67,7 @@ export function Projects() {
                           </CardContent>
                           <CardFooter className="flex flex-wrap gap-2">
                             {project.demoUrl && (
-                              <Button asChild variant="outline" className="flex-1 min-w-[140px]">
+                              <Button asChild variant="outline" className="flex-1 min-w-[120px]">
                                 <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink />
                                   View Demo
@@ -76,7 +76,7 @@ export function Projects() {
                               </Button>
                             )}
                             {project.githubUrl && (
-                              <Button asChild variant="secondary" className="flex-1 min-w-[140px]">
+                              <Button asChild variant="secondary" className="flex-1 min-w-[120px]">
                                 <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                                   <Github />
                                   View on GitHub
