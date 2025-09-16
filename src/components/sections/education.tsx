@@ -1,6 +1,23 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+"use client";
+
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { EDUCATION_DATA } from "@/lib/data";
 import { Badge } from "../ui/badge";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  }),
+};
 
 export function Education() {
   return (
@@ -14,22 +31,32 @@ export function Education() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-3xl justify-center gap-6 py-12 sm:grid-cols-1 md:grid-cols-2 lg:gap-8">
-          {EDUCATION_DATA.map((edu) => (
-            <Card key={edu.degree} className="flex flex-col text-left p-6 transition-all hover:shadow-lg hover:-translate-y-1">
-              <CardHeader className="p-0 mb-4 flex-row items-center gap-4">
-                 <div className="bg-primary/10 text-primary rounded-full p-3">
-                    <edu.icon className="h-8 w-8" />
+        <div className="mx-auto grid max-w-2xl justify-center gap-8 py-12">
+          {EDUCATION_DATA.map((edu, index) => (
+            <motion.div
+              key={edu.degree}
+              custom={index}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.5 }}
+              variants={cardVariants}
+              whileHover={{ scale: 1.05, rotateY: 5, boxShadow: "0px 15px 30px -10px rgba(0,0,0,0.2)" }}
+              transition={{ duration: 0.3 }}
+              className="w-full"
+            >
+              <Card className="flex flex-col md:flex-row items-center text-left p-6 transition-all h-full">
+                <CardHeader className="p-0 mb-4 md:mb-0 md:mr-6 flex-shrink-0">
+                  <div className="bg-primary/10 text-primary rounded-lg p-4">
+                    <edu.icon className="h-10 w-10" />
+                  </div>
+                </CardHeader>
+                <div className="flex flex-col flex-grow">
+                  <CardTitle className="text-xl font-bold font-headline mb-1">{edu.degree}</CardTitle>
+                  <p className="text-muted-foreground mb-2">{edu.institution}</p>
+                  <Badge variant='secondary' className="self-start">{edu.status}</Badge>
                 </div>
-                <div>
-                    <CardTitle className="text-xl font-bold font-headline mb-1">{edu.degree}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{edu.institution}</p>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <Badge variant='secondary'>{edu.status}</Badge>
-              </CardContent>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>
