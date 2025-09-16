@@ -11,6 +11,7 @@ import { ScrollToTop } from '@/components/scroll-to-top';
 import { ScrollProgress } from '@/components/scroll-progress';
 import { GoogleAnalytics } from '@/components/google-analytics';
 import { Inter, Space_Grotesk, Source_Code_Pro } from 'next/font/google';
+import { QuoteRotator } from '@/components/quote-rotator';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -132,9 +133,10 @@ export default function RootLayout({
         <ThemeProvider>
             <SmoothScroll />
             <ScrollProgress />
+            <QuoteRotator />
             <Header />
             <div className="relative flex min-h-dvh flex-col">
-                <main className="flex-1">{children}</main>
+                <main className="flex-1 pt-10">{children}</main>
                 <Footer />
             </div>
             <Toaster />
