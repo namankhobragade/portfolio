@@ -4,61 +4,61 @@
     {
       "id": "profile-picture-hero",
       "description": "Professional headshot of the portfolio owner for the hero section.",
-      "imageUrl": "https://placehold.co/400x400/222222/FFFFFF?text=Sunil",
+      "imageUrl": "https://picsum.photos/seed/hero/400/400",
       "imageHint": "professional headshot"
     },
     {
       "id": "profile-picture",
       "description": "Professional headshot of the portfolio owner for the about section.",
-      "imageUrl": "https://placehold.co/300x300/222222/FFFFFF?text=Sunil",
+      "imageUrl": "https://picsum.photos/seed/about/300/300",
       "imageHint": "professional portrait"
     },
     {
       "id": "project-1",
       "description": "Abstract visualization of a secure network.",
-      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+1",
+      "imageUrl": "https://picsum.photos/seed/project1/600/400",
       "imageHint": "secure network"
     },
     {
       "id": "project-2",
       "description": "Futuristic AI dashboard interface.",
-      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+2",
+      "imageUrl": "https://picsum.photos/seed/project2/600/400",
       "imageHint": "AI dashboard"
     },
     {
       "id": "project-3",
       "description": "Lines of code on a dark screen.",
-      "imageUrl": "https://placehold.co/600x400/4B0082/FFFFFF?text=Project+3",
+      "imageUrl": "https://picsum.photos/seed/project3/600/400",
       "imageHint": "code screen"
     },
     {
       "id": "blog-1",
       "description": "A padlock symbolizing digital security.",
-      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
+      "imageUrl": "https://picsum.photos/seed/blog1/600/400",
       "imageHint": "digital security"
     },
     {
       "id": "blog-2",
       "description": "An illustration of a neural network.",
-      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
+      "imageUrl": "https://picsum.photos/seed/blog2/600/400",
       "imageHint": "neural network"
     },
     {
       "id": "blog-3",
       "description": "A developer working at a multi-monitor setup.",
-      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
+      "imageUrl": "https://picsum.photos/seed/blog3/600/400",
       "imageHint": "developer setup"
     },
     {
       "id": "blog-4",
       "description": "A diagram of a CI/CD pipeline.",
-      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
+      "imageUrl": "https://picsum.photos/seed/blog4/600/400",
       "imageHint": "CI CD pipeline"
     },
     {
       "id": "blog-5",
       "description": "A robot brain with a lock icon.",
-      "imageUrl": "https://placehold.co/600x400/BF00FF/FFFFFF?text=Blog+Post",
+      "imageUrl": "https://picsum.photos/seed/blog5/600/400",
       "imageHint": "AI security"
     }
   ]
