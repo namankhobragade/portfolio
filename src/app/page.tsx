@@ -7,19 +7,22 @@ import { Certifications } from '@/components/sections/certifications';
 import { Blog } from '@/components/sections/blog';
 import { ProposalGenerator } from '@/components/sections/proposal-generator';
 import { Contact } from '@/components/sections/contact';
+import { Education } from '@/components/sections/education';
+import { AnimatedSection } from '@/components/animated-section';
 
 export default function Home() {
   return (
     <div className="flex flex-col">
         <Hero />
-        <div id="about" className="scroll-mt-14"><About /></div>
-        <div id="skills" className="scroll-mt-14"><Skills /></div>
-        <div id="projects" className="scroll-mt-14"><Projects /></div>
-        <div id="experience" className="scroll-mt-14"><Experience /></div>
-        <div id="certifications" className="scroll-mt-14"><Certifications /></div>
-        <div id="blog" className="scroll-mt-14"><Blog /></div>
-        <div id="services" className="scroll-mt-14"><ProposalGenerator /></div>
-        <div id="contact" className="scroll-mt-14"><Contact /></div>
+        <AnimatedSection id="about"><About /></AnimatedSection>
+        <AnimatedSection id="skills"><Skills /></AnimatedSection>
+        <AnimatedSection id="projects"><Projects /></AnimatedSection>
+        <AnimatedSection id="experience"><Experience /></AnimatedSection>
+        <AnimatedSection id="education"><Education /></AnimatedSection>
+        <AnimatedSection id="certifications"><Certifications /></AnimatedSection>
+        <AnimatedSection id="blog"><Blog /></AnimatedSection>
+        <AnimatedSection id="services"><ProposalGenerator /></AnimatedSection>
+        <AnimatedSection id="contact"><Contact /></AnimatedSection>
     </div>
   );
 }

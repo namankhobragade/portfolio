@@ -13,7 +13,7 @@ export function Certifications() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl justify-center gap-6 py-12 sm:grid-cols-2 md:grid-cols-3 lg:gap-8">
+        <div className="mx-auto grid max-w-5xl justify-center gap-6 py-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-8">
           {CERTIFICATIONS_DATA.map((cert) => (
             <Card key={cert.name} className="flex flex-col items-center justify-center text-center p-6 transition-all hover:shadow-lg hover:-translate-y-1">
               <CardHeader className="p-0 mb-4">

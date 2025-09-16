@@ -1,4 +1,4 @@
-import { ShieldCheck, Code, Cpu, Server, BrainCircuit, PenTool, Database, Cloud, GitBranch, Bot, Award, CloudCog } from 'lucide-react';
+import { ShieldCheck, Code, Cpu, Server, BrainCircuit, PenTool, Database, Cloud, GitBranch, Bot, Award, CloudCog, GraduationCap } from 'lucide-react';
 
 export const SKILLS_DATA = [
   {
@@ -102,21 +102,26 @@ export const EXPERIENCE_DATA = [
   },
 ];
 
+export const EDUCATION_DATA = [
+    {
+        degree: 'Master’s in Information Security',
+        institution: 'IGNOU',
+        status: 'Ongoing',
+        icon: GraduationCap,
+    },
+    {
+        degree: 'PG Diploma in Information Security',
+        institution: 'IGNOU',
+        status: 'Completed',
+        icon: Award,
+    }
+];
+
 export const CERTIFICATIONS_DATA = [
     {
         name: 'Certified Ethical Hacker (CEH v13 AI)',
         issuer: 'EC-Council',
         icon: ShieldCheck,
-    },
-    {
-        name: 'PG Diploma in Information Security',
-        issuer: 'IGNOU',
-        icon: Award,
-    },
-    {
-        name: 'Master’s in Information Security',
-        issuer: 'Ongoing',
-        icon: BrainCircuit,
     },
     {
         name: 'IBM Security Course',
@@ -134,6 +139,7 @@ export const CERTIFICATIONS_DATA = [
         icon: Code,
     }
 ];
+
 
 export const BLOG_POSTS_DATA = [
     {
