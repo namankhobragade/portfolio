@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Suspense } from 'react';
@@ -40,7 +39,9 @@ export function Hero() {
   return (
     <section className="relative w-full h-dvh min-h-[700px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 h-full w-full">
-            <ThreeDShape />
+            <Suspense fallback={<div className="absolute inset-0 z-0 h-full w-full" />}>
+                <ThreeDShape />
+            </Suspense>
         </div>
         <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10"></div>
       
