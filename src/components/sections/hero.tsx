@@ -4,12 +4,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export function Hero() {
-  const profileImage = PlaceHolderImages.find(p => p.id === 'profile-picture-hero');
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -43,20 +39,6 @@ export function Hero() {
           animate="visible"
           className="flex flex-col items-center text-center space-y-8"
         >
-          <motion.div variants={itemVariants}>
-            {profileImage && (
-              <Image
-                src={profileImage.imageUrl}
-                alt={profileImage.description}
-                data-ai-hint={profileImage.imageHint}
-                width={200}
-                height={200}
-                className="rounded-full aspect-square object-cover border-4 border-primary/20 shadow-lg"
-                priority
-              />
-            )}
-          </motion.div>
-
           <motion.h1
             variants={itemVariants}
             className="text-5xl font-bold tracking-tighter sm:text-7xl xl:text-8xl/none font-headline"
