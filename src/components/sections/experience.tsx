@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EXPERIENCE_DATA } from "@/lib/data";
 import { CheckCircle2 } from "lucide-react";
@@ -15,16 +16,15 @@ export function Experience() {
             </p>
           </div>
         </div>
-        <div className="relative mx-auto max-w-5xl py-12">
-          <div className="absolute left-6 md:left-1/2 top-0 h-full w-0.5 -translate-x-1/2 bg-border"></div>
+        <div className="relative mt-12 space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-border/70 md:before:mx-auto md:before:ml-0">
           {EXPERIENCE_DATA.map((item, index) => (
-            <AnimatedItem key={item.role} direction={index % 2 === 0 ? 'right' : 'left'} delay={index * 0.2}>
-              <div className="relative mb-8 md:flex md:items-center">
-                <div className="absolute left-6 top-1/2 -translate-x-1/2 -translate-y-1/2 md:relative md:left-auto md:top-auto md:translate-x-0 md:translate-y-0">
-                  <div className="flex h-4 w-4 items-center justify-center rounded-full bg-primary ring-4 ring-background" />
+             <AnimatedItem key={item.role} direction={index % 2 === 0 ? 'right' : 'left'} delay={index * 0.2}>
+              <div className="relative flex items-center md:justify-normal md:odd:flex-row-reverse">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-md ring-4 ring-background z-10">
+                   <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>
                 </div>
-                <div className={`w-full ml-12 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:ml-auto'}`}>
-                  <Card className="transition-all hover:shadow-lg hover:border-primary/50 text-left">
+                <div className="w-full md:w-[calc(50%-2.5rem)]">
+                   <Card className={`transition-all hover:shadow-lg hover:border-primary/50 text-left ${index % 2 === 0 ? 'ml-6 md:ml-0 md:mr-auto' : 'ml-6 md:ml-auto'}`}>
                     <CardHeader>
                       <CardTitle className="font-headline">{item.role}</CardTitle>
                       <CardDescription>{item.company} | {item.period}</CardDescription>
