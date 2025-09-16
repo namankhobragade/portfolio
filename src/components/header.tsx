@@ -1,4 +1,3 @@
-
 // src/components/header.tsx
 "use client";
 
@@ -27,7 +26,7 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+      <header className="fixed top-14 left-1/2 -translate-x-1/2 z-50">
         <motion.nav 
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
