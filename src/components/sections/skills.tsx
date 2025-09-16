@@ -1,3 +1,4 @@
+
 "use client";
 
 import { SKILLS_DATA } from "@/lib/data";
@@ -18,7 +19,7 @@ export function Skills() {
         </div>
         
         <Tabs defaultValue={SKILLS_DATA[0].category} orientation="vertical" className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <TabsList className="flex-col h-auto justify-start p-2 bg-secondary rounded-lg">
+          <TabsList className="flex-col h-auto justify-start p-2 rounded-lg">
             {SKILLS_DATA.map((category) => (
               <TabsTrigger 
                 key={category.category} 
