@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Bot, Loader2, Save, FileText, Check } from 'lucide-react';
+import { Bot, Loader2, Save, FileText, Check, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownContent } from '@/components/markdown-content';
 import { generateBlogPost, GenerateBlogPostOutput } from '@/ai/flows/generate-blog-post-flow';
@@ -23,6 +23,7 @@ import { SKILLS_DATA } from '@/lib/data';
 import { saveBlogPost } from '@/app/actions';
 import { Header } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
+import Image from 'next/image';
 
 const formSchema = z.object({
   topic: z.string().min(10, 'Please provide a more detailed topic (min 10 characters).'),
@@ -48,7 +49,9 @@ export default function StudioPage() {
         setIsSaved(false);
 
         try {
-            const userSkills = SKILLS_DATA.flatMap(category => category.skills.map(skill => skill.name));
+            const userSkills = SKILLS_DATA.flatMap(category => 
+                category.skills.map(skill => skill.name)
+            );
             const result = await generateBlogPost({ topic: values.topic, userSkills });
             setGeneratedPost(result);
         } catch (error) {
@@ -94,7 +97,7 @@ export default function StudioPage() {
             <div className="space-y-3 text-center mb-12">
                 <h1 className="text-4xl font-bold tracking-tighter md:text-5xl/tight font-headline">Content Studio</h1>
                 <p className="mx-auto max-w-[800px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Generate a high-quality, SEO-friendly blog post on any topic using AI.
+                    Generate a high-quality, SEO-friendly blog post on any topic using AI, complete with a unique, AI-generated featured image.
                 </p>
             </div>
 
@@ -139,6 +142,24 @@ export default function StudioPage() {
                     <div className="text-center">
                         <h2 className="text-3xl font-bold tracking-tighter font-headline">Generated Post</h2>
                     </div>
+                    
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Generated Image</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                             <Image
+                                src={generatedPost.imageDataUri}
+                                alt={generatedPost.title}
+                                width={1200}
+                                height={675}
+                                className="aspect-video w-full object-cover rounded-lg mb-4 border"
+                             />
+                             <p className="text-sm text-muted-foreground italic">
+                                <span className="font-semibold">Image Prompt:</span> "{generatedPost.imagePrompt}"
+                             </p>
+                        </CardContent>
+                    </Card>
 
                     <Card>
                         <CardHeader>
@@ -146,7 +167,6 @@ export default function StudioPage() {
                             <p className="text-sm text-muted-foreground pt-2">{generatedPost.description}</p>
                             <div className="flex flex-wrap gap-2 pt-2">
                                 <p className="text-xs text-muted-foreground"><span className="font-semibold">Slug:</span> {generatedPost.slug}</p>
-                                <p className="text-xs text-muted-foreground"><span className="font-semibold">Image ID:</span> {generatedPost.imageId}</p>
                             </div>
                         </CardHeader>
                         <CardContent className="prose prose-lg dark:prose-invert max-w-none">
@@ -157,7 +177,7 @@ export default function StudioPage() {
                     <Button onClick={onSave} disabled={isSaving || isSaved} className="w-full">
                         {isSaving && <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</>}
                         {isSaved && <><Check className="mr-2 h-4 w-4" /> Saved!</>}
-                        {!isSaving && !isSaved && <><Save className="mr-2 h-4 w-4" /> Save Blog Post</>}
+                        {!isSaving && !isSaved && <><Save className="mr-2 h-4 w-4" /> Save Blog Post & Image</>}
                     </Button>
                 </div>
             )}

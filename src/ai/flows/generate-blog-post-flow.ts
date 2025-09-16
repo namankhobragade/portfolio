@@ -9,6 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { generateImage } from './generate-image-flow';
 
 const GenerateBlogPostInputSchema = z.object({
   topic: z.string().describe('The topic for the blog post.'),
@@ -21,7 +22,8 @@ const GenerateBlogPostOutputSchema = z.object({
   slug: z.string().describe('A URL-friendly slug for the blog post (e.g., "how-to-secure-apis").'),
   description: z.string().describe('A brief, compelling meta description for the blog post (1-2 sentences).'),
   content: z.string().describe('The full content of the blog post in Markdown format. It should be well-structured with headings, lists, and code blocks where appropriate.'),
-  imageId: z.string().describe('A suitable image ID from the provided list for the blog post\'s featured image.'),
+  imageDataUri: z.string().describe("The generated blog post image as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
+  imagePrompt: z.string().describe("The prompt that was used to generate the blog post's featured image."),
 });
 export type GenerateBlogPostOutput = z.infer<typeof GenerateBlogPostOutputSchema>;
 
@@ -29,17 +31,19 @@ export async function generateBlogPost(input: GenerateBlogPostInput): Promise<Ge
   return generateBlogPostFlow(input);
 }
 
-const imageIdList = [
-    "blog-1", "blog-2", "blog-3", "blog-4", "blog-5", 
-    "blog-zero-trust", "blog-serverless-security", "blog-api-security", 
-    "blog-cloud-native", "blog-owasp-top-10", "blog-oauth-oidc", 
-    "blog-pwa-nextjs", "blog-social-engineering", "blog-incident-response", "blog-es2022"
-];
-
 const prompt = ai.definePrompt({
   name: 'generateBlogPostPrompt',
-  input: {schema: GenerateBlogPostInputSchema},
-  output: {schema: GenerateBlogPostOutputSchema},
+  input: {schema: z.object({
+    topic: z.string(),
+    userSkills: z.array(z.string()),
+  })},
+  output: {schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    description: z.string(),
+    content: z.string(),
+    imagePrompt: z.string(),
+  })},
   prompt: `You are an expert tech blogger and content creator specializing in web development, cybersecurity, and AI. Your writing style is clear, informative, and engaging.
 
 **Your Task:**
@@ -58,8 +62,7 @@ Write a comprehensive blog post about the following topic: **{{{topic}}}**
         - {{{this}}}
         {{/each}}
     *   The tone should be professional yet accessible.
-5.  **Image ID:** Based on the topic, select the most appropriate 'imageId' from the following list. Do not invent a new one.
-    Available Image IDs: ${imageIdList.join(', ')}
+5.  **Image Prompt:** Based on the blog post content, create a detailed, descriptive prompt for an AI image generator to create a visually appealing featured image. The prompt should describe an abstract or conceptual image, not a literal one. For example, for a post about API security, a good prompt would be "An abstract visualization of a secure data network, with glowing lines of light representing data flowing through digital tunnels, protected by crystalline shields."
 
 Your final output must be a single JSON object matching the defined schema.
 `,
@@ -72,7 +75,16 @@ const generateBlogPostFlow = ai.defineFlow(
     outputSchema: GenerateBlogPostOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const { output: textOutput } = await prompt(input);
+    if (!textOutput) {
+        throw new Error('Failed to generate blog post text content.');
+    }
+    
+    const { imageDataUri } = await generateImage({ prompt: textOutput.imagePrompt });
+
+    return {
+        ...textOutput,
+        imageDataUri: imageDataUri,
+    };
   }
 );
