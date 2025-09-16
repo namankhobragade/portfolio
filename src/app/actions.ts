@@ -1,8 +1,11 @@
+
 "use server";
 
 import { z } from "zod";
 import fs from "fs/promises";
 import path from "path";
+
+// ========= Contact Form Logic =========
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -10,6 +13,37 @@ const contactFormSchema = z.object({
   message: z.string().min(10, "Message must be at least 10 characters."),
   honeypot: z.string().optional(),
 });
+
+type Contact = {
+  name: string;
+  email: string;
+  message: string;
+  submittedAt: string;
+};
+
+const contactsFilePath = path.join(process.cwd(), 'data', 'contacts.json');
+
+async function getContacts(): Promise<Contact[]> {
+  try {
+    const data = await fs.readFile(contactsFilePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return [];
+    }
+    console.error("Error reading contacts file:", error);
+    throw new Error("Could not read contacts data.");
+  }
+}
+
+async function saveContacts(contacts: Contact[]) {
+  try {
+    await fs.writeFile(contactsFilePath, JSON.stringify(contacts, null, 2), 'utf-8');
+  } catch (error) {
+    console.error("Error writing contacts file:", error);
+    throw new Error("Could not save contacts data.");
+  }
+}
 
 export async function submitContactForm(data: z.infer<typeof contactFormSchema>) {
   const parsedData = contactFormSchema.safeParse(data);
@@ -22,14 +56,21 @@ export async function submitContactForm(data: z.infer<typeof contactFormSchema>)
   if (parsedData.data.honeypot) {
     return { success: false, message: "Bot detected." };
   }
+  
+  const { name, email, message } = parsedData.data;
 
   try {
-    // Here you would typically send an email or save to a database.
-    // For this example, we'll just log the data to the console.
-    console.log("New contact form submission:");
-    console.log("Name:", parsedData.data.name);
-    console.log("Email:", parsedData.data.email);
-    console.log("Message:", parsedData.data.message);
+    const contacts = await getContacts();
+    
+    const newContact: Contact = {
+      name,
+      email,
+      message,
+      submittedAt: new Date().toISOString(),
+    };
+
+    contacts.push(newContact);
+    await saveContacts(contacts);
 
     return { success: true, message: "Thank you for your message! I'll get back to you soon." };
   } catch (error) {
@@ -37,6 +78,9 @@ export async function submitContactForm(data: z.infer<typeof contactFormSchema>)
     return { success: false, message: "Something went wrong. Please try again later." };
   }
 }
+
+
+// ========= Newsletter Subscription Logic =========
 
 const newsletterFormSchema = z.object({
   email: z.string().email("Invalid email address."),
@@ -54,7 +98,6 @@ async function getSubscribers(): Promise<Subscriber[]> {
     const data = await fs.readFile(subscribersFilePath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
-    // If the file doesn't exist, return an empty array
     if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
       return [];
     }
