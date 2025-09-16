@@ -40,8 +40,11 @@ export function Contact() {
     const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // This function will trigger the form submission.
-        // The `action` attribute on the form will handle the rest.
+        // This function now programmatically submits the form.
+        const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
+        if (formElement) {
+            formElement.submit();
+        }
     }
 
     return (
