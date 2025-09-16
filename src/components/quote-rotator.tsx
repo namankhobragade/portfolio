@@ -29,7 +29,7 @@ export function QuoteRotator() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-[100] bg-background border-b"
+      className="fixed top-0 left-0 right-0 z-[100] bg-background"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative flex items-center justify-center h-10">
