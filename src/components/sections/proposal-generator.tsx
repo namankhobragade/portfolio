@@ -88,97 +88,93 @@ export function ProposalGenerator() {
                     </p>
                 </div>
                 <div className="mx-auto w-full max-w-2xl">
-                    <Card>
-                        <CardContent className="p-6">
-                            <Form {...form}>
-                                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-left">
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                                        <FormField
-                                            control={form.control}
-                                            name="clientName"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Client Name (Optional)</FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="e.g., Jane Doe" {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name="companyName"
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Company Name (Optional)</FormLabel>
-                                                    <FormControl>
-                                                        <Input placeholder="e.g., Acme Inc." {...field} />
-                                                    </FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-                                    <FormField
-                                        control={form.control}
-                                        name="clientNeeds"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Client Needs</FormLabel>
-                                                <FormControl>
-                                                    <Textarea placeholder="e.g., 'A small e-commerce site needs a security audit and performance optimization.'" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="serviceDescription"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Your Service Offering</FormLabel>
-                                                <FormControl>
-                                                    <Textarea placeholder="e.g., 'Comprehensive security audit including penetration testing, code review, and performance tuning.'" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="userSkills"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Key Skills to Highlight</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Next.js, Penetration Testing, AWS" {...field} />
-                                                </FormControl>
-                                                <FormDescription>
-                                                    Enter comma-separated skills.
-                                                </FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <Button type="submit" disabled={isLoading} className="w-full">
-                                        {isLoading ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                                Generating...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Bot className="mr-2 h-4 w-4" />
-                                                Generate Proposal
-                                            </>
-                                        )}
-                                    </Button>
-                                </form>
-                            </Form>
-                        </CardContent>
-                    </Card>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-left">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                <FormField
+                                    control={form.control}
+                                    name="clientName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Client Name (Optional)</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="e.g., Jane Doe" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="companyName"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Company Name (Optional)</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="e.g., Acme Inc." {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name="clientNeeds"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Client Needs</FormLabel>
+                                        <FormControl>
+                                            <Textarea placeholder="e.g., 'A small e-commerce site needs a security audit and performance optimization.'" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="serviceDescription"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Your Service Offering</FormLabel>
+                                        <FormControl>
+                                            <Textarea placeholder="e.g., 'Comprehensive security audit including penetration testing, code review, and performance tuning.'" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="userSkills"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Key Skills to Highlight</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Next.js, Penetration Testing, AWS" {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Enter comma-separated skills.
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <Button type="submit" disabled={isLoading} className="w-full">
+                                {isLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Generating...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Bot className="mr-2 h-4 w-4" />
+                                        Generate Proposal
+                                    </>
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
                     
                     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
                         <DialogContent className="sm:max-w-2xl">
