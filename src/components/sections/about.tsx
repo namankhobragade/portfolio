@@ -9,8 +9,7 @@ export function About() {
     <section className="w-full py-12 md:py-24 lg:py-32 bg-background">
       <div className="container px-4 md:px-6">
         <div className="grid items-center gap-10 lg:grid-cols-2">
-          <div className="relative flex justify-center">
-             <div className="absolute inset-0.5 -m-2 bg-gradient-to-tr from-primary to-accent rounded-lg blur-xl opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+          <div className="flex justify-center">
             {profileImage && (
              <Image
                 src={profileImage.imageUrl}
