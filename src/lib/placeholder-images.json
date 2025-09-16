@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "profile-picture-hero",
+      "description": "Professional headshot of the portfolio owner for the hero section.",
+      "imageUrl": "https://picsum.photos/seed/1/400/400",
+      "imageHint": "professional headshot"
+    },
+    {
+      "id": "profile-picture",
+      "description": "Professional headshot of the portfolio owner for the about section.",
+      "imageUrl": "https://picsum.photos/seed/8/300/300",
+      "imageHint": "professional portrait"
+    },
+    {
+      "id": "project-1",
+      "description": "Abstract visualization of a secure network.",
+      "imageUrl": "https://picsum.photos/seed/2/600/400",
+      "imageHint": "secure network"
+    },
+    {
+      "id": "project-2",
+      "description": "Futuristic AI dashboard interface.",
+      "imageUrl": "https://picsum.photos/seed/3/600/400",
+      "imageHint": "AI dashboard"
+    },
+    {
+      "id": "project-3",
+      "description": "Lines of code on a dark screen.",
+      "imageUrl": "https://picsum.photos/seed/4/600/400",
+      "imageHint": "code screen"
+    },
+    {
+      "id": "blog-1",
+      "description": "A padlock symbolizing digital security.",
+      "imageUrl": "https://picsum.photos/seed/5/600/400",
+      "imageHint": "digital security"
+    },
+    {
+      "id": "blog-2",
+      "description": "An illustration of a neural network.",
+      "imageUrl": "https://picsum.photos/seed/6/600/400",
+      "imageHint": "neural network"
+    },
+    {
+      "id": "blog-3",
+      "description": "A developer working at a multi-monitor setup.",
+      "imageUrl": "https://picsum.photos/seed/7/600/400",
+      "imageHint": "developer setup"
+    }
+  ]
 }
