@@ -1,6 +1,8 @@
 "use server";
 
 import { z } from "zod";
+import fs from "fs/promises";
+import path from "path";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -40,17 +42,59 @@ const newsletterFormSchema = z.object({
   email: z.string().email("Invalid email address."),
 });
 
+type Subscriber = {
+  email: string;
+  subscribedAt: string;
+};
+
+const subscribersFilePath = path.join(process.cwd(), 'data', 'subscribers.json');
+
+async function getSubscribers(): Promise<Subscriber[]> {
+  try {
+    const data = await fs.readFile(subscribersFilePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    // If the file doesn't exist, return an empty array
+    if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return [];
+    }
+    console.error("Error reading subscribers file:", error);
+    throw new Error("Could not read subscribers data.");
+  }
+}
+
+async function saveSubscribers(subscribers: Subscriber[]) {
+  try {
+    await fs.writeFile(subscribersFilePath, JSON.stringify(subscribers, null, 2), 'utf-8');
+  } catch (error) {
+    console.error("Error writing subscribers file:", error);
+    throw new Error("Could not save subscribers data.");
+  }
+}
+
 export async function subscribeToNewsletter(data: z.infer<typeof newsletterFormSchema>) {
   const parsedData = newsletterFormSchema.safeParse(data);
 
   if (!parsedData.success) {
     return { success: false, message: "Invalid email address." };
   }
+  
+  const { email } = parsedData.data;
 
   try {
-    // Here you would add the email to your mailing list (e.g., Mailchimp, ConvertKit).
-    // For this example, we'll just log it to the console.
-    console.log("New newsletter subscription:", parsedData.data.email);
+    const subscribers = await getSubscribers();
+    
+    if (subscribers.some(sub => sub.email === email)) {
+      return { success: false, message: "This email is already subscribed." };
+    }
+
+    const newSubscriber: Subscriber = {
+      email,
+      subscribedAt: new Date().toISOString(),
+    };
+
+    subscribers.push(newSubscriber);
+    await saveSubscribers(subscribers);
 
     return { success: true, message: "Thanks for subscribing! You're on the list." };
   } catch (error) {
