@@ -3,12 +3,15 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { BLOG_POSTS_DATA } from "@/lib/data";
+import { getAllPosts } from "@/lib/blog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { BlogSummary } from "./blog-summary";
 import { AnimatedItem } from "../animated-item";
+import { format } from "date-fns";
 
-export function Blog() {
+export async function Blog() {
+  const posts = await getAllPosts();
+  
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -21,10 +24,10 @@ export function Blog() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
-          {BLOG_POSTS_DATA.map((post, index) => {
-            const postImage = PlaceHolderImages.find(p => p.id === post.imageId);
+          {posts.map((post, index) => {
+            const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
             return (
-            <AnimatedItem key={post.title} delay={index * 0.1} className="h-full">
+            <AnimatedItem key={post.slug} delay={index * 0.1} className="h-full">
               <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
                 {postImage && (
                   <Image
@@ -37,10 +40,13 @@ export function Blog() {
                   />
                 )}
                 <CardHeader>
-                  <CardTitle className="font-headline">{post.title}</CardTitle>
+                  <CardTitle className="font-headline">{post.frontmatter.title}</CardTitle>
+                  <p className="text-sm text-muted-foreground">
+                    {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
+                  </p>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <BlogSummary content={post.fullContent} />
+                  <BlogSummary content={post.content} />
                 </CardContent>
                 <CardFooter>
                   <Button asChild variant="link" className="p-0 h-auto">
