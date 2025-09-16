@@ -19,7 +19,7 @@ const GenerateProposalInputSchema = z.object({
 export type GenerateProposalInput = z.infer<typeof GenerateProposalInputSchema>;
 
 const GenerateProposalOutputSchema = z.object({
-  proposalText: z.string().describe('The generated sales proposal text.'),
+  proposalText: z.string().describe('The generated sales proposal text in Markdown format.'),
 });
 export type GenerateProposalOutput = z.infer<typeof GenerateProposalOutputSchema>;
 
@@ -31,7 +31,28 @@ const prompt = ai.definePrompt({
   name: 'generateProposalPrompt',
   input: {schema: GenerateProposalInputSchema},
   output: {schema: GenerateProposalOutputSchema},
-  prompt: `You are an expert freelance proposal writer. Generate a compelling and personalized sales proposal based on the client's needs and the service offered.\n\nClient Needs: {{{clientNeeds}}}\nService Description: {{{serviceDescription}}}\nUser Skills: {{#each userSkills}}{{{this}}} {{/each}}\n\nWrite a proposal that addresses the client's needs and highlights the benefits of the service. Focus on how the service and the user's skills can provide value to the client.`, // Updated prompt
+  prompt: `You are an expert freelance proposal writer. Generate a compelling and personalized sales proposal based on the client's needs and the service offered.
+
+**Client Needs:**
+{{{clientNeeds}}}
+
+**Service Description:**
+{{{serviceDescription}}}
+
+**Key Skills to Highlight:**
+{{#each userSkills}}
+- {{{this}}}
+{{/each}}
+
+---
+
+**Instructions:**
+1.  Write a proposal that directly addresses the client's needs.
+2.  Use Markdown for formatting (e.g., headings, bold text, and numbered or bulleted lists).
+3.  Structure the proposal logically with sections like "Introduction," "Our Solution," "Why Choose My Expertise," and "Benefits."
+4.  Highlight how the provided skills and services create value for the client.
+5.  Conclude the proposal with the name "Sunil Khobragade" instead of a placeholder.
+`,
 });
 
 const generateProposalFlow = ai.defineFlow(

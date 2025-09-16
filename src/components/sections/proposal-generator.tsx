@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Bot, Clipboard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { MarkdownContent } from '../markdown-content';
 
 const formSchema = z.object({
   clientNeeds: z.string().min(20, 'Please provide more details on client needs (min 20 characters).'),
@@ -145,7 +146,7 @@ export function ProposalGenerator() {
                                 </CardTitle>
                                 <CardDescription>Review and copy the AI-generated text below.</CardDescription>
                             </CardHeader>
-                            <CardContent>
+                            <CardContent className="prose prose-sm dark:prose-invert max-w-none">
                                 {isLoading ? (
                                      <div className="space-y-4">
                                         <div className="animate-pulse bg-muted h-4 w-full rounded"></div>
@@ -156,7 +157,7 @@ export function ProposalGenerator() {
                                         <div className="animate-pulse bg-muted h-4 w-full rounded"></div>
                                      </div>
                                 ) : (
-                                    <p className="whitespace-pre-wrap text-sm text-muted-foreground">{proposal}</p>
+                                    <MarkdownContent content={proposal} />
                                 )}
                             </CardContent>
                         </Card>
