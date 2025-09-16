@@ -24,7 +24,7 @@ export function Blog() {
           {BLOG_POSTS_DATA.map((post, index) => {
             const postImage = PlaceHolderImages.find(p => p.id === post.imageId);
             return (
-            <AnimatedItem key={post.title} delay={index * 0.1}>
+            <AnimatedItem key={post.title} delay={index * 0.1} className="h-full">
               <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
                 {postImage && (
                   <Image
