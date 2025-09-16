@@ -8,19 +8,24 @@ import { Separator } from './ui/separator';
 import { useState, useEffect } from 'react';
 
 export function Footer() {
-  const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [currentDateTime, setCurrentDateTime] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Set the initial time on the client
+    setCurrentDateTime(new Date());
+    
+    // Update the time every second
     const timer = setInterval(() => {
       setCurrentDateTime(new Date());
     }, 1000);
 
+    // Clean up the interval on component unmount
     return () => {
       clearInterval(timer);
     };
   }, []);
 
-  const formattedDateTime = currentDateTime.toLocaleString(undefined, {
+  const formattedDateTime = currentDateTime?.toLocaleString(undefined, {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
@@ -48,7 +53,7 @@ export function Footer() {
           </p>
           <Separator className="w-1/4 my-2" />
           <div className="text-xs text-muted-foreground">
-              {formattedDateTime}
+              {formattedDateTime ? formattedDateTime : <span className="h-4 w-48 inline-block bg-muted rounded animate-pulse" />}
           </div>
           <div className="flex space-x-6">
             <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
