@@ -15,8 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Send } from 'lucide-react';
-import { submitContactForm } from '@/app/actions';
+import { Send } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -38,22 +37,11 @@ export function Contact() {
     });
 
     const {formState: {isSubmitting}} = form;
+    const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        const result = await submitContactForm(values);
-        if (result.success) {
-            toast({
-                title: "Message Sent!",
-                description: result.message,
-            });
-            form.reset();
-        } else {
-            toast({
-                title: "Error",
-                description: result.message,
-                variant: "destructive",
-            });
-        }
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        // This function will trigger the form submission.
+        // The `action` attribute on the form will handle the rest.
     }
 
     return (
@@ -68,7 +56,15 @@ export function Contact() {
                 </div>
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 text-left">
+                        <form 
+                            action={`https://formsubmit.co/${formSubmitEmail}`}
+                            method="POST"
+                            onSubmit={form.handleSubmit(onSubmit)} 
+                            className="space-y-4 text-left"
+                        >
+                             <input type="hidden" name="_subject" value="New Contact Form Submission!" />
+                             <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}/?form-submitted=true` : ''} />
+                             <input type="hidden" name="_captcha" value="false" />
                             <FormField
                                 control={form.control}
                                 name="name"

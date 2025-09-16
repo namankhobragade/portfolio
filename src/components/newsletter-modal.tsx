@@ -22,6 +22,7 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
 
   useEffect(() => {
     const isSubscribed = localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === 'true';
@@ -49,22 +50,9 @@ export function NewsletterModal() {
 
   const { isSubmitting } = form.formState;
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    const result = await subscribeToNewsletter(values);
-    if (result.success) {
-      toast({
-        title: "Subscribed!",
-        description: "Thanks for joining the newsletter. You'll hear from me soon.",
-      });
-      localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
-      setIsOpen(false);
-    } else {
-      toast({
-        title: "Error",
-        description: result.message || "Failed to subscribe. Please try again.",
-        variant: "destructive",
-      });
-    }
+  function onSubmit(values: z.infer<typeof formSchema>) {
+     localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
+     (form.control.owner?._formRef.current as HTMLFormElement)?.submit();
   }
 
   const handleOpenChange = (open: boolean) => {
@@ -85,7 +73,14 @@ export function NewsletterModal() {
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form 
+            action={`https://formsubmit.co/${formSubmitEmail}`} 
+            method="POST"
+            onSubmit={form.handleSubmit(onSubmit)} 
+            className="space-y-4"
+          >
+            <input type="hidden" name="_subject" value="New Newsletter Subscription!" />
+            <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href : ''} />
             <FormField
               control={form.control}
               name="email"
