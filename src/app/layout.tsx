@@ -6,6 +6,8 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { SmoothScroll } from '@/components/smooth-scroll';
+import { ScrollToTop } from '@/components/scroll-to-top';
+import { ScrollProgress } from '@/components/scroll-progress';
 
 export const metadata: Metadata = {
   title: 'Securefolio',
@@ -27,12 +29,14 @@ export default function RootLayout({
       <body className={cn('bg-background font-body text-foreground antialiased')}>
         <ThemeProvider>
             <SmoothScroll />
+            <ScrollProgress />
             <div className="relative flex min-h-dvh flex-col">
                 <Header />
                 <main className="flex-1">{children}</main>
                 <Footer />
             </div>
             <Toaster />
+            <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>
