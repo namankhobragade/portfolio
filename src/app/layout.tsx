@@ -136,7 +136,7 @@ export default function RootLayout({
             <QuoteRotator />
             <Header />
             <div className="relative flex min-h-dvh flex-col">
-                <main className="flex-1 pt-10">{children}</main>
+                <main className="flex-1 pt-24">{children}</main>
                 <Footer />
             </div>
             <Toaster />
