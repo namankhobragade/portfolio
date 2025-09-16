@@ -85,7 +85,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
 };
 
 const personSchema = {
