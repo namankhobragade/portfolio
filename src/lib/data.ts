@@ -93,7 +93,6 @@ export const PROJECTS_DATA = [
     description: 'Full-stack platform with live classes, integrated billing, and secure student/teacher dashboards.',
     techStack: ['CodeIgniter 4', 'MySQLi', 'BigBlueButton'],
     securityFocus: 'CSRF protection, access control, tokenization.',
-    githubUrl: 'https://github.com/naman-mahi',
     demoUrl: '#',
     imageId: 'project-2',
   },
@@ -103,7 +102,6 @@ export const PROJECTS_DATA = [
     techStack: ['Python', 'LLM', 'FastAPI'],
     securityFocus: 'Automated Security Analysis, Prompt Injection Defense.',
     githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-3',
   },
   {
@@ -121,7 +119,6 @@ export const PROJECTS_DATA = [
     techStack: ['React', 'Node.js', 'Web Crypto API'],
     securityFocus: 'End-to-End Encryption (E2EE), Secure File Deletion.',
     githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-5',
   },
   {
@@ -129,8 +126,6 @@ export const PROJECTS_DATA = [
     description: 'A tool to automate security checks (SAST, DAST, Container Scanning) in CI/CD pipelines.',
     techStack: ['Python', 'Docker', 'Jenkins API'],
     securityFocus: 'Automated SAST/DAST, Vulnerability Management.',
-    githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-6',
   },
   {
@@ -139,7 +134,6 @@ export const PROJECTS_DATA = [
     techStack: ['JavaScript', 'TensorFlow.js', 'Genkit'],
     securityFocus: 'Natural Language Processing, Real-time Threat Detection.',
     githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-7',
   },
   {
@@ -156,8 +150,6 @@ export const PROJECTS_DATA = [
     description: 'A central dashboard to monitor network traffic from IoT devices and flag anomalous behavior.',
     techStack: ['Node.js', 'React', 'MQTT'],
     securityFocus: 'Network Anomaly Detection, Device Authentication.',
-    githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-9',
   },
   {
@@ -166,7 +158,6 @@ export const PROJECTS_DATA = [
     techStack: ['Solidity', 'Next.js', 'Ethers.js'],
     securityFocus: 'Smart Contract Security, Decentralized Identity.',
     githubUrl: 'https://github.com/naman-mahi',
-    demoUrl: '#',
     imageId: 'project-10',
   },
 ];
