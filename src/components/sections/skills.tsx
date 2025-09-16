@@ -20,7 +20,7 @@ export function Skills() {
             <AnimatedItem key={category.category} delay={index * 0.2}>
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold font-headline text-center">{category.category}</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 justify-center">
                   {category.skills.map((skill, skillIndex) => (
                     <AnimatedItem key={skill.name} delay={skillIndex * 0.05}>
                       <Card className="flex flex-col items-center justify-center text-center p-4 transition-all hover:shadow-lg hover:-translate-y-1 h-full">
