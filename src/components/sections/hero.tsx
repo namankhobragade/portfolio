@@ -1,4 +1,4 @@
-// src/components/sections/hero.tsx
+
 "use client";
 
 import { Suspense } from 'react';
@@ -6,28 +6,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from 'lucide-react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
+import dynamic from 'next/dynamic';
 
-function ThreeDShape() {
-    return (
-        <Canvas>
-            <Suspense fallback={null}>
-                <OrbitControls enableZoom={false} autoRotate />
-                <ambientLight intensity={1} />
-                <directionalLight position={[3, 2, 1]} />
-                <Sphere args={[1, 100, 200]} scale={2.5}>
-                   <MeshDistortMaterial
-                        color="#3b82f6"
-                        attach="material"
-                        distort={0.5}
-                        speed={2}
-                    />
-                </Sphere>
-            </Suspense>
-        </Canvas>
-    );
-}
+const ThreeDShape = dynamic(() => import('@/components/three-d-shape').then(mod => mod.ThreeDShape), {
+    ssr: false,
+    loading: () => <div className="absolute inset-0 z-0 h-full w-full" />
+});
 
 
 export function Hero() {
