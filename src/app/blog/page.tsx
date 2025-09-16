@@ -8,6 +8,12 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { format } from "date-fns";
 import { AnimatedItem } from "@/components/animated-item";
 import { AnimatedSection } from "@/components/animated-section";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'All Blog Posts',
+  description: 'Explore all my insights on secure coding, AI in cybersecurity, and industry trends.',
+};
 
 export default async function AllBlogsPage() {
   const posts = await getAllPosts();
@@ -39,7 +45,7 @@ export default async function AllBlogsPage() {
                         {postImage && (
                             <Image
                             src={postImage.imageUrl}
-                            alt={postImage.description}
+                            alt={post.frontmatter.description}
                             data-ai-hint={postImage.imageHint}
                             width={600}
                             height={400}

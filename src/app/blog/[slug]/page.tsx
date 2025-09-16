@@ -1,13 +1,49 @@
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft, Share2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import { format } from 'date-fns';
+import type { Metadata } from 'next';
+
+type BlogPostPageProps = {
+  params: { slug: string };
+};
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug);
+
+  if (!post) {
+    return {
+      title: 'Post Not Found',
+    };
+  }
+
+  const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
+
+  return {
+    title: post.frontmatter.title,
+    description: post.frontmatter.description,
+    openGraph: {
+      title: post.frontmatter.title,
+      description: post.frontmatter.description,
+      type: 'article',
+      publishedTime: new Date(post.frontmatter.date).toISOString(),
+      url: `/blog/${post.slug}`,
+      images: postImage ? [{ url: postImage.imageUrl }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.frontmatter.title,
+      description: post.frontmatter.description,
+      images: postImage ? [postImage.imageUrl] : [],
+    }
+  };
+}
 
 export async function generateStaticParams() {
   const posts = await getAllPosts();
@@ -16,7 +52,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -45,11 +81,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       {postImage && (
         <Image
           src={postImage.imageUrl}
-          alt={postImage.description}
+          alt={post.frontmatter.description}
           data-ai-hint={postImage.imageHint}
           width={1200}
           height={675}
           className="aspect-video w-full object-cover rounded-lg mb-8"
+          priority
         />
       )}
 
