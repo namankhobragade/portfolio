@@ -64,7 +64,7 @@ export function Contact() {
     useEffect(() => {
         if (state.message) {
             toast({
-                title: state.success ? "Message Sent!" : "Error",
+                title: state.success ? "Message Sent! 🚀" : "Error",
                 description: state.message,
                 variant: state.success ? "default" : "destructive",
             });

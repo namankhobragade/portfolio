@@ -60,7 +60,7 @@ export function ProposalGenerator() {
             console.error(error);
             toast({
                 title: "Error",
-                description: "Failed to generate proposal. Please try again.",
+                description: "Oops! Something went wrong. 🛠️ Please try generating the proposal again.",
                 variant: "destructive",
             });
         } finally {
@@ -72,7 +72,7 @@ export function ProposalGenerator() {
         navigator.clipboard.writeText(proposal);
         setCopied(true);
         toast({
-            title: "Copied to Clipboard!",
+            title: "Copied to Clipboard! 📋",
             description: "The proposal text has been copied.",
         });
         setTimeout(() => setCopied(false), 2000);
