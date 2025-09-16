@@ -34,7 +34,7 @@ export function Hero() {
 
   return (
     <section className="relative w-full h-dvh min-h-[700px] flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 bg-grid-pattern"></div>
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10"></div>
       
       <div className="container relative z-20 px-4 md:px-6">
         <motion.div
