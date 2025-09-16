@@ -22,6 +22,8 @@ import { useToast } from '@/hooks/use-toast';
 import { MarkdownContent } from '../markdown-content';
 
 const formSchema = z.object({
+  clientName: z.string().optional(),
+  companyName: z.string().optional(),
   clientNeeds: z.string().min(20, 'Please provide more details on client needs (min 20 characters).'),
   serviceDescription: z.string().min(20, 'Please describe your service in more detail (min 20 characters).'),
   userSkills: z.string().min(5, 'Please list at least one relevant skill.').transform(s => s.split(',').map(skill => skill.trim())),
@@ -35,6 +37,8 @@ export function ProposalGenerator() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            clientName: "",
+            companyName: "",
             clientNeeds: "",
             serviceDescription: "",
             userSkills: "Secure Web Development, AI Integration, Cloud Security",
@@ -81,6 +85,34 @@ export function ProposalGenerator() {
                         <CardContent className="p-6">
                             <Form {...form}>
                                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 text-left">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                                        <FormField
+                                            control={form.control}
+                                            name="clientName"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Client Name (Optional)</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="e.g., Jane Doe" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="companyName"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Company Name (Optional)</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="e.g., Acme Inc." {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                     <FormField
                                         control={form.control}
                                         name="clientNeeds"
