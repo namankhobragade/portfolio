@@ -64,7 +64,7 @@ export function Hero() {
             variants={itemVariants}
             className="max-w-[700px] text-muted-foreground md:text-xl"
           >
-            I'm Sunil Khobragade, a Technical Lead and Full-stack Developer
+            I'm Sunil Khobragade, a Freelance Full-stack Developer
             specializing in building secure, scalable web applications with a focus
             on AI integration and cybersecurity.
           </motion.p>

@@ -1,79 +1,80 @@
+
 import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers } from 'lucide-react';
 
 export const SKILLS_DATA = [
   {
     category: 'Backend',
     skills: [
-      { name: 'PHP', icon: Code },
-      { name: 'Laravel', icon: Code },
-      { name: 'CodeIgniter', icon: Code },
-      { name: 'Node.js', icon: Code },
-      { name: 'Express.js', icon: Code },
-      { name: 'Python', icon: Code },
+      { name: 'PHP', icon: Code, proficiency: 95 },
+      { name: 'Laravel', icon: Code, proficiency: 90 },
+      { name: 'CodeIgniter', icon: Code, proficiency: 85 },
+      { name: 'Node.js', icon: Code, proficiency: 80 },
+      { name: 'Express.js', icon: Code, proficiency: 80 },
+      { name: 'Python', icon: Code, proficiency: 75 },
     ],
   },
   {
     category: 'Frontend',
     skills: [
-      { name: 'JavaScript', icon: Code },
-      { name: 'HTML', icon: Code },
-      { name: 'Bootstrap', icon: Code },
-      { name: 'Next.js', icon: Code },
-      { name: 'React', icon: Code },
+      { name: 'JavaScript', icon: Code, proficiency: 90 },
+      { name: 'HTML', icon: Code, proficiency: 95 },
+      { name: 'Bootstrap', icon: Code, proficiency: 90 },
+      { name: 'Next.js', icon: Code, proficiency: 85 },
+      { name: 'React', icon: Code, proficiency: 80 },
     ],
   },
   {
     category: 'Databases',
     skills: [
-      { name: 'MySQL', icon: Database },
-      { name: 'MongoDB', icon: Database },
-      { name: 'Redis', icon: Database },
+      { name: 'MySQL', icon: Database, proficiency: 95 },
+      { name: 'MongoDB', icon: Database, proficiency: 85 },
+      { name: 'Redis', icon: Database, proficiency: 70 },
     ],
   },
   {
     category: 'Web Servers',
     skills: [
-      { name: 'Nginx', icon: Server },
-      { name: 'Apache', icon: Server },
+      { name: 'Nginx', icon: Server, proficiency: 80 },
+      { name: 'Apache', icon: Server, proficiency: 85 },
     ],
   },
   {
     category: 'Version Control',
     skills: [
-      { name: 'Git', icon: GitBranch },
-      { name: 'GitHub', icon: GitBranch },
-      { name: 'GitLab', icon: GitBranch },
-      { name: 'GitHub Actions', icon: GitCommit },
-      { name: 'GitLab CI', icon: GitCommit },
+      { name: 'Git', icon: GitBranch, proficiency: 90 },
+      { name: 'GitHub', icon: GitBranch, proficiency: 90 },
+      { name: 'GitLab', icon: GitBranch, proficiency: 80 },
+      { name: 'GitHub Actions', icon: GitCommit, proficiency: 75 },
+      { name: 'GitLab CI', icon: GitCommit, proficiency: 75 },
     ],
   },
   {
     category: 'Cloud & DevOps',
     skills: [
-      { name: 'AWS', icon: Cloud },
-      { name: 'IBM Cloud', icon: CloudCog },
-      { name: 'Cloudflare', icon: Cloud },
-      { name: 'Docker', icon: Container },
-      { name: 'Microservices', icon: Settings },
-      { name: 'Linux', icon: Terminal },
+      { name: 'AWS', icon: Cloud, proficiency: 70 },
+      { name: 'IBM Cloud', icon: CloudCog, proficiency: 65 },
+      { name: 'Cloudflare', icon: Cloud, proficiency: 80 },
+      { name: 'Docker', icon: Container, proficiency: 75 },
+      { name: 'Microservices', icon: Settings, proficiency: 70 },
+      { name: 'Linux', icon: Terminal, proficiency: 85 },
     ],
   },
   {
     category: 'Payment Gateways',
     skills: [
-      { name: 'Stripe', icon: CreditCard },
-      { name: 'PhonePe', icon: CreditCard },
-      { name: 'Razorpay', icon: CreditCard },
+      { name: 'Stripe', icon: CreditCard, proficiency: 90 },
+      { name: 'PhonePe', icon: CreditCard, proficiency: 85 },
+      { name: 'Razorpay', icon: CreditCard, proficiency: 85 },
     ],
   },
   {
     category: 'Cybersecurity',
     skills: [
-      { name: 'Penetration Testing', icon: ShieldCheck },
-      { name: 'Network Security', icon: Cloud },
-      { name: 'SOC & Risk Assessment', icon: Cpu },
-      { name: 'OWASP Practices', icon: ShieldCheck },
-      { name: 'Vulnerability Assessment', icon: ShieldCheck },
+      { name: 'Penetration Testing', icon: ShieldCheck, proficiency: 85 },
+      { name: 'Network Security', icon: Cloud, proficiency: 80 },
+      { name: 'SOC & Risk Assessment', icon: Cpu, proficiency: 75 },
+      { name: 'OWASP Practices', icon: ShieldCheck, proficiency: 90 },
+      { name: 'Vulnerability Assessment', icon: ShieldCheck, proficiency: 85 },
     ],
   },
 ];
@@ -161,15 +162,26 @@ export const PROJECTS_DATA = [
 ];
 
 export const EXPERIENCE_DATA = [
-    {
+  {
+    role: 'Freelance Full-Stack Developer & Security Consultant',
+    company: 'Self-Employed',
+    period: '2020 – Present',
+    responsibilities: [
+      'Delivered over 20 secure, custom web applications for clients in education, e-commerce, and SaaS.',
+      'Architected and built full-stack solutions using Laravel, Next.js, MongoDB, and MySQLi.',
+      'Integrated third-party services like Stripe, Razorpay, and OAuth, ensuring secure data handling.',
+      'Applied OWASP Top 10 practices to prevent XSS, CSRF, and SQLi vulnerabilities, conducting regular security audits.'
+    ],
+  },
+  {
     role: 'Technical Lead',
     company: 'Confidential',
     period: 'March 2025 – Present',
     responsibilities: [
-      'Leading a cross-functional team to develop secure and scalable web applications.',
+      'Led a cross-functional team to develop secure and scalable web applications.',
       'Architecting full-stack solutions using Laravel, Next.js, MongoDB, and MySQLi.',
-      'Enforcing secure coding practices and optimizing performance across microservices.',
-      'Exploring integration of AI/LLM tools to automate and enhance software security.',
+      'Enforced secure coding practices and optimized performance across microservices.',
+      'Explored integration of AI/LLM tools to automate and enhance software security.',
     ],
   },
   {
@@ -193,18 +205,7 @@ export const EXPERIENCE_DATA = [
     ],
   },
   {
-    role: 'Freelance Full-Stack Developer',
-    company: 'Self-employed',
-    period: 'Jan 2020 – Present',
-    responsibilities: [
-      'Built secure, custom web applications for clients in education, e-commerce, and SaaS.',
-      'Used Laravel + Next.js stack with MongoDB and MySQLi for backend and frontend.',
-      'Integrated third-party services like Stripe, Razorpay, and OAuth.',
-      'Applied OWASP practices to prevent XSS, CSRF, and SQLi vulnerabilities.'
-    ],
-  },
-  {
-    role: 'Full-stack Developer',
+    role: 'Full-stack Developer (Contract)',
     company: 'IBM',
     period: 'Sep 2021 – March 2022',
     responsibilities: [
@@ -290,3 +291,5 @@ export const SERVICES_DATA = [
     icon: GanttChartSquare,
   },
 ];
+
+    

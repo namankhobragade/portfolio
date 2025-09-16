@@ -38,11 +38,11 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
+    default: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
     template: '%s | Sunil Khobragade',
   },
-  description: 'The professional portfolio of Sunil Khobragade, a Technical Lead and Full-stack Developer with a passion for cybersecurity and AI.',
-  keywords: ['Sunil Khobragade', 'Technical Lead', 'Full-Stack Developer', 'Cybersecurity', 'AI', 'Laravel', 'Next.js', 'Portfolio'],
+  description: 'The professional portfolio of Sunil Khobragade, a freelance Full-Stack Developer and Cybersecurity expert specializing in secure, AI-powered web applications.',
+  keywords: ['Sunil Khobragade', 'Freelance Developer', 'Full-Stack Developer', 'Cybersecurity Specialist', 'AI Developer', 'Laravel', 'Next.js', 'Portfolio'],
   authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
   creator: 'Sunil Khobragade',
   alternates: {
@@ -52,8 +52,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
-    description: 'A seasoned Full-stack Developer and Technical Lead specializing in secure, scalable web applications.',
+    title: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
+    description: 'Expert freelance developer building secure, scalable, and intelligent web applications with a focus on cybersecurity and AI.',
     url: siteUrl,
     siteName: 'DevSec',
     images: [
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Sunil Khobragade Portfolio',
+        alt: 'Sunil Khobragade Freelance Portfolio',
       },
     ],
     locale: 'en_US',
@@ -69,8 +69,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sunil Khobragade | Technical Lead & Full-Stack Developer',
-    description: 'A seasoned Full-stack Developer and Technical Lead specializing in secure, scalable web applications.',
+    title: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
+    description: 'Expert freelance developer building secure, scalable, and intelligent web applications with a focus on cybersecurity and AI.',
     creator: '@naman-mahi',
     images: [`${siteUrl}/og-image.png`],
   },
@@ -93,7 +93,7 @@ const personSchema = {
   "@type": "Person",
   "name": "Sunil Khobragade",
   "url": siteUrl,
-  "jobTitle": "Technical Lead & Full-Stack Developer",
+  "jobTitle": "Freelance Full-Stack Developer & Cybersecurity Specialist",
   "sameAs": [
     "https://www.linkedin.com/in/sunilkhobragade",
     "https://github.com/naman-mahi"

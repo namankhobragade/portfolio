@@ -25,7 +25,7 @@ export function About() {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">About Me</h2>
             <div className="space-y-4 text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 <p>
-                I’m Sunil Khobragade, a Technical Lead and seasoned Full-stack Developer with over 4 years of freelance experience delivering scalable, secure web platforms using Laravel, Next.js, MongoDB, and MySQLi.
+                I’m Sunil Khobragade, a freelance Full-stack Developer with over 5 years of experience delivering scalable, secure web platforms for a diverse range of clients. My expertise lies in Laravel, Next.js, MongoDB, and MySQLi.
                 </p>
                 <p>
                 My passion for cybersecurity has led me to pursue a Post Graduate Diploma and Master’s in Information Security from IGNOU. I’m also actively exploring how artificial intelligence and large language models (LLMs) can revolutionize security operations — from automated threat analysis to smart incident response.
