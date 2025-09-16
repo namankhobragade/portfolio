@@ -12,6 +12,7 @@ import { ScrollProgress } from '@/components/scroll-progress';
 import { GoogleAnalytics } from '@/components/google-analytics';
 import { Inter, Space_Grotesk, Source_Code_Pro } from 'next/font/google';
 import { QuoteRotator } from '@/components/quote-rotator';
+import { ClientInfoWidget } from '@/components/client-info-widget';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -141,6 +142,7 @@ export default function RootLayout({
             </div>
             <Toaster />
             <ScrollToTop />
+            <ClientInfoWidget />
         </ThemeProvider>
       </body>
     </html>
