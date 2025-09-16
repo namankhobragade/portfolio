@@ -51,6 +51,7 @@ export function Projects() {
                             <CardTitle className="font-headline">{project.title}</CardTitle>
                           </CardHeader>
                           <CardContent className="flex-grow space-y-4">
+                            <p className="text-sm text-muted-foreground line-clamp-3">{project.description}</p>
                             <div>
                               <h4 className="font-semibold mb-2 text-sm">Tech Stack:</h4>
                               <div className="flex flex-wrap gap-2">
@@ -64,9 +65,9 @@ export function Projects() {
                               <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
                             </div>
                           </CardContent>
-                          <CardFooter className="flex flex-wrap gap-2">
+                          <CardFooter className="flex flex-wrap gap-2 mt-auto pt-4">
                             {project.demoUrl && (
-                              <Button asChild variant="outline" className="flex-1 min-w-[120px]">
+                              <Button asChild variant="outline" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink />
                                   View Demo
@@ -76,7 +77,7 @@ export function Projects() {
                               </Button>
                             )}
                             {project.githubUrl && (
-                              <Button asChild variant="secondary" className="flex-1 min-w-[120px]">
+                              <Button asChild variant="secondary" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                                   <Github />
                                   View on GitHub

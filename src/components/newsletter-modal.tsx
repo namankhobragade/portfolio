@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/app/actions';
 import { Loader2, Mail } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -22,6 +24,7 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
 
   useEffect(() => {
@@ -34,14 +37,24 @@ export function NewsletterModal() {
     const oneDay = 24 * 60 * 60 * 1000;
 
     if (!lastPromptTime || (Date.now() - Number(lastPromptTime)) > oneDay) {
-      // Show the modal after a short delay
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 5000); // 5-second delay
+      }, 5000); 
 
       return () => clearTimeout(timer);
     }
   }, []);
+
+  useEffect(() => {
+    if (searchParams.get('newsletter-subscribed') === 'true') {
+        toast({
+            title: "Subscription Confirmed!",
+            description: "Thanks for subscribing! You're on the list.",
+        });
+        localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
+        setIsOpen(false);
+    }
+  }, [searchParams, toast]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,7 +64,6 @@ export function NewsletterModal() {
   const { isSubmitting } = form.formState;
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-     localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
      const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
       if (formElement) {
           formElement.submit();
@@ -60,7 +72,6 @@ export function NewsletterModal() {
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
-      // If the user closes the modal without subscribing, update the timestamp
       localStorage.setItem(LAST_PROMPT_KEY, String(Date.now()));
     }
     setIsOpen(open);
@@ -83,7 +94,7 @@ export function NewsletterModal() {
             className="space-y-4"
           >
             <input type="hidden" name="_subject" value="New Newsletter Subscription!" />
-            <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href : ''} />
+            <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?newsletter-subscribed=true` : ''} />
             <FormField
               control={form.control}
               name="email"

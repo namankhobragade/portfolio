@@ -1,3 +1,4 @@
+
 // src/components/header.tsx
 "use client";
 
@@ -12,6 +13,7 @@ import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/#about", label: "About" },
+  { href: "/#services", label: "Services" },
   { href: "/#skills", label: "Skills" },
   { href: "/#projects", label: "Projects" },
   { href: "/blog", label: "Blog" },

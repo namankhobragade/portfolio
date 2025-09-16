@@ -19,12 +19,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '',
     '/blog',
     '/#about',
+    '/#services',
     '/#skills',
     '/#projects',
     '/#experience',
     '/#education',
     '/#certifications',
-    '/#services',
+    '/#testimonials',
+    '/#proposal',
     '/#contact'
   ].map((route) => ({
     url: `${URL}${route}`,

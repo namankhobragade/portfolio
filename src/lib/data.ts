@@ -1,4 +1,4 @@
-import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings } from 'lucide-react';
+import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers } from 'lucide-react';
 
 export const SKILLS_DATA = [
   {
@@ -93,7 +93,6 @@ export const PROJECTS_DATA = [
     description: 'Full-stack platform with live classes, integrated billing, and secure student/teacher dashboards.',
     techStack: ['CodeIgniter 4', 'MySQLi', 'BigBlueButton'],
     securityFocus: 'CSRF protection, access control, tokenization.',
-    demoUrl: '#',
     imageId: 'project-2',
   },
   {
@@ -109,7 +108,6 @@ export const PROJECTS_DATA = [
     description: 'A dashboard that scans AWS environments for misconfigurations and compliance violations.',
     techStack: ['Next.js', 'Node.js', 'AWS SDK'],
     securityFocus: 'IAM Role Analysis, Security Group Auditing.',
-    githubUrl: 'https://github.com/naman-mahi',
     demoUrl: '#',
     imageId: 'project-4',
   },
@@ -269,3 +267,26 @@ export const CERTIFICATIONS_DATA = [
 
 
 export const BLOG_POSTS_DATA = [];
+
+export const SERVICES_DATA = [
+  {
+    title: 'Secure Web Development',
+    description: 'Building robust, scalable, and secure web applications from the ground up using modern frameworks like Next.js and Laravel.',
+    icon: Shield,
+  },
+  {
+    title: 'Cybersecurity Audits',
+    description: 'Comprehensive security assessments, including penetration testing and vulnerability scanning, to identify and mitigate risks.',
+    icon: SearchCheck,
+  },
+  {
+    title: 'AI/Chatbot Prototyping',
+    description: 'Developing intelligent chatbots and AI-powered tools to automate tasks and enhance security operations.',
+    icon: Bot,
+  },
+  {
+    title: 'SOC Architecture Consulting',
+    description: 'Designing and implementing effective Security Operations Center (SOC) architectures for proactive threat monitoring and response.',
+    icon: GanttChartSquare,
+  },
+];

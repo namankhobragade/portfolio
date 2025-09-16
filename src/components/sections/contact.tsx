@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -16,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
 import { Send } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -26,6 +29,8 @@ const formSchema = z.object({
 
 export function Contact() {
     const { toast } = useToast();
+    const searchParams = useSearchParams();
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,11 +41,20 @@ export function Contact() {
         },
     });
 
+    useEffect(() => {
+        if (searchParams.get('form-submitted') === 'true') {
+            toast({
+                title: "Message Sent!",
+                description: "Thank you for your message. I'll get back to you soon.",
+            });
+            form.reset();
+        }
+    }, [searchParams, toast, form]);
+
     const {formState: {isSubmitting}} = form;
     const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        // This function now programmatically submits the form.
         const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
         if (formElement) {
             formElement.submit();
@@ -51,7 +65,6 @@ export function Contact() {
         <section className="w-full py-12 md:py-24 lg:py-32 border-t">
             <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
                 <div className="space-y-3">
-                    <div className="inline-block rounded-lg px-3 py-1 text-sm">Get in Touch</div>
                     <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">Contact Me</h2>
                      <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                         Have a project in mind, want to collaborate, or just want to connect? Drop me a message using the form below.
@@ -66,7 +79,7 @@ export function Contact() {
                             className="space-y-4 text-left"
                         >
                              <input type="hidden" name="_subject" value="New Contact Form Submission!" />
-                             <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}/?form-submitted=true` : ''} />
+                             <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}/?form-submitted=true#contact` : ''} />
                              <input type="hidden" name="_captcha" value="false" />
                             <FormField
                                 control={form.control}
