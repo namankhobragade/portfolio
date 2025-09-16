@@ -10,7 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Star } from "lucide-react";
+import { Quote } from "lucide-react";
 
 const testimonials = [
   {
@@ -54,14 +54,10 @@ export function Testimonials() {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="md:basis-1/2">
                   <div className="p-4 h-full">
-                    <Card className="flex flex-col justify-between h-full bg-transparent border p-6">
-                      <CardContent className="p-0">
-                        <div className="flex items-center mb-4">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-5 w-5 fill-primary text-primary" />
-                          ))}
-                        </div>
-                        <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
+                    <Card className="flex flex-col justify-between h-full bg-card p-6">
+                       <CardContent className="p-0 flex-grow relative">
+                        <Quote className="absolute -top-2 -left-2 h-10 w-10 text-muted-foreground/10" />
+                        <p className="text-muted-foreground italic z-10 relative">"{testimonial.quote}"</p>
                       </CardContent>
                       <div className="flex items-center gap-4 mt-6 pt-6 border-t">
                         <Avatar>
