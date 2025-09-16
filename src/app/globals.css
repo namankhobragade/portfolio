@@ -23,7 +23,7 @@
     --border: 220 13% 91%;
     --input: 220 13% 91%;
     --ring: 150 100% 30%;
-    --radius: 0.5rem;
+    --radius: 0rem;
   }
  
   .dark {
@@ -55,6 +55,18 @@
   }
   html {
     @apply scroll-smooth;
+  }
+  html.lenis {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
   body {
     @apply bg-background text-foreground;
