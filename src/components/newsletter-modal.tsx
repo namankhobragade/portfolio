@@ -5,29 +5,27 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useActionState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Mail } from 'lucide-react';
+import { subscribeToNewsletter } from '@/app/actions';
+import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
 });
 
-const NEWSLETTER_SUBSCRIBED_KEY = 'devsec_newsletter_subscribed';
 const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://devsec-portfolio.vercel.app';
+  const { toast } = useToast();
+  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
-    const isSubscribed = localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === 'true';
-    if (isSubscribed) {
-      return;
-    }
-
     const lastPromptTime = localStorage.getItem(LAST_PROMPT_KEY);
     const oneDay = 24 * 60 * 60 * 1000;
 
@@ -44,6 +42,22 @@ export function NewsletterModal() {
     resolver: zodResolver(formSchema),
     defaultValues: { email: "" },
   });
+  
+  useEffect(() => {
+    if (form.formState.isSubmitSuccessful && state.success) {
+      toast({
+        description: state.message,
+      });
+      setIsOpen(false);
+      form.reset();
+    } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
+      toast({
+        description: state.message,
+        variant: 'destructive',
+      });
+    }
+  }, [form.formState.isSubmitSuccessful, state, toast, form]);
+
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -51,10 +65,11 @@ export function NewsletterModal() {
     }
     setIsOpen(open);
   };
-
-  const onSubmit = () => {
-    localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
-    setIsOpen(false);
+  
+  const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formAction(formData);
   };
 
   return (
@@ -68,16 +83,9 @@ export function NewsletterModal() {
         </DialogHeader>
         <Form {...form}>
           <form 
-            action="https://formsubmit.co/572490408448a3aca5b3e65283573777"
-            method="POST"
-            onSubmit={() => onSubmit()}
+            onSubmit={form.handleSubmit(handleFormSubmit)}
             className="space-y-4"
           >
-            <input type="hidden" name="_next" value={`${siteUrl}/#`}/>
-            <input type="hidden" name="_subject" value="New Newsletter Subscription!" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="text" name="_honey" style={{display: 'none'}} />
-
             <FormField
               control={form.control}
               name="email"

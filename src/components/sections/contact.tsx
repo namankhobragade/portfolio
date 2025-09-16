@@ -1,9 +1,11 @@
 
 "use client";
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useActionState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { submitContactForm } from '@/app/actions';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -24,6 +28,9 @@ const formSchema = z.object({
 });
 
 export function Contact() {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -33,7 +40,20 @@ export function Contact() {
         },
     });
 
-    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://devsec-portfolio.vercel.app';
+    useEffect(() => {
+      if (state.success) {
+        toast({
+          description: state.message,
+        });
+        form.reset();
+      } else if (state.message) {
+        toast({
+          description: state.message,
+          variant: 'destructive',
+        });
+      }
+    }, [state, toast, form]);
+
 
     return (
         <section className="w-full py-12 md:py-24 lg:py-32">
@@ -47,15 +67,10 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action="https://formsubmit.co/572490408448a3aca5b3e65283573777"
-                            method="POST"
+                            action={formAction}
                             className="space-y-4 text-left"
                         >
-                            <input type="hidden" name="_next" value={`${siteUrl}/#contact`} />
-                            <input type="hidden" name="_captcha" value="false" />
-                            <input type="text" name="_honey" style={{display: 'none'}} />
-
-                            <FormField
+                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
