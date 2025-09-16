@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CERTIFICATIONS_DATA } from "@/lib/data";
+import { AnimatedItem } from "../animated-item";
 
 export function Certifications() {
   return (
@@ -14,18 +15,20 @@ export function Certifications() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl justify-center gap-6 py-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-8">
-          {CERTIFICATIONS_DATA.map((cert) => (
-            <Card key={cert.name} className="flex flex-col items-center justify-center text-center p-6 transition-all hover:shadow-lg hover:-translate-y-1">
-              <CardHeader className="p-0 mb-4">
-                <div className="bg-accent/10 text-accent rounded-full p-3">
-                    <cert.icon className="h-8 w-8" />
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <CardTitle className="text-lg font-bold font-headline mb-1">{cert.name}</CardTitle>
-                <p className="text-sm text-muted-foreground">{cert.issuer}</p>
-              </CardContent>
-            </Card>
+          {CERTIFICATIONS_DATA.map((cert, index) => (
+            <AnimatedItem key={cert.name} delay={index * 0.1}>
+              <Card className="flex flex-col items-center justify-center text-center p-6 transition-all hover:shadow-lg hover:-translate-y-1">
+                <CardHeader className="p-0 mb-4">
+                  <div className="bg-accent/10 text-accent rounded-full p-3">
+                      <cert.icon className="h-8 w-8" />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <CardTitle className="text-lg font-bold font-headline mb-1">{cert.name}</CardTitle>
+                  <p className="text-sm text-muted-foreground">{cert.issuer}</p>
+                </CardContent>
+              </Card>
+            </AnimatedItem>
           ))}
         </div>
       </div>

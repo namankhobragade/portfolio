@@ -10,9 +10,10 @@ interface AnimatedSectionProps {
   className?: string;
   delay?: number;
   id?: string;
+  stagger?: number;
 }
 
-export function AnimatedSection({ children, className, delay = 0, id }: AnimatedSectionProps) {
+export function AnimatedSection({ children, className, delay = 0, id, stagger = 0.1 }: AnimatedSectionProps) {
   const controls = useAnimation();
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -25,6 +26,21 @@ export function AnimatedSection({ children, className, delay = 0, id }: Animated
     }
   }, [controls, inView]);
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        delay,
+        ease: [0.6, -0.05, 0.01, 0.99],
+        when: "beforeChildren",
+        staggerChildren: stagger,
+      },
+    },
+  };
+
   return (
     <motion.section
       ref={ref}
@@ -32,14 +48,7 @@ export function AnimatedSection({ children, className, delay = 0, id }: Animated
       className={cn("scroll-mt-14", className)}
       initial="hidden"
       animate={controls}
-      variants={{
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.8, delay, ease: [0.6, -0.05, 0.01, 0.99] },
-        },
-        hidden: { opacity: 0, y: 50 },
-      }}
+      variants={sectionVariants}
     >
       {children}
     </motion.section>

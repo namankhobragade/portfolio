@@ -8,18 +8,26 @@ interface AnimatedItemProps {
   className?: string;
   delay?: number;
   duration?: number;
+  direction?: 'left' | 'right' | 'up';
 }
 
-export function AnimatedItem({ children, className, delay = 0, duration = 0.5 }: AnimatedItemProps) {
+export function AnimatedItem({ children, className, delay = 0, duration = 0.5, direction = 'up' }: AnimatedItemProps) {
+  const directionVariants = {
+    up: { y: 20, x: 0 },
+    left: { y: 0, x: -20 },
+    right: { y: 0, x: 20 },
+  };
+  
   const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { ...directionVariants[direction], opacity: 0 },
     visible: {
       y: 0,
+      x: 0,
       opacity: 1,
       transition: {
         delay,
         duration,
-        ease: "easeInOut",
+        ease: "easeOut",
       },
     },
   };

@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { BLOG_POSTS_DATA } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { BlogSummary } from "./blog-summary";
+import { AnimatedItem } from "../animated-item";
 
 export function Blog() {
   return (
@@ -20,35 +21,37 @@ export function Blog() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
-          {BLOG_POSTS_DATA.map((post) => {
+          {BLOG_POSTS_DATA.map((post, index) => {
             const postImage = PlaceHolderImages.find(p => p.id === post.imageId);
             return (
-            <Card key={post.title} className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
-              {postImage && (
-                <Image
-                  src={postImage.imageUrl}
-                  alt={postImage.description}
-                  data-ai-hint={postImage.imageHint}
-                  width={600}
-                  height={400}
-                  className="aspect-video w-full object-cover"
-                />
-              )}
-              <CardHeader>
-                <CardTitle className="font-headline">{post.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                 <BlogSummary content={post.fullContent} />
-              </CardContent>
-              <CardFooter>
-                <Button asChild variant="link" className="p-0 h-auto">
-                  <Link href={`/blog/${post.slug}`}>
-                    Read More
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-              </CardFooter>
-            </Card>
+            <AnimatedItem key={post.title} delay={index * 0.1}>
+              <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
+                {postImage && (
+                  <Image
+                    src={postImage.imageUrl}
+                    alt={postImage.description}
+                    data-ai-hint={postImage.imageHint}
+                    width={600}
+                    height={400}
+                    className="aspect-video w-full object-cover"
+                  />
+                )}
+                <CardHeader>
+                  <CardTitle className="font-headline">{post.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <BlogSummary content={post.fullContent} />
+                </CardContent>
+                <CardFooter>
+                  <Button asChild variant="link" className="p-0 h-auto">
+                    <Link href={`/blog/${post.slug}`}>
+                      Read More
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            </AnimatedItem>
           )})}
         </div>
       </div>
