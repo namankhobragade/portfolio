@@ -1,3 +1,4 @@
+
 # Sunil Khobragade 🛡️  
 **Technical Lead | Full-Stack Developer | CEH-Certified Cybersecurity Researcher**  
 _Hyderabad, India_
@@ -106,7 +107,7 @@ Prototype chatbot for automated alert triage using LLMs.
 - SOC Architecture Consulting  
 - AI/Chatbot Prototyping for Security Ops
 
-📨 *Request a proposal at:* `sunil.yourmail@example.com`
+📨 *Request a proposal using the form on this site.*
 
 ---
 
@@ -119,9 +120,9 @@ Prototype chatbot for automated alert triage using LLMs.
 
 ## 📫 Contact
 
-📧 Email: sunil.yourmail@example.com  
+📧 Email: Use the contact form.
 🔗 LinkedIn: [linkedin.com/in/sunilkhobragade](https://linkedin.com/in/sunilkhobragade)  
-🐱 GitHub: [github.com/yourusername](https://github.com/)  
+🐱 GitHub: [github.com/naman-mahi](https://github.com/naman-mahi)  
 📍 Hyderabad, India
 
 ---
@@ -141,3 +142,5 @@ To enable smooth scroll on your portfolio site, add this in your HTML/JS project
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.38/bundled/lenis.min.js"></script>
+
+```
