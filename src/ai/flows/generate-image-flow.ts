@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates an image based on a text prompt.
@@ -37,7 +38,6 @@ const generateImageFlow = ai.defineFlow(
       prompt: prompt,
       config: {
         responseModalities: ['IMAGE'],
-        aspectRatio: "16:9"
       }
     });
     
