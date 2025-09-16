@@ -1,8 +1,6 @@
 
 "use client";
 
-import { useEffect, useActionState } from 'react';
-import { useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -17,61 +15,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from '@/hooks/use-toast';
-import { Send, Loader2 } from 'lucide-react';
-import { submitContactForm } from '@/app/actions';
+import { Send } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   email: z.string().email("Invalid email address."),
   message: z.string().min(10, "Message must be at least 10 characters."),
-  honeypot: z.string().optional(), // Honeypot field
 });
 
-function SubmitButton() {
-    const { pending } = useFormStatus();
-    return (
-        <Button type="submit" disabled={pending} className="w-full">
-            {pending ? (
-                <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending...
-                </>
-            ) : (
-                <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Message
-                </>
-            )}
-        </Button>
-    );
-}
-
 export function Contact() {
-    const { toast } = useToast();
-    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
-    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             email: "",
             message: "",
-            honeypot: "",
         },
     });
 
-    useEffect(() => {
-        if (state.message) {
-            toast({
-                description: state.message,
-                variant: state.success ? "default" : "destructive",
-            });
-            if (state.success) {
-                form.reset();
-            }
-        }
-    }, [state, toast, form]);
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://devsec-portfolio.vercel.app';
 
     return (
         <section className="w-full py-12 md:py-24 lg:py-32">
@@ -85,9 +47,14 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action={formAction}
+                            action="https://formsubmit.co/naman.intelcode@gmail.com"
+                            method="POST"
                             className="space-y-4 text-left"
                         >
+                            <input type="hidden" name="_next" value={`${siteUrl}/#contact`} />
+                            <input type="hidden" name="_captcha" value="false" />
+                            <input type="text" name="_honey" style={{display: 'none'}} />
+
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -127,19 +94,10 @@ export function Contact() {
                                     </FormItem>
                                 )}
                             />
-                            {/* Honeypot Field */}
-                            <FormField
-                                control={form.control}
-                                name="honeypot"
-                                render={({ field }) => (
-                                    <FormItem className="hidden">
-                                        <FormControl>
-                                            <Input type="text" {...field} tabIndex={-1} autoComplete="off" />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <SubmitButton />
+                            <Button type="submit" className="w-full">
+                                <Send className="mr-2 h-4 w-4" />
+                                Send Message
+                            </Button>
                         </form>
                     </Form>
                 </div>
