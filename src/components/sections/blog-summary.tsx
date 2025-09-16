@@ -15,8 +15,9 @@ export function BlogSummary({ content }: { content: string }) {
         setSummary(result.summary);
       } catch (e) {
         console.error("Failed to generate summary:", e);
-        // Fallback to a truncated summary in case of AI error
-        setSummary(content.substring(0, 150) + '...');
+        // Fallback to a truncated summary in case of any AI error (like rate limiting)
+        const excerpt = content.split('. ').slice(0, 2).join('. ') + '.';
+        setSummary(excerpt.length > 150 ? excerpt.substring(0, 150) + '...' : excerpt);
         setError("Could not generate AI summary.");
       }
     }
@@ -24,7 +25,13 @@ export function BlogSummary({ content }: { content: string }) {
   }, [content]);
 
   if (summary === null) {
-    return <Skeleton className="h-16 w-full" />;
+    return (
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-4/5" />
+      </div>
+    );
   }
 
   return <p className="text-muted-foreground">{summary}</p>;
