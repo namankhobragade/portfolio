@@ -15,7 +15,7 @@ import { subscribeToNewsletter } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
 const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address."),
+  email: z.string().min(1, "Email is required.").email("Please enter a valid email address."),
 });
 
 const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
@@ -100,7 +100,7 @@ export function NewsletterModal() {
               )}
             />
             <DialogFooter>
-               <Button type="submit" className="w-full">
+               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                     <Mail className="mr-2 h-4 w-4" />
                     Subscribe
                 </Button>

@@ -22,9 +22,9 @@ import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from '@/app/actions';
 
 const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
+  name: z.string().min(1, "Name is required."),
   email: z.string().email("Invalid email address."),
-  message: z.string().min(10, "Message must be at least 10 characters."),
+  message: z.string().min(1, "Message is required."),
 });
 
 export function Contact() {
@@ -41,18 +41,18 @@ export function Contact() {
     });
 
     useEffect(() => {
-      if (state.success) {
+      if (form.formState.isSubmitSuccessful && state.success) {
         toast({
           description: state.message,
         });
         form.reset();
-      } else if (state.message) {
+      } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
         toast({
           description: state.message,
           variant: 'destructive',
         });
       }
-    }, [state, toast, form]);
+    }, [form.formState.isSubmitSuccessful, state, toast, form]);
 
 
     return (
@@ -67,7 +67,13 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action={formAction}
+                            onSubmit={form.handleSubmit((data) => {
+                                const formData = new FormData();
+                                formData.append('name', data.name);
+                                formData.append('email', data.email);
+                                formData.append('message', data.message);
+                                formAction(formData);
+                            })}
                             className="space-y-4 text-left"
                         >
                              <FormField
@@ -109,7 +115,7 @@ export function Contact() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full">
+                            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                                 <Send className="mr-2 h-4 w-4" />
                                 Send Message
                             </Button>
