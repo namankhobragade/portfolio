@@ -14,8 +14,8 @@ const contactFormSchema = z.object({
   honeypot: z.string().optional(),
 });
 
-
-export async function submitContactForm(data: z.infer<typeof contactFormSchema>) {
+export async function submitContactForm(prevState: any, formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
   const parsedData = contactFormSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -24,13 +24,17 @@ export async function submitContactForm(data: z.infer<typeof contactFormSchema>)
 
   // Honeypot check for bots
   if (parsedData.data.honeypot) {
-    return { success: false, message: "Bot detected." };
+    console.log("Bot detected.");
+    // Return success to avoid tipping off the bot
+    return { success: true, message: "Thank you for your message! I'll get back to you soon." };
   }
+
+  // Here you would typically send an email or save to a database.
+  // For this example, we'll just log it to the console.
+  console.log("New Contact Form Submission:", parsedData.data);
   
   return { success: true, message: "Thank you for your message! I'll get back to you soon." };
-
 }
-
 
 // ========= Newsletter Subscription Logic =========
 
@@ -38,13 +42,17 @@ const newsletterFormSchema = z.object({
   email: z.string().email("Invalid email address."),
 });
 
-
-export async function subscribeToNewsletter(data: z.infer<typeof newsletterFormSchema>) {
+export async function subscribeToNewsletter(prevState: any, formData: FormData) {
+  const data = Object.fromEntries(formData.entries());
   const parsedData = newsletterFormSchema.safeParse(data);
 
   if (!parsedData.success) {
     return { success: false, message: "Invalid email address." };
   }
   
+  // Here you would typically add the email to your mailing list.
+  // For this example, we'll just log it.
+  console.log("New Newsletter Subscription:", parsedData.data.email);
+
   return { success: true, message: "Thanks for subscribing! You're on the list." };
 }

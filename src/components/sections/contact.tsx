@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -17,8 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from '@/hooks/use-toast';
-import { Send } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
+import { Send, Loader2 } from 'lucide-react';
+import { submitContactForm } from '@/app/actions';
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -27,9 +28,28 @@ const formSchema = z.object({
   honeypot: z.string().optional(), // Honeypot field
 });
 
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" disabled={pending} className="w-full">
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                </>
+            ) : (
+                <>
+                    <Send className="mr-2 h-4 w-4" />
+                    Send Message
+                </>
+            )}
+        </Button>
+    );
+}
+
 export function Contact() {
     const { toast } = useToast();
-    const searchParams = useSearchParams();
+    const [state, formAction] = useFormState(submitContactForm, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -42,24 +62,17 @@ export function Contact() {
     });
 
     useEffect(() => {
-        if (searchParams.get('form-submitted') === 'true') {
+        if (state.message) {
             toast({
-                title: "Message Sent!",
-                description: "Thank you for your message. I'll get back to you soon.",
+                title: state.success ? "Message Sent!" : "Error",
+                description: state.message,
+                variant: state.success ? "default" : "destructive",
             });
-            form.reset();
+            if (state.success) {
+                form.reset();
+            }
         }
-    }, [searchParams, toast, form]);
-
-    const {formState: {isSubmitting}} = form;
-    const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
-
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
-        if (formElement) {
-            formElement.submit();
-        }
-    }
+    }, [state, toast, form]);
 
     return (
         <section className="w-full py-12 md:py-24 lg:py-32 border-t">
@@ -73,14 +86,9 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action={`https://formsubmit.co/${formSubmitEmail}`}
-                            method="POST"
-                            onSubmit={form.handleSubmit(onSubmit)} 
+                            action={formAction}
                             className="space-y-4 text-left"
                         >
-                             <input type="hidden" name="_subject" value="New Contact Form Submission!" />
-                             <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}/?form-submitted=true#contact` : ''} />
-                             <input type="hidden" name="_captcha" value="false" />
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -132,10 +140,7 @@ export function Contact() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" disabled={isSubmitting} className="w-full">
-                                <Send className="mr-2 h-4 w-4" />
-                                {isSubmitting ? 'Sending...' : 'Send Message'}
-                            </Button>
+                            <SubmitButton />
                         </form>
                     </Form>
                 </div>

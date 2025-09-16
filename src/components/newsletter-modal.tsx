@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useFormState, useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -12,7 +13,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { subscribeToNewsletter } from '@/app/actions';
 import { Loader2, Mail } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -21,12 +21,31 @@ const formSchema = z.object({
 const NEWSLETTER_SUBSCRIBED_KEY = 'devsec_newsletter_subscribed';
 const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" disabled={pending} className="w-full">
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Subscribing...
+                </>
+            ) : (
+                <>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Subscribe
+                </>
+            )}
+        </Button>
+    );
+}
+
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const formSubmitEmail = process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL;
-
+  const [state, formAction] = useFormState(subscribeToNewsletter, { success: false, message: "" });
+  
   useEffect(() => {
     const isSubscribed = localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === 'true';
     if (isSubscribed) {
@@ -44,31 +63,27 @@ export function NewsletterModal() {
       return () => clearTimeout(timer);
     }
   }, []);
-
-  useEffect(() => {
-    if (searchParams.get('newsletter-subscribed') === 'true') {
-        toast({
-            title: "Subscription Confirmed!",
-            description: "Thanks for subscribing! You're on the list.",
-        });
-        localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
-        setIsOpen(false);
-    }
-  }, [searchParams, toast]);
-
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "" },
   });
 
-  const { isSubmitting } = form.formState;
+  useEffect(() => {
+    if (state.message) {
+        toast({
+            title: state.success ? "Subscribed!" : "Error",
+            description: state.message,
+            variant: state.success ? "default" : "destructive",
+        });
+        if (state.success) {
+            localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
+            setIsOpen(false);
+            form.reset();
+        }
+    }
+  }, [state, toast, form]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-     const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
-      if (formElement) {
-          formElement.submit();
-      }
-  }
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -88,13 +103,9 @@ export function NewsletterModal() {
         </DialogHeader>
         <Form {...form}>
           <form 
-            action={`https://formsubmit.co/${formSubmitEmail}`} 
-            method="POST"
-            onSubmit={form.handleSubmit(onSubmit)} 
+            action={formAction}
             className="space-y-4"
           >
-            <input type="hidden" name="_subject" value="New Newsletter Subscription!" />
-            <input type="hidden" name="_next" value={typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}?newsletter-subscribed=true` : ''} />
             <FormField
               control={form.control}
               name="email"
@@ -109,19 +120,7 @@ export function NewsletterModal() {
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isSubmitting} className="w-full">
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Subscribing...
-                  </>
-                ) : (
-                  <>
-                    <Mail className="mr-2 h-4 w-4" />
-                    Subscribe
-                  </>
-                )}
-              </Button>
+                <SubmitButton />
             </DialogFooter>
           </form>
         </Form>
