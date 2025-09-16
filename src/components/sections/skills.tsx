@@ -1,9 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SKILLS_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
 
 export function Skills() {
+    const allSkills = SKILLS_DATA.flatMap(category => category.skills.map(skill => ({...skill, category: category.category})));
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -15,23 +17,13 @@ export function Skills() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-          {SKILLS_DATA.map((category, index) => (
-            <AnimatedItem key={category.category} delay={index * 0.1}>
-              <Card className="h-full glow-card">
-                <CardHeader>
-                  <CardTitle className="font-headline">{category.category}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {category.skills.map((skill) => (
-                    <div key={skill.name} className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <skill.icon className="h-5 w-5 text-accent" />
-                        <span className="font-medium">{skill.name}</span>
-                      </div>
-                      <Progress value={skill.level} aria-label={`${skill.name} proficiency`} />
-                    </div>
-                  ))}
+        <div className="mx-auto grid max-w-6xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 py-12">
+          {allSkills.map((skill, index) => (
+            <AnimatedItem key={skill.name} delay={index * 0.05}>
+              <Card className="h-full glow-card flex flex-col items-center justify-center p-4 text-center">
+                <CardContent className="p-2 flex flex-col items-center justify-center gap-3">
+                    <skill.icon className="h-10 w-10 text-accent" />
+                    <span className="font-bold text-sm">{skill.name}</span>
                 </CardContent>
               </Card>
             </AnimatedItem>
