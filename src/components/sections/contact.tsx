@@ -47,7 +47,7 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action="https://formsubmit.co/naman.intelcode@gmail.com"
+                            action="https://formsubmit.co/572490408448a3aca5b3e65283573777"
                             method="POST"
                             className="space-y-4 text-left"
                         >
