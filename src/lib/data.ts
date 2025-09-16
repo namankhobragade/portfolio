@@ -1,3 +1,4 @@
+
 import { ShieldCheck, Code, Cpu, Server, BrainCircuit, PenTool, Database, Cloud, GitBranch, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star } from 'lucide-react';
 
 export const SKILLS_DATA = [
@@ -36,14 +37,6 @@ export const SKILLS_DATA = [
       { name: 'SOC Automation', icon: Bot },
       { name: 'Threat Detection', icon: BrainCircuit },
       { name: 'Secure Coding Audit', icon: Bot },
-    ],
-  },
-   {
-    category: 'Languages',
-    skills: [
-      { name: 'English', icon: BookOpen },
-      { name: 'Hindi', icon: BookOpen },
-      { name: 'Marathi', icon: BookOpen },
     ],
   },
 ];
@@ -161,26 +154,26 @@ export const EDUCATION_DATA = [
 ];
 
 export const CERTIFICATIONS_DATA = [
-    {
-        name: 'Introduction to Cybersecurity',
-        issuer: 'Cisco',
-        icon: ShieldCheck,
-    },
-    {
-        name: 'IBM z/OS Mainframe Practitioner',
-        issuer: 'IBM',
-        icon: CloudCog,
-    },
-     {
-        name: 'Introduction to Packet Tracer',
-        issuer: 'Cisco',
-        icon: Cpu,
-    },
-    {
-        name: 'Cybersecurity Fundamentals',
-        issuer: 'IBM',
-        icon: Star,
-    }
+  {
+      name: 'Introduction to Cybersecurity',
+      issuer: 'Cisco',
+      icon: ShieldCheck,
+  },
+  {
+      name: 'IBM z/OS Mainframe Practitioner',
+      issuer: 'IBM',
+      icon: CloudCog,
+  },
+   {
+      name: 'Introduction to Packet Tracer',
+      issuer: 'Cisco',
+      icon: Cpu,
+  },
+  {
+      name: 'Cybersecurity Fundamentals',
+      issuer: 'IBM',
+      icon: Star,
+  }
 ];
 
 
