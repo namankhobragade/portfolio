@@ -8,12 +8,17 @@ import { Separator } from './ui/separator';
 
 export function Footer() {
   return (
-    <footer className="border-t">
-      <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <footer className="relative border-t py-8 overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center -z-10">
+        <span className="text-[30vw] md:text-[20vw] font-black font-headline text-foreground/5 leading-none">
+          DevSec
+        </span>
+      </div>
+      <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center gap-6">
           <div className="flex items-center space-x-3">
-            <Code2 className="h-12 w-12 text-accent" />
-            <span className="text-6xl font-bold font-headline">DevSec</span>
+            <Code2 className="h-8 w-8 text-accent" />
+            <span className="text-2xl font-bold font-headline">DevSec</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-md">
              &copy; {new Date().getFullYear()} Sunil Khobragade. All rights reserved. 
