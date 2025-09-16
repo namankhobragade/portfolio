@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
@@ -28,13 +28,13 @@ export function Projects() {
                 align: "start",
                 loop: PROJECTS_DATA.length > 2,
               }}
-              className="w-full max-w-6xl mx-auto"
+              className="w-full max-w-sm md:max-w-3xl lg:max-w-6xl mx-auto"
             >
               <CarouselContent>
                 {PROJECTS_DATA.map((project, index) => {
                   const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
                   return (
-                    <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={project.title} className="sm:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
                         <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
                           {projectImage && (
@@ -51,7 +51,6 @@ export function Projects() {
                             <CardTitle className="font-headline">{project.title}</CardTitle>
                           </CardHeader>
                           <CardContent className="flex-grow space-y-4">
-                            <p className="text-sm text-muted-foreground">{project.description}</p>
                             <div>
                               <h4 className="font-semibold mb-2 text-sm">Tech Stack:</h4>
                               <div className="flex flex-wrap gap-2">
@@ -73,6 +72,7 @@ export function Projects() {
                                   View Demo
                                   <ArrowUpRight className="ml-auto" />
                                 </Link>
+
                               </Button>
                             )}
                             {project.githubUrl && (
@@ -90,8 +90,8 @@ export function Projects() {
                   )
                 })}
               </CarouselContent>
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselNext className="hidden md:flex" />
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
         </div>
       </div>
