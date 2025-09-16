@@ -52,7 +52,10 @@ export function NewsletterModal() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
      localStorage.setItem(NEWSLETTER_SUBSCRIBED_KEY, 'true');
-     (form.control.owner?._formRef.current as HTMLFormElement)?.submit();
+     const formElement = form.control.owner?._formRef.current as HTMLFormElement | undefined;
+      if (formElement) {
+          formElement.submit();
+      }
   }
 
   const handleOpenChange = (open: boolean) => {
