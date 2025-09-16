@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,13 +54,15 @@ export function Projects() {
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button asChild variant="outline" className="w-full">
-                    <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                      <Github className="mr-2 h-4 w-4" />
-                      View on GitHub
-                      <ArrowUpRight className="ml-auto h-4 w-4" />
-                    </Link>
-                  </Button>
+                  {project.githubUrl && (
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <Github className="mr-2 h-4 w-4" />
+                        View on GitHub
+                        <ArrowUpRight className="ml-auto h-4 w-4" />
+                      </Link>
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             )
