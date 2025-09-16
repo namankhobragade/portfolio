@@ -59,8 +59,7 @@ export function ProposalGenerator() {
         } catch (error) {
             console.error(error);
             toast({
-                title: "Error",
-                description: "Oops! Something went wrong. 🛠️ Please try generating the proposal again.",
+                description: "Oops! Something went wrong. Please try generating the proposal again. 🛠️",
                 variant: "destructive",
             });
         } finally {
@@ -72,8 +71,7 @@ export function ProposalGenerator() {
         navigator.clipboard.writeText(proposal);
         setCopied(true);
         toast({
-            title: "Copied to Clipboard! 📋",
-            description: "The proposal text has been copied.",
+            description: "Proposal copied to clipboard! 📋",
         });
         setTimeout(() => setCopied(false), 2000);
     };

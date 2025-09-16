@@ -72,7 +72,6 @@ export function NewsletterModal() {
   useEffect(() => {
     if (state.message) {
         toast({
-            title: state.success ? "Subscribed! 🎉" : "Error",
             description: state.message,
             variant: state.success ? "default" : "destructive",
         });
