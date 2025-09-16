@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Smartphone, HardDrive, Cpu, ScreenShare, Wifi, Mic, Info, Loader2, Network, Gauge, Shield, Settings } from 'lucide-react';
+import { Smartphone, HardDrive, Cpu, ScreenShare, Wifi, Info, Loader2, Network, Gauge, Shield, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from './ui/dialog';
 
@@ -26,6 +26,16 @@ interface ClientInfoState {
   plugins?: string[];
   performance?: PerformanceNavigationTiming;
 }
+
+const InfoItem = ({ label, value, unit = '' }: { label: string; value: any; unit?: string }) => {
+    if (value === undefined || value === null || value === '') return null;
+    return (
+        <div className="border p-3 rounded-lg flex justify-between items-center text-sm">
+            <span className="text-muted-foreground">{label}</span>
+            <span className="font-medium text-right break-all">{String(value)} {unit}</span>
+        </div>
+    );
+};
 
 export function ClientInfoWidget() {
   const [info, setInfo] = useState<ClientInfoState>({});
@@ -127,11 +137,6 @@ export function ClientInfoWidget() {
 
     getClientInfo();
   }, [isOpen]);
-
-  const renderInfo = (label: string, value: any, unit: string = '') => {
-      if(value === undefined || value === null || value === '') return null;
-      return <li className="flex justify-between text-sm"><span className="text-muted-foreground">{label}</span> <span className="font-medium text-right">{String(value)} {unit}</span></li>
-  }
   
   const perf = info.performance;
 
@@ -140,21 +145,19 @@ export function ClientInfoWidget() {
       return <div className="flex justify-center items-center h-48"><Loader2 className="w-8 h-8 animate-spin" /></div>;
     }
     return (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Geolocation</CardTitle>
                     <HardDrive className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                    <ul className="space-y-1">
-                        {renderInfo('IP Address', info.ip)}
-                        {renderInfo('City', info.geolocation?.city)}
-                        {renderInfo('Region', info.geolocation?.region)}
-                        {renderInfo('Country', info.geolocation?.country)}
-                        {renderInfo('Timezone', info.geolocation?.tz)}
-                        {renderInfo('ISP', info.geolocation?.isp)}
-                    </ul>
+                <CardContent className="space-y-2">
+                    <InfoItem label='IP Address' value={info.ip} />
+                    <InfoItem label='City' value={info.geolocation?.city} />
+                    <InfoItem label='Region' value={info.geolocation?.region} />
+                    <InfoItem label='Country' value={info.geolocation?.country} />
+                    <InfoItem label='Timezone' value={info.geolocation?.tz} />
+                    <InfoItem label='ISP' value={info.geolocation?.isp} />
                 </CardContent>
             </Card>
 
@@ -163,14 +166,12 @@ export function ClientInfoWidget() {
                     <CardTitle className="text-base font-medium">Device Hardware</CardTitle>
                     <Smartphone className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                     <ul className="space-y-1">
-                        {renderInfo('OS/Platform', info.platform)}
-                        {renderInfo('CPU Cores', info.cpuCores)}
-                        {renderInfo('Device Memory (GB)', info.memory)}
-                        {renderInfo('Touch Enabled', info.touch ? 'Yes' : 'No')}
-                        {info.battery && renderInfo('Battery', `${info.battery.level}% ${info.battery.charging ? '(Charging)' : ''}`)}
-                    </ul>
+                <CardContent className="space-y-2">
+                    <InfoItem label='OS/Platform' value={info.platform} />
+                    <InfoItem label='CPU Cores' value={info.cpuCores} />
+                    <InfoItem label='Device Memory (GB)' value={info.memory} />
+                    <InfoItem label='Touch Enabled' value={info.touch ? 'Yes' : 'No'} />
+                    {info.battery && <InfoItem label='Battery' value={`${info.battery.level}% ${info.battery.charging ? '(Charging)' : ''}`} />}
                 </CardContent>
             </Card>
             
@@ -179,15 +180,13 @@ export function ClientInfoWidget() {
                     <CardTitle className="text-base font-medium">Network</CardTitle>
                     <Wifi className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                     <ul className="space-y-1">
-                        {renderInfo('Online', info.online ? 'Yes' : 'No')}
-                        {renderInfo('Connection Type', info.connection?.type)}
-                        {renderInfo('Effective Type', info.connection?.effectiveType)}
-                        {renderInfo('Est. Speed', info.connection?.downlink, 'Mbps')}
-                        {renderInfo('Est. RTT', info.connection?.rtt, 'ms')}
-                        {renderInfo('Data Saver', info.connection?.saveData ? 'On' : 'Off')}
-                    </ul>
+                <CardContent className="space-y-2">
+                    <InfoItem label='Online' value={info.online ? 'Yes' : 'No'} />
+                    <InfoItem label='Connection Type' value={info.connection?.type} />
+                    <InfoItem label='Effective Type' value={info.connection?.effectiveType} />
+                    <InfoItem label='Est. Speed' value={info.connection?.downlink} unit='Mbps' />
+                    <InfoItem label='Est. RTT' value={info.connection?.rtt} unit='ms' />
+                    <InfoItem label='Data Saver' value={info.connection?.saveData ? 'On' : 'Off'} />
                 </CardContent>
             </Card>
 
@@ -196,14 +195,12 @@ export function ClientInfoWidget() {
                     <CardTitle className="text-base font-medium">Display & GPU</CardTitle>
                     <ScreenShare className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                     <ul className="space-y-1">
-                        {renderInfo('Resolution', `${info.screen?.width}x${info.screen?.height}`)}
-                        {renderInfo('Pixel Ratio', info.screen?.pixelRatio)}
-                        {renderInfo('Color Depth', `${info.screen?.colorDepth}-bit`)}
-                        {renderInfo('GPU Vendor', info.gpu?.vendor)}
-                        {renderInfo('GPU Renderer', info.gpu?.renderer, '')}
-                    </ul>
+                <CardContent className="space-y-2">
+                    <InfoItem label='Resolution' value={`${info.screen?.width}x${info.screen?.height}`} />
+                    <InfoItem label='Pixel Ratio' value={info.screen?.pixelRatio} />
+                    <InfoItem label='Color Depth' value={`${info.screen?.colorDepth}-bit`} />
+                    <InfoItem label='GPU Vendor' value={info.gpu?.vendor} />
+                    <InfoItem label='GPU Renderer' value={info.gpu?.renderer} />
                 </CardContent>
             </Card>
 
@@ -212,13 +209,11 @@ export function ClientInfoWidget() {
                     <CardTitle className="text-base font-medium">Performance</CardTitle>
                     <Gauge className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                     <ul className="space-y-1">
-                        {perf && renderInfo('Page Load', (perf.duration / 1000).toFixed(2), 's')}
-                        {perf && renderInfo('Time to First Byte', (perf.responseStart - perf.requestStart).toFixed(0), 'ms')}
-                        {perf && renderInfo('DOM Interactive', perf.domInteractive.toFixed(0), 'ms')}
-                        {perf && renderInfo('DOM Complete', perf.domComplete.toFixed(0), 'ms')}
-                    </ul>
+                <CardContent className="space-y-2">
+                    {perf && <InfoItem label='Page Load' value={(perf.duration / 1000).toFixed(2)} unit='s' />}
+                    {perf && <InfoItem label='Time to First Byte' value={(perf.responseStart - perf.requestStart).toFixed(0)} unit='ms' />}
+                    {perf && <InfoItem label='DOM Interactive' value={perf.domInteractive.toFixed(0)} unit='ms' />}
+                    {perf && <InfoItem label='DOM Complete' value={perf.domComplete.toFixed(0)} unit='ms' />}
                 </CardContent>
             </Card>
 
@@ -227,15 +222,13 @@ export function ClientInfoWidget() {
                     <CardTitle className="text-base font-medium">Browser & Privacy</CardTitle>
                     <Settings className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
-                <CardContent>
-                     <ul className="space-y-1">
-                        {renderInfo('Language', info.language)}
-                        {renderInfo('Do Not Track', info.doNotTrack)}
-                        {renderInfo('Microphones', info.mediaDevices?.audio)}
-                        {renderInfo('Cameras', info.mediaDevices?.video)}
-                        {info.userAgent && <li className="text-xs text-muted-foreground pt-2 break-all">{info.userAgent}</li>}
-                        {info.plugins && info.plugins.length > 0 && <li className="text-xs text-muted-foreground pt-2 break-all">Plugins: {info.plugins.join(', ')}</li>}
-                    </ul>
+                <CardContent className="space-y-2">
+                    <InfoItem label='Language' value={info.language} />
+                    <InfoItem label='Do Not Track' value={info.doNotTrack} />
+                    <InfoItem label='Microphones' value={info.mediaDevices?.audio} />
+                    <InfoItem label='Cameras' value={info.mediaDevices?.video} />
+                    <InfoItem label='User Agent' value={info.userAgent} />
+                    {info.plugins && info.plugins.length > 0 && <InfoItem label='Plugins' value={info.plugins.join(', ')} />}
                 </CardContent>
             </Card>
         </div>
