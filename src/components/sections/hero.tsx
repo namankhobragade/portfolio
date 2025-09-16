@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Briefcase } from 'lucide-react';
+import { ArrowRight, Briefcase, Download } from 'lucide-react';
 
 export function Hero() {
   const containerVariants = {
@@ -57,7 +57,7 @@ export function Hero() {
 
           <motion.div
             variants={itemVariants}
-            className="flex flex-col gap-4 min-[400px]:flex-row items-center"
+            className="flex flex-col sm:flex-row gap-4 items-center"
           >
             <Button asChild size="lg">
               <Link href="#projects">
@@ -69,6 +69,12 @@ export function Hero() {
               <Link href="#contact">
                 <Briefcase className="mr-2 h-4 w-4" />
                 Hire Me
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link href="/Sunil_Khobragade_CV.pdf" target="_blank" rel="noopener noreferrer">
+                <Download className="mr-2 h-4 w-4" />
+                Download CV
               </Link>
             </Button>
           </motion.div>
