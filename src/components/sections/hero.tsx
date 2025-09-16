@@ -4,12 +4,15 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+
+const ThreeDShape = dynamic(() => import('@/components/three-d-shape').then(mod => mod.ThreeDShape), {
+  ssr: false,
+  loading: () => <div className="h-[250px] w-[250px] bg-transparent" />,
+});
 
 export function Hero() {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'profile-picture-hero');
-  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -43,19 +46,11 @@ export function Hero() {
           animate="visible"
           className="flex flex-col items-center text-center space-y-8"
         >
-          {heroImage && (
-            <motion.div variants={itemVariants}>
-              <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                data-ai-hint={heroImage.imageHint}
-                width={128}
-                height={128}
-                className="rounded-full border-4 border-primary/20 shadow-lg"
-                priority
-              />
-            </motion.div>
-          )}
+          <motion.div variants={itemVariants} className="h-[250px] w-[250px]">
+             <Suspense fallback={null}>
+                <ThreeDShape />
+              </Suspense>
+          </motion.div>
 
           <motion.h1
             variants={itemVariants}
