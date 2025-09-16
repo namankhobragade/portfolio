@@ -65,7 +65,7 @@ export function Projects() {
                               <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
                             </div>
                           </CardContent>
-                          <CardFooter className="flex flex-col sm:flex-row gap-2">
+                          <CardFooter className="flex-col sm:flex-row gap-2">
                             {project.demoUrl && (
                               <Button asChild variant="outline" className="w-full">
                                 <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
