@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { getAllPosts } from "@/lib/blog";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { BlogSummary } from "./blog-summary";
-import { AnimatedItem } from "../animated-item";
 import { format } from "date-fns";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { AnimatedItem } from "../animated-item";
 
 export async function Blog() {
   const posts = await getAllPosts();
@@ -23,42 +24,65 @@ export async function Blog() {
             </p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
-          {posts.map((post, index) => {
-            const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
-            return (
-            <AnimatedItem key={post.slug} delay={index * 0.1} className="h-full">
-              <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
-                {postImage && (
-                  <Image
-                    src={postImage.imageUrl}
-                    alt={postImage.description}
-                    data-ai-hint={postImage.imageHint}
-                    width={600}
-                    height={400}
-                    className="aspect-video w-full object-cover"
-                  />
-                )}
-                <CardHeader>
-                  <CardTitle className="font-headline">{post.frontmatter.title}</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
-                  </p>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <BlogSummary content={post.content} />
-                </CardContent>
-                <CardFooter>
-                  <Button asChild variant="link" className="p-0 h-auto">
-                    <Link href={`/blog/${post.slug}`}>
-                      Read More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
-              </Card>
-            </AnimatedItem>
-          )})}
+        <div className="py-12">
+            <Carousel
+              opts={{
+                align: "start",
+                loop: posts.length > 3,
+              }}
+              className="w-full max-w-6xl mx-auto"
+            >
+              <CarouselContent>
+                {posts.map((post, index) => {
+                  const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
+                  return (
+                    <CarouselItem key={post.slug} className="md:basis-1/2 lg:basis-1/3">
+                      <AnimatedItem delay={index * 0.1} className="h-full p-2">
+                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
+                          {postImage && (
+                            <Image
+                              src={postImage.imageUrl}
+                              alt={postImage.description}
+                              data-ai-hint={postImage.imageHint}
+                              width={600}
+                              height={400}
+                              className="aspect-video w-full object-cover"
+                            />
+                          )}
+                          <CardHeader>
+                            <CardTitle className="font-headline">{post.frontmatter.title}</CardTitle>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
+                            </p>
+                          </CardHeader>
+                          <CardContent className="flex-grow">
+                            <BlogSummary content={post.content} />
+                          </CardContent>
+                          <CardFooter>
+                            <Button asChild variant="link" className="p-0 h-auto">
+                              <Link href={`/blog/${post.slug}`}>
+                                Read More
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </CardFooter>
+                        </Card>
+                      </AnimatedItem>
+                    </CarouselItem>
+                  )
+                })}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
+            </Carousel>
+        </div>
+        <div className="text-center">
+            <Button asChild size="lg">
+                <Link href="/blog">
+                    View All Blogs
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+            </Button>
         </div>
       </div>
     </section>
