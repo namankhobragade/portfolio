@@ -141,7 +141,7 @@ export function ClientInfoWidget() {
     }
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
+            <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Geolocation</CardTitle>
                     <HardDrive className="w-5 h-5 text-muted-foreground" />
@@ -158,7 +158,7 @@ export function ClientInfoWidget() {
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Device Hardware</CardTitle>
                     <Smartphone className="w-5 h-5 text-muted-foreground" />
@@ -174,7 +174,7 @@ export function ClientInfoWidget() {
                 </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Network</CardTitle>
                     <Wifi className="w-5 h-5 text-muted-foreground" />
@@ -191,7 +191,7 @@ export function ClientInfoWidget() {
                 </CardContent>
             </Card>
 
-             <Card>
+             <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Display & GPU</CardTitle>
                     <ScreenShare className="w-5 h-5 text-muted-foreground" />
@@ -207,7 +207,7 @@ export function ClientInfoWidget() {
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Performance</CardTitle>
                     <Gauge className="w-5 h-5 text-muted-foreground" />
@@ -222,7 +222,7 @@ export function ClientInfoWidget() {
                 </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-transparent border">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-medium">Browser & Privacy</CardTitle>
                     <Settings className="w-5 h-5 text-muted-foreground" />
@@ -268,3 +268,5 @@ export function ClientInfoWidget() {
     </Dialog>
   );
 }
+
+    
