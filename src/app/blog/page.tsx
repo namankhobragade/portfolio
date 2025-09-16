@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,7 +42,7 @@ export default async function AllBlogsPage() {
                 const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
                 return (
                     <AnimatedItem key={post.slug} delay={index * 0.1}>
-                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
+                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card bg-transparent border">
                         {postImage && (
                             <Image
                             src={postImage.imageUrl}

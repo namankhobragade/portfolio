@@ -44,7 +44,7 @@ export function Education() {
               transition={{ duration: 0.3 }}
               className="w-full"
             >
-              <Card className="flex flex-col md:flex-row items-center text-left p-6 transition-all h-full">
+              <Card className="flex flex-col md:flex-row items-center text-left p-6 transition-all h-full bg-transparent border">
                 <CardHeader className="p-0 mb-4 md:mb-0 md:mr-6 flex-shrink-0">
                   <div className="bg-primary/10 text-primary rounded-lg p-4">
                     <edu.icon className="h-10 w-10" />

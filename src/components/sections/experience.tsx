@@ -27,7 +27,7 @@ export function Experience() {
                 </div>
 
                 <div className={`pb-12 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
-                  <Card className="transition-all hover:shadow-lg hover:border-primary/50 text-left">
+                  <Card className="transition-all hover:shadow-lg hover:border-primary/50 text-left bg-transparent border">
                     <CardHeader>
                       <CardTitle className="font-headline">{item.role}</CardTitle>
                       <CardDescription>{item.company} | {item.period}</CardDescription>

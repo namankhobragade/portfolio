@@ -38,7 +38,7 @@ export async function Blog() {
                   return (
                     <CarouselItem key={post.slug} className="sm:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
-                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
+                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card bg-transparent border">
                           {postImage && (
                             <Image
                               src={postImage.imageUrl}
