@@ -16,10 +16,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Bot, Clipboard } from 'lucide-react';
+import { Card, CardContent } from '../ui/card';
+import { Bot, Clipboard, Check, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownContent } from '../markdown-content';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 const formSchema = z.object({
   clientName: z.string().optional(),
@@ -32,6 +33,8 @@ const formSchema = z.object({
 export function ProposalGenerator() {
     const [proposal, setProposal] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [copied, setCopied] = useState(false);
     const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -51,6 +54,7 @@ export function ProposalGenerator() {
         try {
             const result = await generateProposal(values);
             setProposal(result.proposalText);
+            setIsModalOpen(true);
         } catch (error) {
             console.error(error);
             toast({
@@ -65,10 +69,12 @@ export function ProposalGenerator() {
     
     const copyToClipboard = () => {
         navigator.clipboard.writeText(proposal);
+        setCopied(true);
         toast({
             title: "Copied to Clipboard!",
             description: "The proposal text has been copied.",
         });
+        setTimeout(() => setCopied(false), 2000);
     };
 
     return (
@@ -156,44 +162,45 @@ export function ProposalGenerator() {
                                         )}
                                     />
                                     <Button type="submit" disabled={isLoading} className="w-full">
-                                        <Bot className="mr-2 h-4 w-4" />
-                                        {isLoading ? 'Generating...' : 'Generate Proposal'}
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Generating...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Bot className="mr-2 h-4 w-4" />
+                                                Generate Proposal
+                                            </>
+                                        )}
                                     </Button>
                                 </form>
                             </Form>
                         </CardContent>
                     </Card>
                     
-                    {(isLoading || proposal) && (
-                         <Card className="mt-8 text-left">
-                            <CardHeader>
-                                <CardTitle className="flex items-center justify-between">
-                                    Generated Proposal
-                                    {proposal && !isLoading && (
-                                        <Button variant="ghost" size="icon" onClick={copyToClipboard}>
-                                            <Clipboard className="h-4 w-4" />
-                                            <span className="sr-only">Copy to clipboard</span>
-                                        </Button>
-                                    )}
-                                </CardTitle>
-                                <CardDescription>Review and copy the AI-generated text below.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="prose prose-sm dark:prose-invert max-w-none">
-                                {isLoading ? (
-                                     <div className="space-y-4">
-                                        <div className="animate-pulse bg-muted h-4 w-full rounded"></div>
-                                        <div className="animate-pulse bg-muted h-4 w-5/6 rounded"></div>
-                                        <div className="animate-pulse bg-muted h-4 w-full rounded"></div>
-                                        <div className="animate-pulse bg-muted h-4 w-4/6 rounded"></div>
-                                        <div className="animate-pulse bg-muted h-4 w-full rounded mt-4"></div>
-                                        <div className="animate-pulse bg-muted h-4 w-full rounded"></div>
-                                     </div>
-                                ) : (
-                                    <MarkdownContent content={proposal} />
-                                )}
-                            </CardContent>
-                        </Card>
-                    )}
+                    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                        <DialogContent className="sm:max-w-2xl">
+                             <DialogHeader>
+                                <DialogTitle>Generated Proposal</DialogTitle>
+                                <DialogDescription>Review and copy the AI-generated text below.</DialogDescription>
+                            </DialogHeader>
+                            <div className="prose prose-sm dark:prose-invert max-w-none max-h-[60vh] overflow-y-auto pr-4">
+                               <MarkdownContent content={proposal} />
+                            </div>
+                             <DialogFooter className="sm:justify-start gap-2">
+                                <Button type="button" onClick={copyToClipboard}>
+                                    {copied ? <Check className="mr-2 h-4 w-4" /> : <Clipboard className="mr-2 h-4 w-4" />}
+                                    {copied ? 'Copied!' : 'Copy to Clipboard'}
+                                </Button>
+                                <DialogClose asChild>
+                                    <Button type="button" variant="secondary">
+                                        Close
+                                    </Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
         </section>
