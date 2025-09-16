@@ -16,6 +16,7 @@ type BlogPostPageProps = {
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com'; // Replace with your domain
 
   if (!post) {
     return {
@@ -24,23 +25,25 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 
   const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
+  const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
 
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
+    authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.description,
       type: 'article',
       publishedTime: new Date(post.frontmatter.date).toISOString(),
-      url: `/blog/${post.slug}`,
-      images: postImage ? [{ url: postImage.imageUrl }] : [],
+      url: `${siteUrl}/blog/${post.slug}`,
+      images: [{ url: imageUrl }],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.frontmatter.title,
       description: post.frontmatter.description,
-      images: postImage ? [postImage.imageUrl] : [],
+      images: [imageUrl],
     }
   };
 }
