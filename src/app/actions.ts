@@ -35,3 +35,26 @@ export async function submitContactForm(data: z.infer<typeof contactFormSchema>)
     return { success: false, message: "Something went wrong. Please try again later." };
   }
 }
+
+const newsletterFormSchema = z.object({
+  email: z.string().email("Invalid email address."),
+});
+
+export async function subscribeToNewsletter(data: z.infer<typeof newsletterFormSchema>) {
+  const parsedData = newsletterFormSchema.safeParse(data);
+
+  if (!parsedData.success) {
+    return { success: false, message: "Invalid email address." };
+  }
+
+  try {
+    // Here you would add the email to your mailing list (e.g., Mailchimp, ConvertKit).
+    // For this example, we'll just log it to the console.
+    console.log("New newsletter subscription:", parsedData.data.email);
+
+    return { success: true, message: "Thanks for subscribing! You're on the list." };
+  } catch (error) {
+    console.error("Newsletter subscription error:", error);
+    return { success: false, message: "Something went wrong. Please try again." };
+  }
+}

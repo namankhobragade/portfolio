@@ -2,7 +2,7 @@
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Linkedin, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -10,6 +10,8 @@ import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import { format } from 'date-fns';
 import type { Metadata } from 'next';
+import { Separator } from '@/components/ui/separator';
+import { NewsletterModal } from '@/components/newsletter-modal';
 
 type BlogPostPageProps = {
   params: { slug: string };
@@ -46,6 +48,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       title: post.frontmatter.title,
       description: post.frontmatter.description,
       images: [imageUrl],
+      creator: '@naman-mahi',
     }
   };
 }
@@ -91,6 +94,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
+      <NewsletterModal />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
@@ -125,6 +129,27 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
           <MarkdownContent content={post.content} />
+        </div>
+        
+        <Separator className="my-12" />
+
+        <div className="text-center space-y-4">
+            <h3 className="text-2xl font-bold font-headline">Stay Connected</h3>
+            <p className="text-muted-foreground">If you enjoyed this article, follow me for more insights on cybersecurity and development.</p>
+            <div className="flex justify-center gap-4">
+                <Button asChild>
+                    <a href="https://www.linkedin.com/in/sunilkhobragade" target="_blank" rel="noopener noreferrer">
+                        <Linkedin className="mr-2 h-4 w-4" />
+                        Follow on LinkedIn
+                    </a>
+                </Button>
+                <Button asChild variant="outline">
+                    <a href="https://medium.com/@your-medium-username" target="_blank" rel="noopener noreferrer">
+                       <BookOpen className="mr-2 h-4 w-4" />
+                        Follow on Medium
+                    </a>
+                </Button>
+            </div>
         </div>
       </article>
     </>
