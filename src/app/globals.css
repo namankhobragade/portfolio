@@ -81,7 +81,7 @@
 @layer utilities {
   /* Custom scrollbar styles */
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 2px;
   }
   ::-webkit-scrollbar-track {
     background-color: transparent;
@@ -89,7 +89,6 @@
   ::-webkit-scrollbar-thumb {
     background-color: hsl(330 70% 40%);
     border-radius: 10px;
-    border: 1px solid hsl(var(--background));
   }
   ::-webkit-scrollbar-thumb:hover {
      background-color: hsl(330 80% 50%);
