@@ -60,6 +60,66 @@
       "description": "A robot brain with a lock icon.",
       "imageUrl": "https://picsum.photos/seed/blog5/600/400",
       "imageHint": "AI security"
+    },
+    {
+      "id": "blog-zero-trust",
+      "description": "A network diagram showing zero trust principles.",
+      "imageUrl": "https://picsum.photos/seed/blog6/600/400",
+      "imageHint": "zero trust"
+    },
+    {
+      "id": "blog-serverless-security",
+      "description": "Icons representing serverless functions and security shields.",
+      "imageUrl": "https://picsum.photos/seed/blog7/600/400",
+      "imageHint": "serverless security"
+    },
+    {
+      "id": "blog-api-security",
+      "description": "An API endpoint with a padlock and shield.",
+      "imageUrl": "https://picsum.photos/seed/blog8/600/400",
+      "imageHint": "API security"
+    },
+    {
+      "id": "blog-cloud-native",
+      "description": "Containers and Kubernetes logos inside a cloud.",
+      "imageUrl": "https://picsum.photos/seed/blog9/600/400",
+      "imageHint": "cloud native"
+    },
+    {
+      "id": "blog-owasp-top-10",
+      "description": "The OWASP logo with a list of security risks.",
+      "imageUrl": "https://picsum.photos/seed/blog10/600/400",
+      "imageHint": "OWASP security"
+    },
+    {
+      "id": "blog-oauth-oidc",
+      "description": "Diagram showing the flow of OAuth 2.0.",
+      "imageUrl": "https://picsum.photos/seed/blog11/600/400",
+      "imageHint": "OAuth flow"
+    },
+    {
+      "id": "blog-pwa-nextjs",
+      "description": "A smartphone screen showing a web app being installed.",
+      "imageUrl": "https://picsum.photos/seed/blog12/600/400",
+      "imageHint": "PWA install"
+    },
+    {
+      "id": "blog-social-engineering",
+      "description": "A person being tricked by a phishing email.",
+      "imageUrl": "https://picsum.photos/seed/blog13/600/400",
+      "imageHint": "phishing attack"
+    },
+    {
+      "id": "blog-incident-response",
+      "description": "A flowchart of an incident response plan.",
+      "imageUrl": "https://picsum.photos/seed/blog14/600/400",
+      "imageHint": "incident response"
+    },
+    {
+      "id": "blog-es2022",
+      "description": "The JavaScript logo with modern code in the background.",
+      "imageUrl": "https://picsum.photos/seed/blog15/600/400",
+      "imageHint": "JavaScript code"
     }
   ]
 }
