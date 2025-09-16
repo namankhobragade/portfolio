@@ -2,132 +2,135 @@ import { ShieldCheck, Code, Cpu, Server, BrainCircuit, PenTool, Database, Cloud,
 
 export const SKILLS_DATA = [
   {
-    category: 'Web Development',
+    category: 'Full-Stack Development',
     skills: [
-      { name: 'React / Next.js', level: 95, icon: Code },
-      { name: 'TypeScript', level: 90, icon: Code },
-      { name: 'Node.js', level: 85, icon: Server },
-      { name: 'GraphQL', level: 75, icon: GitBranch },
+      { name: 'Laravel', level: 95, icon: Code },
+      { name: 'CodeIgniter', level: 90, icon: Code },
+      { name: 'Next.js', level: 85, icon: Code },
+      { name: 'MongoDB', level: 80, icon: Database },
+      { name: 'MySQLi', level: 88, icon: Database },
+      { name: 'REST APIs', level: 92, icon: Server },
     ],
   },
   {
     category: 'Cybersecurity',
     skills: [
-      { name: 'Penetration Testing', level: 88, icon: ShieldCheck },
-      { name: 'Secure SDLC', level: 92, icon: ShieldCheck },
-      { name: 'Cloud Security (AWS, GCP)', level: 80, icon: Cloud },
-      { name: 'Threat Modeling', level: 85, icon: ShieldCheck },
+      { name: 'CEH v13 AI Certified', level: 90, icon: ShieldCheck },
+      { name: 'OWASP Secure Coding', level: 92, icon: ShieldCheck },
+      { name: 'Penetration Testing', level: 85, icon: ShieldCheck },
+      { name: 'Network Security', level: 80, icon: Cloud },
+      { name: 'SOC & Risk Assessment', level: 78, icon: Cpu },
     ],
   },
   {
-    category: 'AI / LLMs',
+    category: 'AI & Innovation',
     skills: [
-      { name: 'Prompt Engineering', level: 90, icon: Bot },
-      { name: 'Genkit / Firebase AI', level: 85, icon: BrainCircuit },
-      { name: 'RAG Implementation', level: 78, icon: Database },
-      { name: 'AI Ethics & Safety', level: 82, icon: Bot },
+      { name: 'LLMs for Threat Detection', level: 85, icon: BrainCircuit },
+      { name: 'Chatbot Integration', level: 88, icon: Bot },
+      { name: 'Secure AI Development', level: 82, icon: Bot },
     ],
   },
   {
-    category: 'DevOps',
+    category: 'Tools',
     skills: [
-      { name: 'Docker & Kubernetes', level: 85, icon: Server },
-      { name: 'CI/CD Pipelines', level: 90, icon: GitBranch },
-      { name: 'Infrastructure as Code', level: 80, icon: PenTool },
-      { name: 'Monitoring & Logging', level: 88, icon: Cpu },
+      { name: 'Git', level: 95, icon: GitBranch },
+      { name: 'Linux', level: 90, icon: Server },
+      { name: 'Docker', level: 85, icon: Server },
+      { name: 'Nginx', level: 82, icon: Server },
+      { name: 'Burp Suite', level: 80, icon: PenTool },
+      { name: 'Wireshark', level: 75, icon: PenTool },
+      { name: 'Nmap', level: 78, icon: PenTool },
     ],
   },
 ];
 
 export const PROJECTS_DATA = [
   {
-    title: 'SecureAuth SSO Platform',
-    description: 'A robust single sign-on solution with multi-factor authentication, biometric security, and advanced session management to protect enterprise applications.',
-    techStack: ['Next.js', 'Go', 'PostgreSQL', 'Docker', 'AWS'],
-    securityFocus: 'OAuth 2.1, OIDC, FIDO2/WebAuthn, XSS/CSRF Prevention.',
+    title: 'Proffid – Secure Identity Platform',
+    description: 'A secure, plug-and-play user authentication layer for SaaS applications.',
+    techStack: ['Laravel', 'MongoDB'],
+    securityFocus: 'Role-based auth, JWT, session hardening.',
     githubUrl: 'https://github.com',
     imageId: 'project-1',
   },
   {
-    title: 'AI Threat Detection System',
-    description: 'A real-time threat intelligence platform using machine learning models to detect and mitigate anomalous network behavior and potential breaches.',
-    techStack: ['Python', 'TensorFlow', 'Kafka', 'GCP', 'Kubernetes'],
-    securityFocus: 'Adversarial ML Defense, Data Encryption, Anomaly Detection.',
+    title: 'E-Learning Platform (Client Project)',
+    description: 'Full-stack platform with live classes, integrated billing, and secure student/teacher dashboards.',
+    techStack: ['CodeIgniter 4', 'MySQLi', 'BigBlueButton'],
+    securityFocus: 'CSRF protection, access control, tokenization.',
     githubUrl: 'https://github.com',
     imageId: 'project-2',
   },
   {
-    title: 'DevSecOps Pipeline Automation',
-    description: 'Automated CI/CD pipeline incorporating SAST, DAST, and SCA scanning to ensure code quality and security from development to deployment.',
-    techStack: ['Jenkins', 'SonarQube', 'OWASP ZAP', 'Ansible'],
-    securityFocus: 'Automated Security Testing, Secret Management, IaC Security.',
+    title: 'SOC Assistant (In Progress)',
+    description: 'Prototype chatbot for automated alert triage using LLMs. Goal: Parse security logs and respond with mitigation suggestions.',
+    techStack: ['Python', 'LLM', 'FastAPI'],
+    securityFocus: 'Automated Security Analysis, Prompt Injection Defense.',
     imageId: 'project-3',
   },
 ];
 
 export const EXPERIENCE_DATA = [
+    {
+    role: 'Technical Lead',
+    company: 'Confidential',
+    period: '2025–Present',
+    responsibilities: [
+      'Leading a full-stack team building secure, scalable platforms.',
+      'Integrating AI-based tools for security automation.',
+      'Enforcing secure coding practices across teams.',
+    ],
+  },
   {
-    role: 'Freelance Developer & Security Consultant',
+    role: 'Freelance Developer',
     company: 'Self-Employed',
-    period: '2022 - Present',
+    period: '2020–Present',
     responsibilities: [
-      'Developed full-stack applications for clients using Next.js, Node.js, and Python.',
-      'Conducted security audits and penetration testing for web applications to identify and mitigate vulnerabilities.',
-      'Integrated AI-powered features, including chatbots and data analysis tools, using modern LLM frameworks.',
-      'Designed and implemented secure authentication and authorization systems (OAuth 2.0, JWT, OIDC).',
+      'Delivered 20+ custom web platforms across education, e-commerce, and SaaS.',
+      'Integrated secure payment systems (Stripe, Razorpay).',
+      'Applied OWASP practices: XSS, CSRF, SQLi mitigation.',
     ],
   },
   {
-    role: 'Cybersecurity Research Intern',
-    company: 'SecureTech Labs',
-    period: 'Summer 2021',
+    role: 'Full-Stack Developer',
+    company: 'IBM',
+    period: '2021–2022',
     responsibilities: [
-      'Researched emerging threats in IoT and cloud environments.',
-      'Assisted in developing proof-of-concept exploits for controlled security demonstrations.',
-      'Contributed to a threat intelligence report on new malware strains.',
-    ],
-  },
-  {
-    role: 'Junior Web Developer',
-    company: 'Digital Solutions Inc.',
-    period: '2020 - 2022',
-    responsibilities: [
-      'Contributed to the development of client websites using React and a headless CMS.',
-      'Collaborated with senior developers to debug and resolve issues in existing codebases.',
-      'Participated in code reviews and learned best practices for web development and version control.',
+      'Built secure MERN apps with Angular CLI.',
+      'Collaborated on system programming with mainframe modules.',
     ],
   },
 ];
 
 export const CERTIFICATIONS_DATA = [
     {
-        name: 'Certified Ethical Hacker (CEH)',
+        name: 'Certified Ethical Hacker (CEH v13 AI)',
         issuer: 'EC-Council',
         icon: ShieldCheck,
     },
     {
-        name: 'AWS Certified Security - Specialty',
-        issuer: 'Amazon Web Services',
-        icon: CloudCog,
-    },
-    {
-        name: 'IBM AI Engineering Professional',
-        issuer: 'IBM',
-        icon: BrainCircuit,
-    },
-    {
-        name: 'Cisco Certified CyberOps Associate',
-        issuer: 'Cisco',
-        icon: Cpu,
-    },
-     {
-        name: 'CompTIA Security+',
-        issuer: 'CompTIA',
+        name: 'PG Diploma in Information Security',
+        issuer: 'IGNOU',
         icon: Award,
     },
     {
-        name: 'Certified Full-Stack Developer',
-        issuer: 'Codecademy',
+        name: 'Master’s in Information Security',
+        issuer: 'Ongoing',
+        icon: BrainCircuit,
+    },
+    {
+        name: 'IBM Security Course',
+        issuer: 'IBM',
+        icon: CloudCog,
+    },
+     {
+        name: 'Cisco Security Course',
+        issuer: 'Cisco',
+        icon: Cpu,
+    },
+    {
+        name: 'Full-Stack Developer',
+        issuer: 'Self-accredited',
         icon: Code,
     }
 ];

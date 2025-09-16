@@ -14,13 +14,13 @@ export function Hero() {
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none font-headline">
-                Alex Thorne
+                Sunil Khobragade
               </h1>
               <p className="text-xl text-primary font-medium">
-                Cybersecurity Engineer & AI Specialist
+                Technical Lead | Full-Stack Developer | CEH-Certified Cybersecurity Researcher
               </p>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                A dedicated security professional with a passion for building secure, intelligent systems. Expertise in full-stack development, cloud security, and applying AI to solve complex challenges.
+                A Full-Stack Developer and Cybersecurity enthusiast with over 5 years of hands-on experience delivering robust, secure web applications. Currently pursuing a Master’s in Information Security and holding a CEH v13 AI certification.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">

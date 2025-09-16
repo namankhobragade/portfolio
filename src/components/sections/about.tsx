@@ -12,10 +12,10 @@ export function About() {
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">About Me</h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              I am a passionate and driven professional with a dual focus on full-stack web development and cybersecurity. My journey in technology is fueled by a desire to build things that are not only functional and user-friendly but also robust and secure.
+             I'm a Full-Stack Developer and Cybersecurity enthusiast with over 5 years of hands-on experience delivering robust, secure web applications. Currently pursuing my Master’s in Information Security and holding a CEH v13 AI certification, I specialize in bridging the gap between software engineering and ethical hacking.
             </p>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Currently, I'm deepening my expertise in cloud security and exploring the fascinating intersection of Artificial Intelligence and cybersecurity. My vision is to leverage these cutting-edge technologies to create innovative solutions that can anticipate and neutralize digital threats, making the web a safer place for everyone.
+              My interests lie in AI-powered cybersecurity, secure code audits, and SOC automation using large language models.
             </p>
           </div>
           <div className="flex items-center justify-center">
