@@ -2,17 +2,10 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Quote } from "lucide-react";
-import Autoplay from "embla-carousel-autoplay";
 import React from "react";
+import { AnimatedItem } from "../animated-item";
 
 const testimonials = [
   {
@@ -36,10 +29,6 @@ const testimonials = [
 ];
 
 export function Testimonials() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: true })
-  );
-
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -51,41 +40,27 @@ export function Testimonials() {
             </p>
           </div>
         </div>
-        <div className="py-12">
-          <Carousel
-            plugins={[plugin.current]}
-            opts={{ align: "start", loop: true }}
-            onMouseEnter={plugin.current.stop}
-            onMouseLeave={plugin.current.reset}
-            className="w-full max-w-sm md:max-w-2xl lg:max-w-4xl mx-auto"
-          >
-            <CarouselContent>
-              {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="md:basis-1/2">
-                  <div className="p-4 h-full">
-                    <Card className="flex flex-col justify-between h-full bg-transparent border p-6">
-                       <CardContent className="p-0 flex-grow relative">
-                        <Quote className="absolute -top-2 -left-2 h-10 w-10 text-muted-foreground/10" />
-                        <p className="text-muted-foreground italic z-10 relative">"{testimonial.quote}"</p>
-                      </CardContent>
-                      <div className="flex items-center gap-4 mt-6 pt-6 border-t">
-                        <Avatar>
-                          <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                          <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-semibold">{testimonial.name}</p>
-                          <p className="text-sm text-muted-foreground">{testimonial.title}</p>
-                        </div>
-                      </div>
-                    </Card>
+        <div className="mx-auto grid max-w-5xl items-start gap-8 py-12 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
+          {testimonials.map((testimonial, index) => (
+            <AnimatedItem key={index} delay={index * 0.1}>
+              <Card className="flex flex-col justify-between h-full bg-transparent border p-6">
+                  <CardContent className="p-0 flex-grow relative">
+                    <Quote className="absolute -top-2 -left-2 h-10 w-10 text-muted-foreground/10" />
+                    <p className="text-muted-foreground italic z-10 relative">"{testimonial.quote}"</p>
+                  </CardContent>
+                  <div className="flex items-center gap-4 mt-6 pt-6 border-t">
+                    <Avatar>
+                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                      <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-semibold">{testimonial.name}</p>
+                      <p className="text-sm text-muted-foreground">{testimonial.title}</p>
+                    </div>
                   </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+              </Card>
+            </AnimatedItem>
+          ))}
         </div>
       </div>
     </section>
