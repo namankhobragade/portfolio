@@ -51,6 +51,7 @@ export const PROJECTS_DATA = [
     techStack: ['Laravel', 'MongoDB'],
     securityFocus: 'Role-based auth, JWT, session hardening.',
     githubUrl: 'https://github.com',
+    demoUrl: '#',
     imageId: 'project-1',
   },
   {
@@ -59,6 +60,7 @@ export const PROJECTS_DATA = [
     techStack: ['CodeIgniter 4', 'MySQLi', 'BigBlueButton'],
     securityFocus: 'CSRF protection, access control, tokenization.',
     githubUrl: 'https://github.com',
+    demoUrl: '#',
     imageId: 'project-2',
   },
   {
@@ -66,6 +68,8 @@ export const PROJECTS_DATA = [
     description: 'Prototype chatbot for automated alert triage using LLMs. Goal: Parse security logs and respond with mitigation suggestions.',
     techStack: ['Python', 'LLM', 'FastAPI'],
     securityFocus: 'Automated Security Analysis, Prompt Injection Defense.',
+    githubUrl: 'https://github.com',
+    demoUrl: '#',
     imageId: 'project-3',
   },
 ];

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Github } from "lucide-react";
+import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
 import { PROJECTS_DATA } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AnimatedItem } from "../animated-item";
@@ -65,13 +65,21 @@ export function Projects() {
                               <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
                             </div>
                           </CardContent>
-                          <CardFooter>
-                            {project.githubUrl && (
+                          <CardFooter className="flex flex-col sm:flex-row gap-2">
+                            {project.demoUrl && (
                               <Button asChild variant="outline" className="w-full">
+                                <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  View Demo
+                                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                                </Link>
+                              </Button>
+                            )}
+                            {project.githubUrl && (
+                              <Button asChild variant="secondary" className="w-full">
                                 <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
                                   <Github className="mr-2 h-4 w-4" />
                                   View on GitHub
-                                  <ArrowUpRight className="ml-auto h-4 w-4" />
                                 </Link>
                               </Button>
                             )}
