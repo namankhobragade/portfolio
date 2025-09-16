@@ -1,23 +1,70 @@
 
-import { ShieldCheck, Code, Cpu, Server, BrainCircuit, PenTool, Database, Cloud, GitBranch, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star } from 'lucide-react';
+import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings } from 'lucide-react';
 
 export const SKILLS_DATA = [
   {
-    category: 'Top Skills',
+    category: 'Backend',
     skills: [
-      { name: 'Technology Leadership', icon: Briefcase },
-      { name: 'Managing Technical Personnel', icon: Briefcase },
+      { name: 'PHP', icon: Code },
       { name: 'Laravel', icon: Code },
+      { name: 'CodeIgniter', icon: Code },
+      { name: 'Node.js', icon: Code },
+      { name: 'Express.js', icon: Code },
+      { name: 'Python', icon: Code },
     ],
   },
   {
-    category: 'Full-Stack Development',
+    category: 'Frontend',
     skills: [
+      { name: 'JavaScript', icon: Code },
+      { name: 'HTML', icon: Code },
+      { name: 'Bootstrap', icon: Code },
       { name: 'Next.js', icon: Code },
+      { name: 'React', icon: Code },
+    ],
+  },
+  {
+    category: 'Databases',
+    skills: [
+      { name: 'MySQL', icon: Database },
       { name: 'MongoDB', icon: Database },
-      { name: 'MySQLi', icon: Database },
-      { name: 'CodeIgniter', icon: Code },
-      { name: 'Stripe/Razorpay', icon: Server },
+      { name: 'Redis', icon: Database },
+    ],
+  },
+  {
+    category: 'Web Servers',
+    skills: [
+      { name: 'Nginx', icon: Server },
+      { name: 'Apache', icon: Server },
+    ],
+  },
+  {
+    category: 'Version Control',
+    skills: [
+      { name: 'Git', icon: GitBranch },
+      { name: 'GitHub', icon: GitBranch },
+      { name: 'GitLab', icon: GitBranch },
+      { name: 'GitHub Actions', icon: GitCommit },
+      { name: 'GitLab CI', icon: GitCommit },
+    ],
+  },
+  {
+    category: 'Cloud & DevOps',
+    skills: [
+      { name: 'AWS', icon: Cloud },
+      { name: 'IBM Cloud', icon: CloudCog },
+      { name: 'Cloudflare', icon: Cloud },
+      { name: 'Docker', icon: Container },
+      { name: 'Microservices', icon: Settings },
+      { name: 'Linux', icon: Terminal },
+    ],
+  },
+  {
+    category: 'Payment Gateways',
+    skills: [
+      { name: 'Stripe', icon: CreditCard },
+      { name: 'PhonePe', icon: CreditCard },
+      { name: 'Razorpay', icon: CreditCard },
     ],
   },
   {
@@ -28,15 +75,6 @@ export const SKILLS_DATA = [
       { name: 'SOC & Risk Assessment', icon: Cpu },
       { name: 'OWASP Practices', icon: ShieldCheck },
       { name: 'Vulnerability Assessment', icon: ShieldCheck },
-    ],
-  },
-  {
-    category: 'AI & Innovation',
-    skills: [
-      { name: 'AI/LLMs for Security', icon: BrainCircuit },
-      { name: 'SOC Automation', icon: Bot },
-      { name: 'Threat Detection', icon: BrainCircuit },
-      { name: 'Secure Coding Audit', icon: Bot },
     ],
   },
 ];
@@ -155,16 +193,16 @@ export const EDUCATION_DATA = [
 
 export const CERTIFICATIONS_DATA = [
   {
-      name: 'Introduction to Cybersecurity',
-      issuer: 'Cisco',
-      icon: ShieldCheck,
+    name: 'Introduction to Cybersecurity',
+    issuer: 'Cisco',
+    icon: ShieldCheck,
   },
   {
       name: 'IBM z/OS Mainframe Practitioner',
       issuer: 'IBM',
       icon: CloudCog,
   },
-   {
+  {
       name: 'Introduction to Packet Tracer',
       issuer: 'Cisco',
       icon: Cpu,
