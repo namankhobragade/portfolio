@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import Image from "next/image";
 
@@ -12,10 +11,10 @@ export function About() {
           <div className="space-y-4">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline">About Me</h2>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-             I'm a Full-Stack Developer and Cybersecurity enthusiast with over 5 years of hands-on experience delivering robust, secure web applications. Currently pursuing my Master’s in Information Security and holding a CEH v13 AI certification, I specialize in bridging the gap between software engineering and ethical hacking.
+              I’m Sunil Khobragade, a Technical Lead and seasoned Full-stack Developer with over 4 years of freelance experience delivering scalable, secure web platforms using Laravel, Next.js, MongoDB, and MySQLi.
             </p>
             <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              My interests lie in AI-powered cybersecurity, secure code audits, and SOC automation using large language models.
+              My passion for cybersecurity has led me to pursue a Post Graduate Diploma and Master’s in Information Security from IGNOU. I’m also actively exploring how artificial intelligence and large language models (LLMs) can revolutionize security operations — from automated threat analysis to smart incident response.
             </p>
           </div>
           <div className="flex items-center justify-center">

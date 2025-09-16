@@ -62,8 +62,8 @@ export function Contact() {
                 <div className="space-y-3">
                     <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Get in Touch</div>
                     <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight font-headline">Contact Me</h2>
-                    <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                        Have a project in mind or want to connect? Drop me a message.
+                     <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                        Have a project in mind, want to collaborate, or just want to connect? Drop me a message at <a href="mailto:skhobragade993@gmail.com" className="text-primary underline">skhobragade993@gmail.com</a> or use the form below.
                     </p>
                 </div>
                 <div className="mx-auto w-full max-w-sm space-y-2">

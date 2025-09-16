@@ -27,7 +27,7 @@ export function Education() {
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <Badge variant={edu.status === 'Completed' ? 'default' : 'secondary'}>{edu.status}</Badge>
+                <Badge variant='secondary'>{edu.status}</Badge>
               </CardContent>
             </Card>
           ))}

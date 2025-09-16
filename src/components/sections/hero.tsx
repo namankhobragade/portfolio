@@ -17,10 +17,10 @@ export function Hero() {
                 Sunil Khobragade
               </h1>
               <p className="text-lg text-primary font-medium sm:text-xl">
-                Technical Lead | Full-Stack Developer | CEH-Certified Cybersecurity Researcher
+                Technical Lead | Freelancer Full-stack Developer | Master’s in Information Security
               </p>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                A Full-Stack Developer and Cybersecurity enthusiast with over 5 years of hands-on experience delivering robust, secure web applications. Currently pursuing a Master’s in Information Security and holding a CEH v13 AI certification.
+                A seasoned Full-stack Developer and Technical Lead with a passion for cybersecurity, actively pursuing a Master’s in Information Security and exploring AI/LLMs for security operations.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
