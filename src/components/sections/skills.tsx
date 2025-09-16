@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SKILLS_DATA } from "@/lib/data";
+import { AnimatedItem } from "../animated-item";
 
 export function Skills() {
   return (
@@ -15,23 +16,25 @@ export function Skills() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-start gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-          {SKILLS_DATA.map((category) => (
-            <Card key={category.category}>
-              <CardHeader>
-                <CardTitle className="font-headline">{category.category}</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {category.skills.map((skill) => (
-                  <div key={skill.name} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <skill.icon className="h-5 w-5 text-accent" />
-                      <span className="font-medium">{skill.name}</span>
+          {SKILLS_DATA.map((category, index) => (
+            <AnimatedItem key={category.category} delay={index * 0.1}>
+              <Card className="h-full glow-card">
+                <CardHeader>
+                  <CardTitle className="font-headline">{category.category}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {category.skills.map((skill) => (
+                    <div key={skill.name} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <skill.icon className="h-5 w-5 text-accent" />
+                        <span className="font-medium">{skill.name}</span>
+                      </div>
+                      <Progress value={skill.level} aria-label={`${skill.name} proficiency`} />
                     </div>
-                    <Progress value={skill.level} aria-label={`${skill.name} proficiency`} />
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                  ))}
+                </CardContent>
+              </Card>
+            </AnimatedItem>
           ))}
         </div>
       </div>

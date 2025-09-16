@@ -60,3 +60,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .glow-card {
+    @apply relative overflow-hidden;
+  }
+  .glow-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(115deg, transparent 20%, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.4) 80%, transparent);
+    transition: transform 0.5s ease;
+    transform: translateX(-100%) skewX(-20deg);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .glow-card:hover::before {
+    transform: translateX(25%) skewX(-20deg);
+  }
+  .glow-card > * {
+      position: relative;
+      z-index: 2;
+  }
+}
