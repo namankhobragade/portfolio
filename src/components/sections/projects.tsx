@@ -65,20 +65,20 @@ export function Projects() {
                               <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
                             </div>
                           </CardContent>
-                          <CardFooter className="flex-col sm:flex-row gap-2">
+                          <CardFooter className="flex flex-wrap gap-2">
                             {project.demoUrl && (
-                              <Button asChild variant="outline" className="w-full">
+                              <Button asChild variant="outline" className="flex-1 min-w-[140px]">
                                 <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  <ExternalLink />
                                   View Demo
-                                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                                  <ArrowUpRight className="ml-auto" />
                                 </Link>
                               </Button>
                             )}
                             {project.githubUrl && (
-                              <Button asChild variant="secondary" className="w-full">
+                              <Button asChild variant="secondary" className="flex-1 min-w-[140px]">
                                 <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                                  <Github className="mr-2 h-4 w-4" />
+                                  <Github />
                                   View on GitHub
                                 </Link>
                               </Button>
