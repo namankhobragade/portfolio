@@ -18,7 +18,7 @@ export function Experience() {
         </div>
         <div className="relative mt-12 pl-6 before:absolute before:top-0 before:left-6 before:h-full before:w-px before:bg-border md:pl-0 md:before:left-1/2 md:before:-translate-x-1/2">
           {EXPERIENCE_DATA.map((item, index) => (
-            <AnimatedItem key={item.role + item.company} direction={index % 2 === 0 ? "right" : "left"} delay={index * 0.2}>
+            <AnimatedItem key={`${item.role}-${item.company}-${index}`} direction={index % 2 === 0 ? "right" : "left"} delay={index * 0.2}>
               <div className="relative md:grid md:grid-cols-2 md:gap-12">
                 <div className={`flex items-center md:justify-end ${index % 2 === 0 ? 'md:order-2 md:text-left' : 'md:order-1 md:text-right'}`}>
                   <div className="absolute top-1 -left-[34px] flex h-8 w-8 items-center justify-center rounded-full bg-background ring-8 ring-background md:static md:h-0 md:w-0 md:ring-0">
