@@ -8,9 +8,9 @@ import { Separator } from './ui/separator';
 
 export function Footer() {
   return (
-    <footer className="relative py-8 overflow-hidden">
+    <footer className="relative py-8 overflow-hidden border-t">
       <div className="absolute inset-0 flex items-center justify-center -z-10">
-        <span className="text-[30vw] md:text-[20vw] font-black font-headline text-foreground/5 leading-none">
+        <span className="text-[40vw] md:text-[20vw] font-black font-headline text-foreground/5 leading-none">
           DevSec
         </span>
       </div>

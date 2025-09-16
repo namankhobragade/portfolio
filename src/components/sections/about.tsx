@@ -17,7 +17,7 @@ export function About() {
                 data-ai-hint={profileImage.imageHint}
                 width={400}
                 height={400}
-                className="relative aspect-square overflow-hidden object-cover rounded-lg shadow-2xl"
+                className="relative aspect-square overflow-hidden object-cover rounded-lg shadow-2xl w-[250px] h-[250px] md:w-[400px] md:h-[400px]"
               />
           )}
           </div>
