@@ -251,7 +251,7 @@ export function ClientInfoWidget() {
         <DialogHeader>
           <DialogTitle>Live Visitor Stats</DialogTitle>
           <DialogDescription>
-            A real-time snapshot of your browser, device, and network information gathered using client-side JavaScript APIs.
+            This widget demonstrates what client-side JavaScript can see about your browser, device, and network. None of this data is stored.
           </DialogDescription>
         </DialogHeader>
         <div className="max-h-[70vh] overflow-y-auto pr-4">
@@ -262,4 +262,5 @@ export function ClientInfoWidget() {
   );
 }
 
+    
     
