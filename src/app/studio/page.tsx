@@ -101,7 +101,7 @@ export default function StudioPage() {
                 </p>
             </div>
 
-            <Card className="mb-12">
+            <Card className="mb-12 bg-transparent border">
                 <CardHeader>
                     <CardTitle>Blog Post Generator</CardTitle>
                 </CardHeader>
@@ -143,7 +143,7 @@ export default function StudioPage() {
                         <h2 className="text-3xl font-bold tracking-tighter font-headline">Generated Post</h2>
                     </div>
                     
-                    <Card>
+                    <Card className="bg-transparent border">
                         <CardHeader>
                             <CardTitle>Generated Image</CardTitle>
                         </CardHeader>
@@ -161,7 +161,7 @@ export default function StudioPage() {
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="bg-transparent border">
                         <CardHeader>
                             <CardTitle>{generatedPost.title}</CardTitle>
                             <p className="text-sm text-muted-foreground pt-2">{generatedPost.description}</p>
