@@ -12,8 +12,8 @@ export function Footer() {
       <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center gap-6">
           <div className="flex items-center space-x-3">
-            <Code2 className="h-8 w-8 text-accent" />
-            <span className="text-2xl font-bold font-headline">DevSec</span>
+            <Code2 className="h-10 w-10 text-accent" />
+            <span className="text-4xl font-bold font-headline">DevSec</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-md">
              &copy; {new Date().getFullYear()} Sunil Khobragade. All rights reserved. 
