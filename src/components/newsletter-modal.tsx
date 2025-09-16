@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useEffect, useState, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -44,7 +44,7 @@ function SubmitButton() {
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const [state, formAction] = useFormState(subscribeToNewsletter, { success: false, message: "" });
+  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
     const isSubscribed = localStorage.getItem(NEWSLETTER_SUBSCRIBED_KEY) === 'true';
