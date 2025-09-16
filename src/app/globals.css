@@ -27,25 +27,25 @@
   }
  
   .dark {
-    --background: 0 0% 13.3%; /* Dark Gray */
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 16%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 13.3%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 273 100% 45%; /* Deep Indigo (Dark Theme) */
+    --primary: 273 100% 65%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 20%;
+    --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 288 100% 50%; /* Electric Purple */
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5.9% 64.9%;
+    --accent: 288 100% 60%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 288 100% 50%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 273 100% 65%;
   }
 }
  
@@ -63,7 +63,7 @@
 
 @layer components {
   .glow-card {
-    @apply relative overflow-hidden;
+    @apply relative overflow-hidden border border-transparent;
   }
   .glow-card::before {
     content: '';
@@ -73,7 +73,7 @@
     width: 200%;
     height: 100%;
     background: linear-gradient(115deg, transparent 20%, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.4) 80%, transparent);
-    transition: transform 0.5s ease;
+    transition: transform 0.7s ease;
     transform: translateX(-100%) skewX(-20deg);
     z-index: 1;
     pointer-events: none;

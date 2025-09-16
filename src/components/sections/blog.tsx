@@ -23,7 +23,7 @@ export function Blog() {
           {BLOG_POSTS_DATA.map((post) => {
             const postImage = PlaceHolderImages.find(p => p.id === post.imageId);
             return (
-            <Card key={post.title} className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+            <Card key={post.title} className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card">
               {postImage && (
                 <Image
                   src={postImage.imageUrl}
@@ -42,7 +42,7 @@ export function Blog() {
               </CardContent>
               <CardFooter>
                 <Button asChild variant="link" className="p-0 h-auto">
-                  <Link href={post.link}>
+                  <Link href={`/blog/${post.slug}`}>
                     Read More
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>

@@ -144,19 +144,22 @@ export const CERTIFICATIONS_DATA = [
 export const BLOG_POSTS_DATA = [
     {
         title: "The Future of Authentication: Beyond Passwords",
-        fullContent: "The traditional password system is becoming increasingly obsolete in the face of sophisticated cyber threats. This article explores the rise of passwordless authentication methods like FIDO2, WebAuthn, and biometric verification. We'll delve into the security benefits, implementation challenges, and how these technologies are shaping a more secure digital identity for users and organizations. We will cover the core principles of public-key cryptography that underpin these standards and provide a step-by-step guide to integrating a simple WebAuthn flow into a modern web application.",
+        slug: "future-of-authentication",
+        fullContent: "The traditional password system is becoming increasingly obsolete in the face of sophisticated cyber threats. This article explores the rise of passwordless authentication methods like FIDO2, WebAuthn, and biometric verification. We'll delve into the security benefits, implementation challenges, and how these technologies are shaping a more secure digital identity for users and organizations.\n\nWe will cover the core principles of public-key cryptography that underpin these standards and provide a step-by-step guide to integrating a simple WebAuthn flow into a modern web application.",
         link: "#",
         imageId: "blog-1",
     },
     {
         title: "How AI is Revolutionizing Threat Intelligence",
-        fullContent: "Artificial intelligence is no longer a buzzword in cybersecurity; it's a critical component of modern defense strategies. This post examines how machine learning models are being used to analyze vast datasets, identify subtle patterns of malicious activity, and predict future threats with unprecedented accuracy. From anomaly detection in network traffic to automated malware analysis, we'll uncover the practical applications of AI that are helping security teams stay one step ahead of attackers. We'll also discuss the challenges, such as model poisoning and adversarial attacks against AI systems themselves.",
+        slug: "ai-in-threat-intelligence",
+        fullContent: "Artificial intelligence is no longer a buzzword in cybersecurity; it's a critical component of modern defense strategies. This post examines how machine learning models are being used to analyze vast datasets, identify subtle patterns of malicious activity, and predict future threats with unprecedented accuracy.\n\nFrom anomaly detection in network traffic to automated malware analysis, we'll uncover the practical applications of AI that are helping security teams stay one step ahead of attackers. We'll also discuss the challenges, such as model poisoning and adversarial attacks against AI systems themselves.",
         link: "#",
         imageId: "blog-2",
     },
     {
         title: "A Practical Guide to Secure Coding in JavaScript",
-        fullContent: "JavaScript's ubiquity makes it a prime target for attackers. This guide provides developers with actionable advice and best practices for writing secure JavaScript code. We'll cover common vulnerabilities like Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and insecure direct object references. Each section includes code examples of both vulnerable and secured implementations, focusing on modern frameworks like React and Next.js. Learn how to leverage built-in security features, sanitize inputs, and use security headers to build more resilient web applications.",
+        slug: "secure-coding-in-javascript",
+        fullContent: "JavaScript's ubiquity makes it a prime target for attackers. This guide provides developers with actionable advice and best practices for writing secure JavaScript code. We'll cover common vulnerabilities like Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), and insecure direct object references.\n\nEach section includes code examples of both vulnerable and secured implementations, focusing on modern frameworks like React and Next.js. Learn how to leverage built-in security features, sanitize inputs, and use security headers to build more resilient web applications.",
         link: "#",
         imageId: "blog-3",
     }
