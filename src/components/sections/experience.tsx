@@ -16,15 +16,18 @@ export function Experience() {
             </p>
           </div>
         </div>
-        <div className="relative mt-12 space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-border/70 md:before:mx-auto md:before:ml-0">
+        <div className="relative mt-12 pl-6 before:absolute before:top-0 before:left-6 before:h-full before:w-px before:bg-border md:pl-0 md:before:left-1/2 md:before:-translate-x-1/2">
           {EXPERIENCE_DATA.map((item, index) => (
-             <AnimatedItem key={item.role} direction={index % 2 === 0 ? 'right' : 'left'} delay={index * 0.2}>
-              <div className="relative flex items-center md:justify-normal md:odd:flex-row-reverse">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary shadow-md ring-4 ring-background z-10">
-                   <div className="h-2 w-2 rounded-full bg-primary-foreground"></div>
+            <AnimatedItem key={item.role} direction={index % 2 === 0 ? "right" : "left"} delay={index * 0.2}>
+              <div className="relative md:grid md:grid-cols-2 md:gap-12">
+                <div className={`flex items-center md:justify-end ${index % 2 === 0 ? 'md:order-2 md:text-left' : 'md:order-1 md:text-right'}`}>
+                  <div className="absolute top-1 -left-[34px] flex h-8 w-8 items-center justify-center rounded-full bg-background ring-8 ring-background md:static md:h-0 md:w-0 md:ring-0">
+                    <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+                  </div>
                 </div>
-                <div className="w-full md:w-[calc(50%-2.5rem)]">
-                   <Card className={`transition-all hover:shadow-lg hover:border-primary/50 text-left ${index % 2 === 0 ? 'ml-6 md:ml-0 md:mr-auto' : 'ml-6 md:ml-auto'}`}>
+
+                <div className={`pb-12 ${index % 2 === 0 ? 'md:order-1' : 'md:order-2'}`}>
+                  <Card className="transition-all hover:shadow-lg hover:border-primary/50 text-left">
                     <CardHeader>
                       <CardTitle className="font-headline">{item.role}</CardTitle>
                       <CardDescription>{item.company} | {item.period}</CardDescription>
