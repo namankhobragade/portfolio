@@ -8,19 +8,26 @@ import { Separator } from './ui/separator';
 import { useState, useEffect } from 'react';
 
 export function Footer() {
-  const [currentDateTime, setCurrentDateTime] = useState('');
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   useEffect(() => {
-    // Set the date and time only on the client side after hydration
-    setCurrentDateTime(new Date().toLocaleString(undefined, { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit'
-    }));
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
+  const formattedDateTime = currentDateTime.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      second: '2-digit'
+  });
 
   return (
     <footer className="relative py-8 overflow-hidden border-t">
@@ -40,11 +47,9 @@ export function Footer() {
              Crafting secure and intelligent digital experiences with a passion for code.
           </p>
           <Separator className="w-1/4 my-2" />
-          {currentDateTime && (
-            <div className="text-xs text-muted-foreground">
-                {currentDateTime}
-            </div>
-          )}
+          <div className="text-xs text-muted-foreground">
+              {formattedDateTime}
+          </div>
           <div className="flex space-x-6">
             <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
               <Github className="h-6 w-6" />
