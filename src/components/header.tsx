@@ -118,13 +118,13 @@ export function Header() {
                 <Link
                   href={href}
                   className={cn(
-                    "p-3 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-12 w-12 relative overflow-hidden",
+                    "p-2 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-10 w-10 relative overflow-hidden",
                     activeLink === href || (href.includes(activeLink) && activeLink !== '/#home' && href !== '/#home') || (activeLink.startsWith('/blog') && href === '/blog') 
                     ? "text-primary-foreground active-nav-link" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
-                  <Icon className="h-6 w-6" />
+                  <Icon className="h-5 w-5" />
                   <span className="sr-only">{label}</span>
                 </Link>
               </TooltipTrigger>
