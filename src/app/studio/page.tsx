@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useActionState, useEffect } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from "@/components/ui/button";
@@ -188,15 +188,17 @@ function GeneralSettings() {
 function SkillsManager() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
-    const { control, handleSubmit, formState: { isSubmitting } } = useForm<z.infer<typeof skillsFormSchema>>({
+    const formMethods = useForm<z.infer<typeof skillsFormSchema>>({
         resolver: zodResolver(skillsFormSchema),
         defaultValues: {
             skills: SKILLS_DATA.map(cat => ({
                 ...cat,
-                skills: cat.skills.map(skill => ({...skill, icon: skill.icon.displayName || 'Code' }))
+                skills: cat.skills.map(skill => ({...skill, icon: skill.icon as any }))
             }))
         }
     });
+
+    const { control, handleSubmit, formState: { isSubmitting } } = formMethods;
 
     const { fields, append, remove, move } = useFieldArray({
         control,
@@ -223,7 +225,7 @@ function SkillsManager() {
                 <CardDescription>Add, edit, or remove skill categories and individual skills.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Form {...{control, handleSubmit}}>
+                <FormProvider {...formMethods}>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-6">
                             {fields.map((field, index) => (
@@ -238,7 +240,7 @@ function SkillsManager() {
                            {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
                         </Button>
                     </form>
-                </Form>
+                </FormProvider>
             </CardContent>
         </Card>
     );
@@ -603,3 +605,5 @@ function ContentStudio() {
         </Card>
     )
 }
+
+    
