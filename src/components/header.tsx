@@ -71,7 +71,7 @@ export function Header() {
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="relative hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg"
+          className="relative hidden md:flex items-center gap-2 px-3 py-2 rounded-full bg-background/50 backdrop-blur-sm border shadow-lg"
         >
           <Link href="/" className="flex items-center gap-2 pr-2 text-foreground/80 hover:text-foreground transition-colors">
             <Code2 className="h-6 w-6 text-accent" />
@@ -103,7 +103,7 @@ export function Header() {
       </header>
       
       {/* Mobile Control Buttons - Bottom Left */}
-      <div className="md:hidden fixed left-4 bottom-16 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+      <div className="md:hidden fixed left-4 bottom-16 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/50 backdrop-blur-sm border shadow-lg">
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
               <Menu className="h-6 w-6" />
@@ -111,7 +111,7 @@ export function Header() {
       </div>
       
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-background/50 backdrop-blur-sm border shadow-lg">
         <TooltipProvider>
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Tooltip key={label}>
@@ -144,7 +144,7 @@ export function Header() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-lg"
+            className="fixed inset-0 z-[100] bg-background/50 backdrop-blur-lg"
           >
             <div className="container p-4 h-full flex flex-col">
               <div className="flex justify-between items-center mb-8">
