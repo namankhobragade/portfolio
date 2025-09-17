@@ -16,6 +16,7 @@ import { ClientInfoWidget } from '@/components/client-info-widget';
 import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Preloader } from '@/components/preloader';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -135,6 +136,7 @@ export default function RootLayout({
       </head>
       <body className={cn('bg-background font-body text-foreground antialiased')}>
         <ThemeProvider>
+            <Preloader />
             <SmoothScroll />
             <ScrollProgress />
             <QuoteRotator />
