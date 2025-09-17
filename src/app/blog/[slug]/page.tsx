@@ -1,4 +1,3 @@
-
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -17,12 +16,8 @@ import { SITE_CONFIG } from '@/lib/data';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-type Props = {
-  params: { slug: string };
-};
-
 export async function generateMetadata(
-  { params }: Props,
+  { params }: { params: { slug: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
@@ -67,19 +62,14 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export default async function BlogPostPage({ params }: Props) {
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
 
-  if (!post) {
-    notFound();
-  }
+  if (!post) notFound();
 
   const allPosts = await getAllPosts();
-  const relatedPosts = allPosts
-    .filter((p) => p.slug !== post.slug)
-    .slice(0, 2);
-
+  const relatedPosts = allPosts.filter(p => p.slug !== slug).slice(0, 2);
   const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
   const imageUrl = postImage
     ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`
