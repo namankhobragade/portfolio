@@ -110,17 +110,18 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 200%;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(115deg, transparent 20%, #4D92FF, #7857FF, #E042FE, transparent 80%);
-    opacity: 0.15;
-    transition: transform 0.7s ease;
-    transform: translateX(-100%) skewX(-20deg);
+    background: linear-gradient(115deg, #4D92FF, #7857FF, #E042FE);
+    background-size: 200% 200%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
     z-index: 1;
     pointer-events: none;
+    animation: animated-gradient 3s linear infinite;
   }
   .glow-card:hover::before {
-    transform: translateX(25%) skewX(-20deg);
+    opacity: 0.15;
   }
   .glow-card > * {
       position: relative;
@@ -150,4 +151,12 @@
     z-index: 1;
   }
 
+}
+
+@layer utilities {
+    @keyframes animated-gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 }
