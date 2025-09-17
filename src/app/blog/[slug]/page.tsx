@@ -1,7 +1,8 @@
+
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Linkedin, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -11,14 +12,12 @@ import { format } from 'date-fns';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
-import { PostCard } from '@/components/post-card';
-import { SITE_CONFIG } from '@/lib/data';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
 type Props = {
   params: { slug: string };
 };
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
 export async function generateMetadata(
   { params }: Props,
@@ -40,7 +39,7 @@ export async function generateMetadata(
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
-    authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.linkedinUrl }],
+    authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.description,
@@ -59,7 +58,7 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export async function generateStaticParams(): Promise<Props['params'][]> {
   const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
@@ -67,13 +66,12 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const { slug } = params;
-  const post = await getPostBySlug(slug);
+  const post = await getPostBySlug(params.slug);
 
-  if (!post) notFound();
+  if (!post) {
+    notFound();
+  }
 
-  const allPosts = await getAllPosts();
-  const relatedPosts = allPosts.filter(p => p.slug !== slug).slice(0, 2);
   const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
   const imageUrl = postImage
     ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`
@@ -86,12 +84,12 @@ export default async function BlogPostPage({ params }: Props) {
     "image": imageUrl,
     "author": {
       "@type": "Person",
-      "name": SITE_CONFIG.name,
-      "url": SITE_CONFIG.linkedinUrl,
+      "name": "Sunil Khobragade",
+      "url": "https://www.linkedin.com/in/sunilkhobragade",
     },
     "publisher": {
       "@type": "Organization",
-      "name": SITE_CONFIG.name,
+      "name": "DevSec",
       "logo": {
         "@type": "ImageObject",
         "url": `${siteUrl}/favicon.svg`,
@@ -144,18 +142,26 @@ export default async function BlogPostPage({ params }: Props) {
 
         <Separator className="my-12" />
 
-        {relatedPosts.length > 0 && (
-          <section className="mt-12">
-            <h2 className="text-2xl font-bold tracking-tight font-headline mb-8 text-center">
-              You might also like
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {relatedPosts.map((relatedPost) => (
-                <PostCard key={relatedPost.slug} post={relatedPost} orientation="vertical" />
-              ))}
-            </div>
-          </section>
-        )}
+        <div className="text-center space-y-4">
+          <h3 className="text-2xl font-bold font-headline">Stay Connected</h3>
+          <p className="text-muted-foreground">
+            If you enjoyed this article, follow me for more insights on cybersecurity and development.
+          </p>
+          <div className="flex justify-center gap-4">
+            <Button asChild>
+              <a href="https://www.linkedin.com/in/sunilkhobragade" target="_blank" rel="noopener noreferrer">
+                <Linkedin className="mr-2 h-4 w-4" />
+                Follow on LinkedIn
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <a href="https://medium.com/@your-medium-username" target="_blank" rel="noopener noreferrer">
+                <BookOpen className="mr-2 h-4 w-4" />
+                Follow on Medium
+              </a>
+            </Button>
+          </div>
+        </div>
       </article>
     </>
   );

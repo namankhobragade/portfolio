@@ -1,3 +1,4 @@
+
 import { PROJECTS_DATA, SITE_CONFIG } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -56,7 +57,7 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export async function generateStaticParams(): Promise<Props['params'][]> {
   return PROJECTS_DATA.map((project) => ({
     slug: project.slug,
   }));
