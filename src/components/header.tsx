@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X, Mail } from "lucide-react";
+import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X, Mail, Award } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,6 +17,8 @@ const navLinks = [
   { href: "/#services", label: "Services", icon: Briefcase },
   { href: "/#skills", label: "Skills", icon: Wrench },
   { href: "/#projects", label: "Projects", icon: FolderKanban },
+  { href: "/#experience", label: "Experience", icon: Briefcase },
+  { href: "/#certifications", label: "Certifications", icon: Award },
   { href: "/blog", label: "Blog", icon: BookOpen },
 ];
 
@@ -110,7 +112,7 @@ export function Header() {
       </header>
       
       {/* Mobile Bottom Nav */}
-      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+      <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
         <TooltipProvider>
           {navLinks.map(({ href, label, icon: Icon }) => (
             <Tooltip key={label}>
@@ -118,7 +120,7 @@ export function Header() {
                 <Link
                   href={href}
                   className={cn(
-                    "p-2 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-10 w-10 relative overflow-hidden",
+                    "p-2 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-9 w-9 relative overflow-hidden",
                     activeLink === href || (href.includes(activeLink) && activeLink !== '/#home' && href !== '/#home') || (activeLink.startsWith('/blog') && href === '/blog') 
                     ? "text-primary-foreground active-nav-link" 
                     : "text-muted-foreground hover:text-foreground hover:bg-muted"
