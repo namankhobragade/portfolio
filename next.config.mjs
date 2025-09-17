@@ -6,17 +6,20 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pravatar.cc',
       },
     ],
   },
-  webpack(config) {
-    config.externals.push({
-      '@google-cloud/vertexai-preview':
-        'commonjs @google-cloud/vertexai-preview',
-      '@google-cloud/vertexai': 'commonjs @google-cloud/vertexai',
-    });
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push({
+        '@google-cloud/functions-framework':
+          'commonjs @google-cloud/functions-framework',
+      });
+    }
     return config;
   },
 };
