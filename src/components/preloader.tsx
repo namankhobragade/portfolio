@@ -11,20 +11,21 @@ export function Preloader() {
     // This effect runs only on the client
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000); 
+    }, 2500); 
 
     return () => clearTimeout(timer);
   }, []);
   
   if (isLoading) {
-      const text = "DevSec";
+      const text = "</> DevSec";
 
       const containerVariants = {
         hidden: { opacity: 1 },
         visible: {
           opacity: 1,
           transition: {
-            staggerChildren: 0.1,
+            staggerChildren: 0.08,
+            delayChildren: 0.2,
           },
         },
         exit: {
@@ -48,20 +49,33 @@ export function Preloader() {
           },
         },
       };
+
+      const subtitleVariants = {
+         hidden: { opacity: 0, y: 20 },
+         visible: {
+           opacity: 1,
+           y: 0,
+           transition: {
+             delay: 1.2,
+             duration: 0.5,
+           },
+         },
+      }
       
       return (
         <AnimatePresence>
             <motion.div
-              className="fixed inset-0 z-[200] flex items-center justify-center bg-background"
+              className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-background"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
+              aria-busy="true"
             >
               <motion.h1
                 className="text-6xl md:text-8xl font-bold font-headline tracking-tighter text-foreground"
                 variants={containerVariants}
-                aria-busy="true"
+                aria-label={text}
               >
                 {text.split('').map((letter, index) => (
                   <motion.span
@@ -73,6 +87,12 @@ export function Preloader() {
                   </motion.span>
                 ))}
               </motion.h1>
+              <motion.p 
+                className="mt-4 text-xl md:text-2xl font-medium text-muted-foreground"
+                variants={subtitleVariants}
+              >
+                Sunil Khobragade
+              </motion.p>
             </motion.div>
         </AnimatePresence>
       )
