@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Github, ExternalLink } from "lucide-react";
+import { ArrowUpRight, Github, ExternalLink, BookText } from "lucide-react";
 import { PROJECTS_DATA } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AnimatedItem } from "../animated-item";
@@ -36,7 +36,7 @@ export function Projects() {
                   return (
                     <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
-                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border">
+                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border-2">
                           {projectImage && (
                             <Image
                               src={projectImage.imageUrl}
@@ -66,12 +66,17 @@ export function Projects() {
                             </div>
                           </CardContent>
                           <CardFooter className="flex flex-wrap gap-2 mt-auto pt-4">
+                            <Button asChild variant="default" size="sm" className="flex-1 min-w-[120px]">
+                                <Link href={`/projects/${project.slug}`}>
+                                    <BookText />
+                                    Case Study
+                                </Link>
+                            </Button>
                             {project.demoUrl && (
                               <Button asChild variant="outline" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink />
                                   View Demo
-                                  <ArrowUpRight className="ml-auto" />
                                 </Link>
 
                               </Button>
