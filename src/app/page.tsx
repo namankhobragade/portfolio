@@ -20,7 +20,7 @@ export default function Home() {
         <AnimatedSection id="skills"><Skills /></AnimatedSection>
         <AnimatedSection id="projects"><Projects /></AnimatedSection>
         <AnimatedSection id="experience"><Experience /></AnimatedSection>
-        <AnimatedSection id="education"><Education /></AnimatedSection>
+        <AnimatedSection id="studies"><Education /></AnimatedSection>
         <AnimatedSection id="certifications"><Certifications /></AnimatedSection>
         <AnimatedSection id="testimonials"><Testimonials /></AnimatedSection>
         <AnimatedSection id="blog"><Blog /></AnimatedSection>

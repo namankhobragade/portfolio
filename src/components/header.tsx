@@ -1,8 +1,9 @@
+
 // src/components/header.tsx
 "use client";
 
 import Link from "next/link";
-import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X, Mail, Award } from "lucide-react";
+import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X, Mail, Award, GraduationCap } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { AnimatePresence, motion } from "framer-motion";
@@ -17,6 +18,7 @@ const navLinks = [
   { href: "/#skills", label: "Skills", icon: Wrench },
   { href: "/#projects", label: "Projects", icon: FolderKanban },
   { href: "/#experience", label: "Experience", icon: Briefcase },
+  { href: "/#studies", label: "Studies", icon: GraduationCap },
   { href: "/#certifications", label: "Certifications", icon: Award },
   { href: "/blog", label: "Blog", icon: BookOpen },
 ];
@@ -101,7 +103,7 @@ export function Header() {
       </header>
       
       {/* Mobile Control Buttons - Bottom Left */}
-       <div className="md:hidden fixed left-4 bottom-16 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+      <div className="md:hidden fixed left-4 bottom-16 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
               <Menu className="h-6 w-6" />
