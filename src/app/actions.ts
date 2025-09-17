@@ -260,21 +260,25 @@ const skillsFormSchema = z.object({
     skills: z.array(skillCategorySchema),
 });
 
-export async function updateSkills(data: any) {
-     const validatedFields = skillsFormSchema.safeParse({ skills: data });
-
-    if (!validatedFields.success) {
-        return { success: false, message: 'Invalid skills data.' };
+export async function updateSkills(prevState: any, formData: FormData) {
+    const jsonString = formData.get('skills') as string;
+    let data;
+    try {
+        data = JSON.parse(jsonString);
+    } catch {
+        return { success: false, message: 'Invalid JSON data for skills.' };
     }
 
-     // The icon names are strings, which is what we need.
+    const validatedFields = skillsFormSchema.safeParse(data);
+
+    if (!validatedFields.success) {
+        return { success: false, message: 'Invalid skills data structure.' };
+    }
+
     const newSkillsData = validatedFields.data.skills;
 
     const newContent = `export const SITE_CONFIG = ${JSON.stringify(SITE_CONFIG, null, 2)};\n\n`
-        + `export const SKILLS_DATA = ${JSON.stringify(newSkillsData, (key, value) => {
-            if (key === 'icon') return value; // Keep icon as string for now
-            return value;
-        }, 2)};\n\n`
+        + `export const SKILLS_DATA = ${JSON.stringify(newSkillsData, null, 2)};\n\n`
         + `export const PROJECTS_DATA = ${JSON.stringify(PROJECTS_DATA, null, 2)};\n\n`
         + `export const EXPERIENCE_DATA = ${JSON.stringify(EXPERIENCE_DATA, null, 2)};\n\n`
         + `export const EDUCATION_DATA = ${JSON.stringify(EDUCATION_DATA, null, 2)};\n\n`
@@ -370,8 +374,8 @@ export async function updateTypography(prevState: any, formData: FormData) {
         const fontBodyVar = `var(--font-${fontBody.toLowerCase().replace(/ /g, '-')})`;
         const fontHeadlineVar = `var(--font-${fontHeadline.toLowerCase().replace(/ /g, '-')})`;
 
-        tailwindConfig = tailwindConfig.replace(/body: \['[^']+_TS_DELIMITER'[^\]]+\]/, `body: ['${fontBodyVar}', 'sans-serif']`);
-        tailwindConfig = tailwindConfig.replace(/headline: \['[^']+'[^\]]+\]/, `headline: ['${fontHeadlineVar}', 'sans-serif']`);
+        tailwindConfig = tailwindConfig.replace(/body: \['[^']+'\s*,\s*'sans-serif'\]/, `body: ['${fontBodyVar}', 'sans-serif']`);
+        tailwindConfig = tailwindConfig.replace(/headline: \['[^']+'\s*,\s*'sans-serif'\]/, `headline: ['${fontHeadlineVar}', 'sans-serif']`);
         
         await fs.writeFile(tailwindConfigPath, tailwindConfig, 'utf-8');
 
@@ -381,18 +385,22 @@ export async function updateTypography(prevState: any, formData: FormData) {
         const fontBodyConst = fontBody.replace(/ /g, '_');
         const fontHeadlineConst = fontHeadline.replace(/ /g, '_');
         
-        // Remove old font imports, but keep Source Code Pro
-        layoutContent = layoutContent.replace(/import { Inter, Space_Grotesk, /g, 'import { ');
+        // This regex will find all existing font imports from next/font/google except Source_Code_Pro
+        const fontImportRegex = /import\s*{\s*([^}]+)\s*}\s*from\s*'next\/font\/google';/;
+        const match = layoutContent.match(fontImportRegex);
+        let existingFonts = ['Source_Code_Pro'];
+        if(match) {
+            existingFonts = match[1].split(',').map(f => f.trim()).filter(f => f !== fontBodyConst && f !== fontHeadlineConst && f !== 'Source_Code_Pro');
+        }
 
-        // Add new font imports
         const newImport = `import { ${fontBodyConst}, ${fontHeadlineConst}, Source_Code_Pro } from 'next/font/google';`;
         if (!layoutContent.includes(newImport)) {
              layoutContent = layoutContent.replace(/import {[^}]+} from 'next\/font\/google';/, newImport);
         }
 
         // Update font instantiation
-        const bodyRegex = /const inter = Inter\({[\s\S]*?}\);/;
-        const headlineRegex = /const spaceGrotesk = Space_Grotesk\({[\s\S]*?}\);/;
+        const bodyRegex = /const\s+\w+\s*=\s*\w+\({[\s\S]*?variable:\s*'--font-inter'[\s\S]*?}\);/;
+        const headlineRegex = /const\s+\w+\s*=\s*\w+\({[\s\S]*?variable:\s*'--font-space-grotesk'[\s\S]*?}\);/;
         
         const newBodyConst = `const ${fontBodyConst.toLowerCase()} = ${fontBodyConst}({
   subsets: ['latin'],
@@ -405,11 +413,14 @@ export async function updateTypography(prevState: any, formData: FormData) {
   variable: '--font-${fontHeadline.toLowerCase().replace(/ /g, '-')}',
 });`;
         
-        layoutContent = layoutContent.replace(bodyRegex, newBodyConst);
-        layoutContent = layoutContent.replace(headlineRegex, newHeadlineConst);
+        layoutContent = layoutContent.replace(bodyRegex, `const inter = ${fontBodyConst}({...});`); // temporary placeholder
+        layoutContent = layoutcontent.replace(headlineRegex, `const spaceGrotesk = ${fontHeadlineConst}({...});`); // temporary placeholder
+
+        layoutContent = layoutContent.replace(/const\s+inter\s*=.*/, newBodyConst);
+        layoutContent = layoutContent.replace(/const\s+spaceGrotesk\s*=.*/, newHeadlineConst);
 
         // Update html className
-        const htmlClassRegex = /className={\`\$\{inter.variable\} \$\{spaceGrotesk.variable\}/;
+        const htmlClassRegex = /className=\{`\$\{inter\.variable\}\s*\$\{spaceGrotesk\.variable\}/;
         layoutContent = layoutContent.replace(htmlClassRegex, `className={\`\$\{${fontBodyConst.toLowerCase()}.variable\} \$\{${fontHeadlineConst.toLowerCase()}.variable\}`);
         
         await fs.writeFile(layoutFilePath, layoutContent, 'utf-8');
@@ -419,3 +430,5 @@ export async function updateTypography(prevState: any, formData: FormData) {
         return { success: false, message: `Failed to update typography: ${error.message}` };
     }
 }
+
+  

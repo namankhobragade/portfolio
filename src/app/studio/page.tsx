@@ -1,6 +1,6 @@
 
 'use client';
-import { useState, useActionState, useEffect } from 'react';
+import { useState, useActionState, useEffect, useTransition } from 'react';
 import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -85,7 +85,6 @@ const availableFonts = ["Inter", "Space Grotesk", "Roboto", "Lato", "Montserrat"
 export default function StudioPage() {
     return (
         <>
-        <Header />
         <main className="container max-w-4xl py-24 md:py-32">
             <div className="space-y-3 text-center mb-12">
                 <h1 className="text-4xl font-bold tracking-tighter md:text-5xl/tight font-headline">Studio</h1>
@@ -118,7 +117,8 @@ export default function StudioPage() {
 function GeneralSettings() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateGeneralSettings, { success: false, message: "" });
-    
+    const [isPending, startTransition] = useTransition();
+
     const form = useForm<z.infer<typeof generalSettingsSchema>>({
         resolver: zodResolver(generalSettingsSchema),
         defaultValues: {
@@ -128,12 +128,19 @@ function GeneralSettings() {
     });
     
     useEffect(() => {
-        if (form.formState.isSubmitSuccessful && state.success) {
-            toast({ description: state.message });
-        } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-            toast({ description: state.message, variant: 'destructive' });
+        if (state.message) {
+            toast({
+                description: state.message,
+                variant: state.success ? 'default' : 'destructive',
+            });
         }
-    }, [form.formState.isSubmitSuccessful, state, toast]);
+    }, [state, toast]);
+
+    const handleFormAction = (formData: FormData) => {
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
 
     return (
         <Card className="mt-6 bg-transparent border-2">
@@ -143,7 +150,7 @@ function GeneralSettings() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={formAction} className="space-y-8">
+                    <form action={handleFormAction} className="space-y-8">
                         <h3 className="text-lg font-semibold">Personal Information</h3>
                         <FormField control={form.control} name="name" render={({ field }) => (
                             <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -175,8 +182,8 @@ function GeneralSettings() {
                             <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
-                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
+                        <Button type="submit" disabled={isPending} className="w-full">
+                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
                         </Button>
                     </form>
                 </Form>
@@ -187,6 +194,9 @@ function GeneralSettings() {
 
 function SkillsManager() {
     const { toast } = useToast();
+    const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
+    const [isPending, startTransition] = useTransition();
+
     const formMethods = useForm<z.infer<typeof skillsFormSchema>>({
         resolver: zodResolver(skillsFormSchema),
         defaultValues: {
@@ -197,20 +207,28 @@ function SkillsManager() {
         }
     });
 
-    const { control, handleSubmit, formState: { isSubmitting } } = formMethods;
+    const { control, handleSubmit } = formMethods;
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: "skills",
     });
     
-    const onSubmit = async (data: z.infer<typeof skillsFormSchema>) => {
-        const result = await updateSkills(null, data.skills);
-        if (result.success) {
-            toast({ description: result.message });
-        } else {
-            toast({ description: result.message, variant: 'destructive' });
+    useEffect(() => {
+        if (state.message) {
+            toast({
+                description: state.message,
+                variant: state.success ? 'default' : 'destructive',
+            });
         }
+    }, [state, toast]);
+    
+    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
+        const formData = new FormData();
+        formData.append('skills', JSON.stringify(data));
+        startTransition(() => {
+            formAction(formData);
+        });
     };
 
     return (
@@ -224,15 +242,15 @@ function SkillsManager() {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-6">
                             {fields.map((field, index) => (
-                                <SkillCategoryField key={field.id} categoryIndex={index} control={control} removeCategory={remove} />
+                                <SkillCategoryField key={field.id} categoryIndex={index} removeCategory={remove} />
                             ))}
                         </div>
                         <Button type="button" variant="outline" onClick={() => append({ category: "", description: "", skills: [{ name: "", icon: "Code"}] })}>
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Category
                         </Button>
                         <Separator />
-                         <Button type="submit" disabled={isSubmitting} className="w-full">
-                           {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
+                         <Button type="submit" disabled={isPending} className="w-full">
+                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
                         </Button>
                     </form>
                 </FormProvider>
@@ -241,7 +259,8 @@ function SkillsManager() {
     );
 }
 
-function SkillCategoryField({ categoryIndex, control, removeCategory }: { categoryIndex: number, control: any, removeCategory: (index: number) => void }) {
+function SkillCategoryField({ categoryIndex, removeCategory }: { categoryIndex: number, removeCategory: (index: number) => void }) {
+    const { control } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
         name: `skills.${categoryIndex}.skills`,
@@ -323,6 +342,7 @@ function SkillCategoryField({ categoryIndex, control, removeCategory }: { catego
 function ThemeCustomizer() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateThemeColors, { success: false, message: "" });
+    const [isPending, startTransition] = useTransition();
 
     const form = useForm<z.infer<typeof themeFormSchema>>({
         resolver: zodResolver(themeFormSchema),
@@ -337,12 +357,19 @@ function ThemeCustomizer() {
     });
     
      useEffect(() => {
-      if (form.formState.isSubmitSuccessful && state.success) {
-        toast({ description: state.message });
-      } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-        toast({ description: state.message, variant: 'destructive' });
-      }
-    }, [form.formState.isSubmitSuccessful, state, toast]);
+        if (state.message) {
+            toast({
+                description: state.message,
+                variant: state.success ? 'default' : 'destructive',
+            });
+        }
+    }, [state, toast]);
+
+    const handleFormAction = (formData: FormData) => {
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
 
     return (
         <Card className="mt-6 bg-transparent border-2">
@@ -352,7 +379,7 @@ function ThemeCustomizer() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={formAction} className="space-y-8">
+                    <form action={handleFormAction} className="space-y-8">
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-semibold mb-4">Light Theme</h3>
@@ -411,8 +438,8 @@ function ThemeCustomizer() {
                         <FormDescription>
                             Enter colors as HSL values without the `hsl()` function (e.g., `240 5.9% 10%`).
                         </FormDescription>
-                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Theme</>}
+                        <Button type="submit" disabled={isPending} className="w-full">
+                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Theme</>}
                         </Button>
                     </form>
                 </Form>
@@ -424,6 +451,7 @@ function ThemeCustomizer() {
 function TypographyCustomizer() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateTypography, { success: false, message: "" });
+    const [isPending, startTransition] = useTransition();
     
     const form = useForm<z.infer<typeof typographySchema>>({
         resolver: zodResolver(typographySchema),
@@ -434,12 +462,19 @@ function TypographyCustomizer() {
     });
 
     useEffect(() => {
-        if (form.formState.isSubmitSuccessful && state.success) {
-            toast({ description: state.message });
-        } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-            toast({ description: state.message, variant: 'destructive' });
+        if (state.message) {
+            toast({
+                description: state.message,
+                variant: state.success ? 'default' : 'destructive',
+            });
         }
-    }, [form.formState.isSubmitSuccessful, state, toast]);
+    }, [state, toast]);
+
+    const handleFormAction = (formData: FormData) => {
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
 
     return (
         <Card className="mt-6 bg-transparent border-2">
@@ -449,7 +484,7 @@ function TypographyCustomizer() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={formAction} className="space-y-8">
+                    <form action={handleFormAction} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <FormField
                                 control={form.control}
@@ -480,8 +515,8 @@ function TypographyCustomizer() {
                                 )}
                             />
                         </div>
-                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Fonts</>}
+                        <Button type="submit" disabled={isPending} className="w-full">
+                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Fonts</>}
                         </Button>
                     </form>
                 </Form>
@@ -602,3 +637,5 @@ function ContentStudio() {
         </Card>
     )
 }
+
+  
