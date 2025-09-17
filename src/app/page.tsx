@@ -16,7 +16,7 @@ import { Testimonials } from '@/components/sections/testimonials';
 export default function Home() {
   return (
     <div className="flex flex-col">
-        <Hero />
+        <AnimatedSection id="home"><Hero /></AnimatedSection>
         <AnimatedSection id="about"><About /></AnimatedSection>
         <AnimatedSection id="services"><Services /></AnimatedSection>
         <AnimatedSection id="skills"><Skills /></AnimatedSection>
