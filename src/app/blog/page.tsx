@@ -1,15 +1,11 @@
 
-import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getAllPosts } from "@/lib/blog";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { format } from "date-fns";
-import { AnimatedItem } from "@/components/animated-item";
 import { AnimatedSection } from "@/components/animated-section";
 import type { Metadata } from 'next';
+import { PostCard } from "@/components/post-card";
 
 export const metadata: Metadata = {
   title: 'All Blog Posts',
@@ -37,43 +33,14 @@ export default async function AllBlogsPage() {
                 </p>
             </div>
 
-            <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none lg:grid-cols-3">
-                {posts.map((post, index) => {
-                const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
-                return (
-                    <AnimatedItem key={post.slug} delay={index * 0.1}>
-                        <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 glow-card bg-transparent border">
-                        {postImage && (
-                            <Image
-                            src={postImage.imageUrl}
-                            alt={post.frontmatter.description}
-                            data-ai-hint={postImage.imageHint}
-                            width={600}
-                            height={400}
-                            className="aspect-video w-full object-cover"
-                            />
-                        )}
-                        <CardHeader>
-                            <CardTitle className="font-headline">{post.frontmatter.title}</CardTitle>
-                            <p className="text-sm text-muted-foreground">
-                            {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
-                            </p>
-                        </CardHeader>
-                        <CardContent className="flex-grow">
-                            <p className="text-muted-foreground">{post.frontmatter.description}</p>
-                        </CardContent>
-                        <CardFooter>
-                            <Button asChild variant="link" className="p-0 h-auto">
-                            <Link href={`/blog/${post.slug}`}>
-                                Read More
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                            </Button>
-                        </CardFooter>
-                        </Card>
-                    </AnimatedItem>
-                )
-                })}
+            <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-2 lg:max-w-none">
+                {posts.map((post, index) => (
+                    <PostCard 
+                        key={post.slug}
+                        post={post}
+                        orientation="vertical"
+                    />
+                ))}
             </div>
         </div>
     </AnimatedSection>
