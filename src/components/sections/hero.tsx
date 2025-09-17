@@ -98,7 +98,7 @@ export function Hero() {
 
                 <motion.div variants={itemVariants} className="space-y-4 text-muted-foreground md:text-lg max-w-2xl mx-auto lg:mx-0">
                     <p>
-                        A Jakarta-based freelance developer and cybersecurity enthusiast with a passion for transforming complex challenges into simple, elegant solutions.
+                        A Hyderabad-based freelance developer and cybersecurity enthusiast with a passion for transforming complex challenges into simple, elegant solutions.
                     </p>
                     <p>
                         My work spans secure full-stack development, AI integration, and the convergence of robust code and proactive security.
