@@ -112,7 +112,8 @@
     left: 0;
     width: 200%;
     height: 100%;
-    background: linear-gradient(115deg, transparent 20%, hsl(var(--primary) / 0.1), hsl(var(--foreground) / 0.1) 80%, transparent);
+    background: linear-gradient(115deg, transparent 20%, #4D92FF, #7857FF, #E042FE, transparent 80%);
+    opacity: 0.15;
     transition: transform 0.7s ease;
     transform: translateX(-100%) skewX(-20deg);
     z-index: 1;
@@ -136,7 +137,7 @@
     inset: 0;
     border-radius: 9999px;
     padding: 2px; /* border thickness */
-    background: linear-gradient(60deg, hsl(var(--primary) / 0.5), hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.5));
+    background: linear-gradient(60deg, #4D92FF, #7857FF, #E042FE);
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
