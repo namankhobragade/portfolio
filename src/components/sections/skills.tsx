@@ -2,9 +2,9 @@
 "use client";
 
 import { SKILLS_DATA } from "@/lib/data";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "../ui/progress";
+import { AnimatedItem } from "../animated-item";
 
 export function Skills() {
   return (
@@ -19,43 +19,31 @@ export function Skills() {
           </div>
         </div>
         
-        <Tabs defaultValue={SKILLS_DATA[0].category} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 h-auto">
-            {SKILLS_DATA.map((category) => (
-              <TabsTrigger 
-                key={category.category} 
-                value={category.category}
-                className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary"
-              >
-                {category.category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-            {SKILLS_DATA.map((category) => (
-              <TabsContent key={category.category} value={category.category} className="mt-8">
-                  <motion.div 
-                    key={category.category}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-                  >
-                    {category.skills.map((skill, index) => (
-                      <div key={skill.name} className="flex flex-col gap-3">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-accent/10 text-accent rounded-full p-2">
-                            <skill.icon className="h-6 w-6" />
-                          </div>
-                          <span className="text-lg font-medium">{skill.name}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {SKILLS_DATA.map((category, index) => (
+            <AnimatedItem key={category.category} delay={index * 0.1}>
+              <Card className="flex flex-col h-full bg-transparent border">
+                <CardHeader>
+                  <CardTitle className="font-headline text-xl">{category.category}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-6">
+                  {category.skills.map((skill) => (
+                    <div key={skill.name} className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <skill.icon className="h-5 w-5 text-accent" />
+                          <span className="font-medium">{skill.name}</span>
                         </div>
-                         <Progress value={skill.proficiency} aria-label={`${skill.name} proficiency`} />
+                        <span className="text-sm text-muted-foreground">{skill.proficiency}%</span>
                       </div>
-                    ))}
-                  </motion.div>
-              </TabsContent>
-            ))}
-        </Tabs>
+                      <Progress value={skill.proficiency} aria-label={`${skill.name} proficiency`} />
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </AnimatedItem>
+          ))}
+        </div>
       </div>
     </section>
   );
