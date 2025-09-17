@@ -6,47 +6,47 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
-    --primary: 215 70% 40%; /* Professional Blue */
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 224 71.4% 4.1%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 180 100% 35%; /* Tech Teal */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 5.9% 10%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 215 70% 40%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
     --radius: 0.5rem;
   }
  
   .dark {
     --background: 0 0% 0%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 215 70% 50%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 180 100% 45%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 215 70% 50%;
+    --foreground: 0 0% 98%;
+    --card: 240 5% 10%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 5% 10%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 0 0% 98%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 0 0% 98%;
   }
 }
  
@@ -112,7 +112,7 @@
     left: 0;
     width: 200%;
     height: 100%;
-    background: linear-gradient(115deg, transparent 20%, hsl(var(--primary) / 0.4), hsl(var(--accent) / 0.4) 80%, transparent);
+    background: linear-gradient(115deg, transparent 20%, hsl(var(--primary) / 0.1), hsl(var(--foreground) / 0.1) 80%, transparent);
     transition: transform 0.7s ease;
     transform: translateX(-100%) skewX(-20deg);
     z-index: 1;
@@ -127,21 +127,21 @@
   }
 
   .active-nav-link {
-    @apply bg-primary;
+    @apply bg-primary text-primary-foreground;
   }
+  
   .active-nav-link::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 9999px;
     padding: 2px; /* border thickness */
-    background: linear-gradient(60deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)), #e11d48, #9333ea, hsl(var(--primary)), hsl(var(--accent)));
+    background: linear-gradient(60deg, hsl(var(--primary) / 0.5), hsl(var(--primary) / 0.2), hsl(var(--primary) / 0.5));
     -webkit-mask: 
         linear-gradient(#fff 0 0) content-box, 
         linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
             mask-composite: exclude;
-    animation: rainbow-spin 4s linear infinite;
     z-index: 0;
   }
   .active-nav-link > * {
@@ -149,12 +149,4 @@
     z-index: 1;
   }
 
-  @keyframes rainbow-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 }
