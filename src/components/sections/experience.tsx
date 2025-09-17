@@ -15,14 +15,10 @@ export function Experience() {
             <div className="space-y-12">
                 {EXPERIENCE_DATA.map((item, index) => (
                     <AnimatedItem key={`${item.role}-${item.company}-${index}`} delay={index * 0.2}>
-                        <div className="grid gap-4 pb-8">
+                        <div className="grid gap-4 pb-8 shadow-sm">
                             <div className="flex flex-col md:flex-row justify-between md:items-baseline">
                                 <h3 className="text-xl md:text-2xl font-semibold font-headline">{item.company}</h3>
-                                {item.period === 'Sep 2021 – March 2022' ? (
-                                    <Badge variant="secondary">{item.period}</Badge>
-                                ) : (
-                                    <p className="text-sm text-muted-foreground">{item.period}</p>
-                                )}
+                                <Badge variant="secondary">{item.period}</Badge>
                             </div>
                              <p className="text-primary font-semibold">{item.role}</p>
                             <ul className="space-y-2 text-muted-foreground list-disc pl-5">
