@@ -187,7 +187,6 @@ function GeneralSettings() {
 
 function SkillsManager() {
     const { toast } = useToast();
-    const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
     const formMethods = useForm<z.infer<typeof skillsFormSchema>>({
         resolver: zodResolver(skillsFormSchema),
         defaultValues: {
@@ -198,25 +197,21 @@ function SkillsManager() {
         }
     });
 
-    const { control, handleSubmit, formState } = formMethods;
-    const { isSubmitting } = formState;
+    const { control, handleSubmit, formState: { isSubmitting } } = formMethods;
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: "skills",
     });
-
-    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
-        formAction(data.skills);
-    };
-
-    useEffect(() => {
-        if (formState.isSubmitSuccessful && state.success && state.message) {
-            toast({ description: state.message });
-        } else if (formState.isSubmitSuccessful && !state.success && state.message) {
-            toast({ description: state.message, variant: 'destructive' });
+    
+    const onSubmit = async (data: z.infer<typeof skillsFormSchema>) => {
+        const result = await updateSkills(null, data.skills);
+        if (result.success) {
+            toast({ description: result.message });
+        } else {
+            toast({ description: result.message, variant: 'destructive' });
         }
-    }, [formState.isSubmitSuccessful, state, toast]);
+    };
 
     return (
          <Card className="mt-6 bg-transparent border-2">
@@ -607,9 +602,3 @@ function ContentStudio() {
         </Card>
     )
 }
-
-    
-
-    
-
-    
