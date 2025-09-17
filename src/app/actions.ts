@@ -8,7 +8,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { format } from 'date-fns';
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
-import { SKILLS_DATA, SITE_CONFIG, EXPERIENCE_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, SERVICES_DATA } from "@/lib/data";
+import { SKILLS_DATA, SITE_CONFIG, EXPERIENCE_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, SERVICES_DATA, PROJECTS_DATA } from "@/lib/data";
 
 // ========= Contact Form Logic =========
 
@@ -196,7 +196,7 @@ export async function saveBlogPost(post: z.infer<typeof blogPostSchema>) {
 const dataFilePath = path.join(process.cwd(), 'src/lib/data.ts');
 
 async function writeDataFile(content: string) {
-    const header = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers } from 'lucide-react';\n\n`;
+    const header = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';\n\n`;
     const fullContent = header + content;
     await fs.writeFile(dataFilePath, fullContent, 'utf-8');
 }
@@ -260,7 +260,7 @@ const skillsFormSchema = z.object({
     skills: z.array(skillCategorySchema),
 });
 
-export async function updateSkills(prevState: any, data: any) {
+export async function updateSkills(data: any) {
      const validatedFields = skillsFormSchema.safeParse({ skills: data });
 
     if (!validatedFields.success) {
@@ -409,7 +409,7 @@ export async function updateTypography(prevState: any, formData: FormData) {
         layoutContent = layoutContent.replace(headlineRegex, newHeadlineConst);
 
         // Update html className
-        const htmlClassRegex = /className=\{\`\$\{inter.variable\} \$\{spaceGrotesk.variable\}/;
+        const htmlClassRegex = /className={\`\$\{inter.variable\} \$\{spaceGrotesk.variable\}/;
         layoutContent = layoutContent.replace(htmlClassRegex, `className={\`\$\{${fontBodyConst.toLowerCase()}.variable\} \$\{${fontHeadlineConst.toLowerCase()}.variable\}`);
         
         await fs.writeFile(layoutFilePath, layoutContent, 'utf-8');
