@@ -17,14 +17,12 @@ import { SITE_CONFIG } from '@/lib/data';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-interface BlogPageProps {
-  params: {
-    slug: string;
-  };
-}
+type Props = {
+  params: { slug: string };
+};
 
 export async function generateMetadata(
-  { params }: BlogPageProps,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
@@ -62,14 +60,14 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<BlogPageProps['params'][]> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
-export default async function BlogPostPage({ params }: BlogPageProps) {
+export default async function BlogPostPage({ params }: Props) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
 

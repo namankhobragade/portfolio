@@ -14,18 +14,16 @@ import { Github, ExternalLink } from 'lucide-react';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-interface ProjectPageProps {
-  params: {
-    slug: string;
-  };
-}
+type Props = {
+  params: { slug: string };
+};
 
 const getProjectBySlug = (slug: string) => {
   return PROJECTS_DATA.find((p) => p.slug === slug);
 };
 
 export async function generateMetadata(
-  { params }: ProjectPageProps,
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
@@ -59,13 +57,13 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<ProjectPageProps['params'][]> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return PROJECTS_DATA.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage({ params }: Props) {
   const { slug } = params;
   const project = getProjectBySlug(slug);
 
