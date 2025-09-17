@@ -34,8 +34,8 @@ export function Hero() {
     },
   };
   
-  const lightImage = "/images/profile-hero.jpg";
-  const darkImage = "/images/profile-hero.jpg";
+  const lightImage = "/images/sunil-khobragade-light.png";
+  const darkImage = "/images/sunil-khobragade-dark.png";
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
