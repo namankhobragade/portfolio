@@ -16,9 +16,9 @@ export function Experience() {
                 {EXPERIENCE_DATA.map((item, index) => (
                     <AnimatedItem key={`${item.role}-${item.company}-${index}`} delay={index * 0.2}>
                         <div className="grid gap-4 pb-8 shadow-sm">
-                            <div className="flex flex-col md:flex-row justify-between md:items-baseline">
+                            <div className="flex flex-col md:flex-row justify-between md:items-baseline gap-2">
                                 <h3 className="text-xl md:text-2xl font-semibold font-headline">{item.company}</h3>
-                                <Badge variant="secondary">{item.period}</Badge>
+                                <Badge variant="secondary" className="w-fit">{item.period}</Badge>
                             </div>
                              <p className="text-primary font-semibold">{item.role}</p>
                             <ul className="space-y-2 text-muted-foreground list-disc pl-5">
