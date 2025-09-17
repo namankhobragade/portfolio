@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { Download, Github, Linkedin, Send, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { useTheme } from '@/components/theme-provider';
+import { SITE_CONFIG } from '@/lib/data';
 
 export function Hero() {
   const { theme } = useTheme();
@@ -50,7 +51,7 @@ export function Hero() {
              <Image
                 key={theme}
                 src={theme === 'dark' ? darkImage : lightImage}
-                alt="Professional headshot of Sunil Khobragade"
+                alt={`Professional headshot of ${SITE_CONFIG.name}`}
                 width={400}
                 height={400}
                 className="rounded-lg object-cover w-full h-auto hero-image-effect"
@@ -61,17 +62,17 @@ export function Hero() {
         <motion.div className="lg:col-span-7 flex flex-col justify-center space-y-6" variants={itemVariants}>
             <div className="space-y-4">
                 <motion.h1 variants={itemVariants} className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl font-headline">
-                    Sunil Khobragade
+                    {SITE_CONFIG.name}
                 </motion.h1>
                 <motion.h2 variants={itemVariants} className="text-2xl text-primary font-semibold">
-                    Freelance Full-Stack Developer & Cybersecurity Specialist
+                    {SITE_CONFIG.jobTitle}
                 </motion.h2>
                 <motion.div variants={itemVariants} className="space-y-4 text-muted-foreground md:text-xl/relaxed">
                     <p>
-                        I’m a Hyderabad-based freelance developer and cybersecurity enthusiast with a passion for transforming complex challenges into simple, elegant solutions.
+                        {SITE_CONFIG.heroDescription1}
                     </p>
                     <p>
-                        My work spans secure full-stack development, AI integration, and the convergence of robust code and proactive security. I leverage my expertise in Laravel, Next.js, and cybersecurity best practices to build applications that are not only functional but also resilient.
+                        {SITE_CONFIG.heroDescription2}
                     </p>
                 </motion.div>
             </div>
@@ -97,11 +98,11 @@ export function Hero() {
             </motion.div>
             <motion.div variants={itemVariants} className="flex items-center gap-4 pt-4">
                 <p className="text-sm text-muted-foreground">Connect with me:</p>
-                <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
+                <Link href={SITE_CONFIG.githubUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
                     <Github className="h-6 w-6" />
                     <span className="sr-only">GitHub</span>
                 </Link>
-                <Link href="https://www.linkedin.com/in/sunilkhobragade" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
+                <Link href={SITE_CONFIG.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
                     <Linkedin className="h-6 w-6" />
                     <span className="sr-only">LinkedIn</span>
                 </Link>

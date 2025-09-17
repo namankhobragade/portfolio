@@ -8,6 +8,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { format } from 'date-fns';
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
+import { SKILLS_DATA, SITE_CONFIG, EXPERIENCE_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, SERVICES_DATA } from "@/lib/data";
 
 // ========= Contact Form Logic =========
 
@@ -190,8 +191,107 @@ export async function saveBlogPost(post: z.infer<typeof blogPostSchema>) {
   }
 }
 
-// ========= Theme Customization Logic =========
+// ========= Studio Settings Logic =========
 
+const dataFilePath = path.join(process.cwd(), 'src/lib/data.ts');
+
+async function writeDataFile(content: string) {
+    const header = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers } from 'lucide-react';\n\n`;
+    const fullContent = header + content;
+    await fs.writeFile(dataFilePath, fullContent, 'utf-8');
+}
+
+// ---- General Settings ----
+const generalSettingsSchema = z.object({
+    name: z.string().min(1),
+    jobTitle: z.string().min(1),
+    heroDescription1: z.string().min(1),
+    heroDescription2: z.string().min(1),
+    siteTitle: z.string().min(1),
+    siteDescription: z.string().min(1),
+    siteKeywords: z.string(),
+    githubUrl: z.string().url(),
+    linkedinUrl: z.string().url(),
+});
+
+export async function updateGeneralSettings(prevState: any, formData: FormData) {
+    const validatedFields = generalSettingsSchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return { success: false, message: 'Invalid data submitted.' };
+    }
+
+    const { siteKeywords, ...rest } = validatedFields.data;
+
+    const newSiteConfig = {
+        ...SITE_CONFIG,
+        ...rest,
+        keywords: siteKeywords.split(',').map(k => k.trim()),
+    };
+
+    const newContent = `export const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n\n`
+        + `export const SKILLS_DATA = ${JSON.stringify(SKILLS_DATA, null, 2)};\n\n`
+        + `export const PROJECTS_DATA = ${JSON.stringify(PROJECTS_DATA, null, 2)};\n\n`
+        + `export const EXPERIENCE_DATA = ${JSON.stringify(EXPERIENCE_DATA, null, 2)};\n\n`
+        + `export const EDUCATION_DATA = ${JSON.stringify(EDUCATION_DATA, null, 2)};\n\n`
+        + `export const CERTIFICATIONS_DATA = ${JSON.stringify(CERTIFICATIONS_DATA, null, 2)};\n\n`
+        + `export const SERVICES_DATA = ${JSON.stringify(SERVICES_DATA, null, 2)};`;
+
+    try {
+        await writeDataFile(newContent);
+        return { success: true, message: 'General settings updated successfully!' };
+    } catch (error: any) {
+        return { success: false, message: `Failed to update settings: ${error.message}` };
+    }
+}
+
+
+// ---- Skills Management ----
+const skillSchema = z.object({
+    name: z.string(),
+    icon: z.string(), // We'll just store the name. The component will map it to the icon.
+});
+const skillCategorySchema = z.object({
+    category: z.string(),
+    description: z.string(),
+    skills: z.array(skillSchema),
+});
+const skillsFormSchema = z.object({
+    skills: z.array(skillCategorySchema),
+});
+
+export async function updateSkills(prevState: any, data: any) {
+     const validatedFields = skillsFormSchema.safeParse({ skills: data });
+
+    if (!validatedFields.success) {
+        return { success: false, message: 'Invalid skills data.' };
+    }
+
+     // The icon names are strings, which is what we need.
+    const newSkillsData = validatedFields.data.skills;
+
+    const newContent = `export const SITE_CONFIG = ${JSON.stringify(SITE_CONFIG, null, 2)};\n\n`
+        + `export const SKILLS_DATA = ${JSON.stringify(newSkillsData, (key, value) => {
+            if (key === 'icon') return value; // Keep icon as string for now
+            return value;
+        }, 2)};\n\n`
+        + `export const PROJECTS_DATA = ${JSON.stringify(PROJECTS_DATA, null, 2)};\n\n`
+        + `export const EXPERIENCE_DATA = ${JSON.stringify(EXPERIENCE_DATA, null, 2)};\n\n`
+        + `export const EDUCATION_DATA = ${JSON.stringify(EDUCATION_DATA, null, 2)};\n\n`
+        + `export const CERTIFICATIONS_DATA = ${JSON.stringify(CERTIFICATIONS_DATA, null, 2)};\n\n`
+        + `export const SERVICES_DATA = ${JSON.stringify(SERVICES_DATA, null, 2)};`;
+    
+    try {
+        await writeDataFile(newContent);
+        return { success: true, message: 'Skills updated successfully!' };
+    } catch (error: any) {
+        return { success: false, message: `Failed to update skills: ${error.message}` };
+    }
+}
+
+
+
+// ---- Theme Customizer ----
 const themeColorSchema = z.object({
     primary: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
     background: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 100%"),
@@ -202,14 +302,7 @@ const themeColorSchema = z.object({
 });
 
 export async function updateThemeColors(prevState: any, formData: FormData) {
-    const validatedFields = themeColorSchema.safeParse({
-        primary: formData.get('primary'),
-        background: formData.get('background'),
-        accent: formData.get('accent'),
-        primaryDark: formData.get('primaryDark'),
-        backgroundDark: formData.get('backgroundDark'),
-        accentDark: formData.get('accentDark'),
-    });
+    const validatedFields = themeColorSchema.safeParse(Object.fromEntries(formData.entries()));
 
     if (!validatedFields.success) {
         return {
@@ -228,11 +321,6 @@ export async function updateThemeColors(prevState: any, formData: FormData) {
         cssContent = cssContent.replace(/--primary:\s*[^;]+;/, `--primary: ${primary};`);
         cssContent = cssContent.replace(/--background:\s*[^;]+;/, `--background: ${background};`);
         cssContent = cssContent.replace(/--accent:\s*[^;]+;/, `--accent: ${accent};`);
-
-        // Replace dark theme colors
-        cssContent = cssContent.replace(/\.dark\s*{[^}]*--primary:\s*[^;]+;/, `.dark {\n    --primary: ${primaryDark};`);
-        cssContent = cssContent.replace(/\.dark\s*{[^}]*--background:\s*[^;]+;/, `.dark {\n    --background: ${backgroundDark};`);
-        cssContent = cssContent.replace(/\.dark\s*{[^}]*--accent:\s*[^;]+;/, `.dark {\n    --accent: ${accentDark};`);
 
         // A more robust way to replace dark mode colors
         cssContent = cssContent.replace(
@@ -254,5 +342,80 @@ export async function updateThemeColors(prevState: any, formData: FormData) {
             success: false,
             message: `Failed to update theme file: ${error.message}`,
         };
+    }
+}
+
+
+// ---- Typography Customizer ----
+const typographySchema = z.object({
+  fontBody: z.string(),
+  fontHeadline: z.string(),
+});
+
+export async function updateTypography(prevState: any, formData: FormData) {
+    const validatedFields = typographySchema.safeParse(Object.fromEntries(formData.entries()));
+
+    if (!validatedFields.success) {
+        return { success: false, message: 'Invalid font selection.' };
+    }
+
+    const { fontBody, fontHeadline } = validatedFields.data;
+    const layoutFilePath = path.join(process.cwd(), 'src/app/layout.tsx');
+    const tailwindConfigPath = path.join(process.cwd(), 'tailwind.config.ts');
+
+    try {
+        // --- Update tailwind.config.ts ---
+        let tailwindConfig = await fs.readFile(tailwindConfigPath, 'utf-8');
+        
+        const fontBodyVar = `var(--font-${fontBody.toLowerCase().replace(/ /g, '-')})`;
+        const fontHeadlineVar = `var(--font-${fontHeadline.toLowerCase().replace(/ /g, '-')})`;
+
+        tailwindConfig = tailwindConfig.replace(/body: \['[^']+_TS_DELIMITER'[^\]]+\]/, `body: ['${fontBodyVar}', 'sans-serif']`);
+        tailwindConfig = tailwindConfig.replace(/headline: \['[^']+'[^\]]+\]/, `headline: ['${fontHeadlineVar}', 'sans-serif']`);
+        
+        await fs.writeFile(tailwindConfigPath, tailwindConfig, 'utf-8');
+
+        // --- Update layout.tsx ---
+        let layoutContent = await fs.readFile(layoutFilePath, 'utf-8');
+
+        const fontBodyConst = fontBody.replace(/ /g, '_');
+        const fontHeadlineConst = fontHeadline.replace(/ /g, '_');
+        
+        // Remove old font imports, but keep Source Code Pro
+        layoutContent = layoutContent.replace(/import { Inter, Space_Grotesk, /g, 'import { ');
+
+        // Add new font imports
+        const newImport = `import { ${fontBodyConst}, ${fontHeadlineConst}, Source_Code_Pro } from 'next/font/google';`;
+        if (!layoutContent.includes(newImport)) {
+             layoutContent = layoutContent.replace(/import {[^}]+} from 'next\/font\/google';/, newImport);
+        }
+
+        // Update font instantiation
+        const bodyRegex = /const inter = Inter\({[\s\S]*?}\);/;
+        const headlineRegex = /const spaceGrotesk = Space_Grotesk\({[\s\S]*?}\);/;
+        
+        const newBodyConst = `const ${fontBodyConst.toLowerCase()} = ${fontBodyConst}({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-${fontBody.toLowerCase().replace(/ /g, '-')}',
+});`;
+         const newHeadlineConst = `const ${fontHeadlineConst.toLowerCase()} = ${fontHeadlineConst}({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-${fontHeadline.toLowerCase().replace(/ /g, '-')}',
+});`;
+        
+        layoutContent = layoutContent.replace(bodyRegex, newBodyConst);
+        layoutContent = layoutContent.replace(headlineRegex, newHeadlineConst);
+
+        // Update html className
+        const htmlClassRegex = /className=\{\`\$\{inter.variable\} \$\{spaceGrotesk.variable\}/;
+        layoutContent = layoutContent.replace(htmlClassRegex, `className={\`\$\{${fontBodyConst.toLowerCase()}.variable\} \$\{${fontHeadlineConst.toLowerCase()}.variable\}`);
+        
+        await fs.writeFile(layoutFilePath, layoutContent, 'utf-8');
+        
+        return { success: true, message: 'Typography updated! Please wait for the server to restart.' };
+    } catch (error: any) {
+        return { success: false, message: `Failed to update typography: ${error.message}` };
     }
 }

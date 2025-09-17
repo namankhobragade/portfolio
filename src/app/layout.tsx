@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Preloader } from '@/components/preloader';
+import { SITE_CONFIG } from '@/lib/data';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -42,13 +43,13 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
-    template: '%s | Sunil Khobragade',
+    default: SITE_CONFIG.siteTitle,
+    template: `%s | ${SITE_CONFIG.name}`,
   },
-  description: 'The professional portfolio of Sunil Khobragade, a freelance Full-Stack Developer and Cybersecurity expert specializing in secure, AI-powered web applications.',
-  keywords: ['Sunil Khobragade', 'Freelance Developer', 'Full-Stack Developer', 'Cybersecurity Specialist', 'AI Developer', 'Laravel', 'Next.js', 'Portfolio'],
-  authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
-  creator: 'Sunil Khobragade',
+  description: SITE_CONFIG.siteDescription,
+  keywords: SITE_CONFIG.keywords,
+  authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.linkedinUrl }],
+  creator: SITE_CONFIG.name,
   alternates: {
     canonical: '/',
     languages: {
@@ -56,8 +57,8 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
-    description: 'Expert freelance developer building secure, scalable, and intelligent web applications with a focus on cybersecurity and AI.',
+    title: SITE_CONFIG.siteTitle,
+    description: SITE_CONFIG.siteDescription,
     url: siteUrl,
     siteName: 'DevSec',
     images: [
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Sunil Khobragade Freelance Portfolio',
+        alt: `${SITE_CONFIG.name} Freelance Portfolio`,
       },
     ],
     locale: 'en_US',
@@ -73,8 +74,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sunil Khobragade | Freelance Full-Stack Developer & Cybersecurity Specialist',
-    description: 'Expert freelance developer building secure, scalable, and intelligent web applications with a focus on cybersecurity and AI.',
+    title: SITE_CONFIG.siteTitle,
+    description: SITE_CONFIG.siteDescription,
     creator: '@naman-mahi',
     images: [`${siteUrl}/og-image.png`],
   },
@@ -95,12 +96,12 @@ export const metadata: Metadata = {
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "Sunil Khobragade",
+  "name": SITE_CONFIG.name,
   "url": siteUrl,
-  "jobTitle": "Freelance Full-Stack Developer & Cybersecurity Specialist",
+  "jobTitle": SITE_CONFIG.jobTitle,
   "sameAs": [
-    "https://www.linkedin.com/in/sunilkhobragade",
-    "https://github.com/naman-mahi"
+    SITE_CONFIG.linkedinUrl,
+    SITE_CONFIG.githubUrl
   ]
 };
 

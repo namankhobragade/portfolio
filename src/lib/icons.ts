@@ -1,0 +1,31 @@
+
+import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers } from 'lucide-react';
+
+export const allIcons = [
+    { name: 'ShieldCheck', component: ShieldCheck },
+    { name: 'Code', component: Code },
+    { name: 'Cpu', component: Cpu },
+    { name: 'Server', component: Server },
+    { name: 'BrainCircuit', component: BrainCircuit },
+    { name: 'Bot', component: Bot },
+    { name: 'Award', component: Award },
+    { name: 'CloudCog', component: CloudCog },
+    { name: 'GraduationCap', component: GraduationCap },
+    { name: 'Briefcase', component: Briefcase },
+    { name: 'BookOpen', component: BookOpen },
+    { name: 'Star', component: Star },
+    { name: 'Database', component: Database },
+    { name: 'Cloud', component: Cloud },
+    { name: 'GitBranch', component: GitBranch },
+    { name: 'Terminal', component: Terminal },
+    { name: 'Globe', component: Globe },
+    { name: 'CreditCard', component: CreditCard },
+    { name: 'GitCommit', component: GitCommit },
+    { name: 'Container', component: Container },
+    { name: 'Users', component: Users },
+    { name: 'Settings', component: Settings },
+    { name: 'SearchCheck', component: SearchCheck },
+    { name: 'Shield', component: Shield },
+    { name: 'GanttChartSquare', component: GanttChartSquare },
+    { name: 'Layers', component: Layers },
+];

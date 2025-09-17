@@ -5,6 +5,13 @@ import { SKILLS_DATA } from "@/lib/data";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedItem } from "../animated-item";
+import { allIcons } from "@/lib/icons";
+
+const iconMap = allIcons.reduce((map, icon) => {
+    map[icon.name] = icon.component;
+    return map;
+}, {} as Record<string, React.FC<any>>);
+
 
 export function Skills() {
   return (
@@ -22,18 +29,21 @@ export function Skills() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {SKILLS_DATA.map((category, index) => (
             <AnimatedItem key={category.category} delay={index * 0.1}>
-              <Card className="flex flex-col h-full bg-transparent border hover:shadow-lg hover:-translate-y-1 transition-all">
+              <Card className="flex flex-col h-full bg-transparent border-2 hover:shadow-lg hover:-translate-y-1 transition-all">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">{category.category}</CardTitle>
                   <CardDescription>{category.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => (
-                    <Badge key={skill.name} variant="secondary" className="flex items-center gap-2">
-                       <skill.icon className="h-4 w-4" />
-                       {skill.name}
-                    </Badge>
-                  ))}
+                  {category.skills.map((skill) => {
+                    const Icon = iconMap[skill.icon as keyof typeof iconMap] || iconMap['Code'];
+                    return (
+                        <Badge key={skill.name} variant="secondary" className="flex items-center gap-2">
+                           <Icon className="h-4 w-4" />
+                           {skill.name}
+                        </Badge>
+                    );
+                  })}
                 </CardContent>
               </Card>
             </AnimatedItem>

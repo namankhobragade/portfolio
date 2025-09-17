@@ -4,6 +4,12 @@
 import { EDUCATION_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { allIcons } from "@/lib/icons";
+
+const iconMap = allIcons.reduce((map, icon) => {
+    map[icon.name] = icon.component;
+    return map;
+}, {} as Record<string, React.FC<any>>);
 
 export function Education() {
   return (
@@ -18,12 +24,14 @@ export function Education() {
           </div>
         </div>
         <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          {EDUCATION_DATA.map((edu, index) => (
+          {EDUCATION_DATA.map((edu, index) => {
+            const Icon = iconMap[edu.icon as keyof typeof iconMap] || iconMap['GraduationCap'];
+            return (
              <AnimatedItem key={edu.degree} delay={index * 0.1}>
-                <Card className="flex h-full flex-col p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border">
+                <Card className="flex h-full flex-col p-6 transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border-2">
                     <CardHeader className="p-0 mb-4">
                         <div className="bg-accent/10 text-accent rounded-lg p-3 w-fit">
-                            <edu.icon className="h-8 w-8" />
+                            <Icon className="h-8 w-8" />
                         </div>
                     </CardHeader>
                     <CardContent className="p-0 flex flex-col flex-grow">
@@ -33,7 +41,8 @@ export function Education() {
                     </CardContent>
                 </Card>
             </AnimatedItem>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

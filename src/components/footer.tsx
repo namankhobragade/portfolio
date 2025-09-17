@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Code2 } from 'lucide-react';
 import { Separator } from './ui/separator';
 import { useState, useEffect } from 'react';
+import { SITE_CONFIG } from '@/lib/data';
 
 interface LocationInfo {
   ip: string;
@@ -62,7 +63,7 @@ export function Footer() {
             <span className="text-2xl font-bold font-headline">DevSec</span>
           </div>
           <p className="text-sm text-muted-foreground max-w-md">
-             &copy; {new Date().getFullYear()} Sunil Khobragade. All rights reserved. 
+             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved. 
              Crafting secure and intelligent digital experiences with a passion for code.
           </p>
           <Separator className="w-1/4 my-2" />
@@ -79,11 +80,11 @@ export function Footer() {
               </div>
           </div>
           <div className="flex space-x-6">
-            <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
+            <Link href={SITE_CONFIG.githubUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
               <Github className="h-6 w-6" />
               <span className="sr-only">GitHub</span>
             </Link>
-            <Link href="https://www.linkedin.com/in/sunilkhobragade" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
+            <Link href={SITE_CONFIG.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-transform hover:text-foreground hover:scale-110">
               <Linkedin className="h-6 w-6" />
               <span className="sr-only">LinkedIn</span>
             </Link>

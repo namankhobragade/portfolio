@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useActionState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from "@/components/ui/button";
@@ -15,24 +15,27 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Bot, Loader2, Save, Check, Image as ImageIcon, Palette } from 'lucide-react';
+import { Bot, Loader2, Save, Check, Image as ImageIcon, Palette, Settings, Trash2, PlusCircle, GripVertical } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownContent } from '@/components/markdown-content';
 import { generateBlogPost, GenerateBlogPostOutput } from '@/ai/flows/generate-blog-post-flow';
-import { SKILLS_DATA } from '@/lib/data';
-import { saveBlogPost, updateThemeColors } from '@/app/actions';
+import { SKILLS_DATA, SITE_CONFIG } from '@/lib/data';
+import { saveBlogPost, updateThemeColors, updateGeneralSettings, updateSkills, updateTypography } from '@/app/actions';
 import { Header } from '@/components/header';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { allIcons } from '@/lib/icons';
 
-// Blog Post Form Schema
+// ========= Form Schemas =========
+
 const blogFormSchema = z.object({
   topic: z.string().min(10, 'Please provide a more detailed topic (min 10 characters).'),
 });
 
-// Theme Customizer Form Schema
 const themeFormSchema = z.object({
     primary: z.string().min(1, 'Primary color is required.'),
     background: z.string().min(1, 'Background color is required.'),
@@ -42,6 +45,42 @@ const themeFormSchema = z.object({
     accentDark: z.string().min(1, 'Dark Accent color is required.'),
 });
 
+const generalSettingsSchema = z.object({
+    name: z.string().min(1, "Name is required."),
+    jobTitle: z.string().min(1, "Job title is required."),
+    heroDescription1: z.string().min(1, "First paragraph of hero description is required."),
+    heroDescription2: z.string().min(1, "Second paragraph of hero description is required."),
+    siteTitle: z.string().min(1, "Site title is required."),
+    siteDescription: z.string().min(1, "Site description is required."),
+    siteKeywords: z.string(),
+    githubUrl: z.string().url("Invalid GitHub URL."),
+    linkedinUrl: z.string().url("Invalid LinkedIn URL."),
+});
+
+const skillSchema = z.object({
+    name: z.string().min(1, "Skill name cannot be empty."),
+    icon: z.string().min(1, "An icon must be selected."),
+});
+
+const skillCategorySchema = z.object({
+    category: z.string().min(1, "Category name cannot be empty."),
+    description: z.string().min(1, "Description cannot be empty."),
+    skills: z.array(skillSchema),
+});
+
+const skillsFormSchema = z.object({
+    skills: z.array(skillCategorySchema),
+});
+
+const typographySchema = z.object({
+  fontBody: z.string(),
+  fontHeadline: z.string(),
+});
+
+const availableFonts = ["Inter", "Space Grotesk", "Roboto", "Lato", "Montserrat", "Oswald", "Raleway"];
+
+
+// ========= Main Studio Page =========
 
 export default function StudioPage() {
     return (
@@ -55,25 +94,403 @@ export default function StudioPage() {
                 </p>
             </div>
             
-            <Tabs defaultValue="content" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="content">Content Studio</TabsTrigger>
-                <TabsTrigger value="theme">Theme Customizer</TabsTrigger>
+            <Tabs defaultValue="general" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
+                <TabsTrigger value="general">General</TabsTrigger>
+                <TabsTrigger value="skills">Skills</TabsTrigger>
+                <TabsTrigger value="theme">Theme</TabsTrigger>
+                <TabsTrigger value="typography">Typography</TabsTrigger>
+                <TabsTrigger value="content" className="md:col-span-4">Content</TabsTrigger>
               </TabsList>
-              <TabsContent value="content">
-                <ContentStudio />
-              </TabsContent>
-              <TabsContent value="theme">
-                <ThemeCustomizer />
-              </TabsContent>
+              <TabsContent value="general"><GeneralSettings /></TabsContent>
+              <TabsContent value="skills"><SkillsManager /></TabsContent>
+              <TabsContent value="theme"><ThemeCustomizer /></TabsContent>
+              <TabsContent value="typography"><TypographyCustomizer /></TabsContent>
+              <TabsContent value="content"><ContentStudio /></TabsContent>
             </Tabs>
         </main>
         </>
     );
 }
 
+// ========= Studio Components =========
 
-// Content Studio Component
+function GeneralSettings() {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(updateGeneralSettings, { success: false, message: "" });
+    
+    const form = useForm<z.infer<typeof generalSettingsSchema>>({
+        resolver: zodResolver(generalSettingsSchema),
+        defaultValues: {
+            ...SITE_CONFIG,
+            siteKeywords: SITE_CONFIG.keywords.join(', '),
+        },
+    });
+    
+    useEffect(() => {
+        if (form.formState.isSubmitSuccessful && state.success) {
+            toast({ description: state.message });
+        } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
+            toast({ description: state.message, variant: 'destructive' });
+        }
+    }, [form.formState.isSubmitSuccessful, state, toast]);
+
+    return (
+        <Card className="mt-6 bg-transparent border">
+            <CardHeader>
+                <CardTitle>General Settings</CardTitle>
+                <CardDescription>Update your personal information, social links, and website SEO settings.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form action={formAction} className="space-y-8">
+                        <h3 className="text-lg font-semibold">Personal Information</h3>
+                        <FormField control={form.control} name="name" render={({ field }) => (
+                            <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="jobTitle" render={({ field }) => (
+                            <FormItem><FormLabel>Job Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="heroDescription1" render={({ field }) => (
+                            <FormItem><FormLabel>Hero Introduction</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="heroDescription2" render={({ field }) => (
+                            <FormItem><FormLabel>Hero Details</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <Separator />
+                        <h3 className="text-lg font-semibold">SEO & Socials</h3>
+                        <FormField control={form.control} name="siteTitle" render={({ field }) => (
+                            <FormItem><FormLabel>Site Title</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="siteDescription" render={({ field }) => (
+                            <FormItem><FormLabel>Site Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="siteKeywords" render={({ field }) => (
+                            <FormItem><FormLabel>Site Keywords</FormLabel><FormControl><Input {...field} /></FormControl><FormDescription>Comma-separated keywords.</FormDescription><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="githubUrl" render={({ field }) => (
+                            <FormItem><FormLabel>GitHub URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <FormField control={form.control} name="linkedinUrl" render={({ field }) => (
+                            <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+
+                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    )
+}
+
+function SkillsManager() {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
+    const { control, handleSubmit, formState: { isSubmitting } } = useForm<z.infer<typeof skillsFormSchema>>({
+        resolver: zodResolver(skillsFormSchema),
+        defaultValues: {
+            skills: SKILLS_DATA.map(cat => ({
+                ...cat,
+                skills: cat.skills.map(skill => ({...skill, icon: skill.icon.displayName || 'Code' }))
+            }))
+        }
+    });
+
+    const { fields, append, remove, move } = useFieldArray({
+        control,
+        name: "skills",
+    });
+
+    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
+        formAction(data.skills);
+    };
+
+    useEffect(() => {
+        if (isSubmitting) return; // Prevent toast on initial load
+        if (state.success) {
+            toast({ description: state.message });
+        } else if (!state.success && state.message) {
+            toast({ description: state.message, variant: 'destructive' });
+        }
+    }, [state, isSubmitting, toast]);
+
+    return (
+         <Card className="mt-6 bg-transparent border">
+            <CardHeader>
+                <CardTitle>Skills Manager</CardTitle>
+                <CardDescription>Add, edit, or remove skill categories and individual skills.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...{control, handleSubmit}}>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                        <div className="space-y-6">
+                            {fields.map((field, index) => (
+                                <SkillCategoryField key={field.id} categoryIndex={index} control={control} removeCategory={remove} />
+                            ))}
+                        </div>
+                        <Button type="button" variant="outline" onClick={() => append({ category: "", description: "", skills: [{ name: "", icon: "Code"}] })}>
+                            <PlusCircle className="mr-2 h-4 w-4" /> Add Category
+                        </Button>
+                        <Separator />
+                         <Button type="submit" disabled={isSubmitting} className="w-full">
+                           {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    );
+}
+
+function SkillCategoryField({ categoryIndex, control, removeCategory }: { categoryIndex: number, control: any, removeCategory: (index: number) => void }) {
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: `skills.${categoryIndex}.skills`,
+    });
+
+    return (
+        <Card className="p-4 border-dashed">
+            <div className="flex justify-between items-start">
+                <div className="flex-grow space-y-4">
+                    <FormField
+                        control={control}
+                        name={`skills.${categoryIndex}.category`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category Name</FormLabel>
+                                <FormControl><Input placeholder="e.g., Backend Development" {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={control}
+                        name={`skills.${categoryIndex}.description`}
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Category Description</FormLabel>
+                                <FormControl><Textarea placeholder="A brief description of the category." {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => removeCategory(categoryIndex)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+            </div>
+             <Separator className="my-4" />
+             <h4 className="text-sm font-semibold mb-2">Skills in this category</h4>
+            <div className="space-y-2">
+                {fields.map((skillField, skillIndex) => (
+                    <div key={skillField.id} className="flex items-center gap-2 p-2 rounded-md bg-muted/50">
+                        <GripVertical className="h-4 w-4 text-muted-foreground" />
+                        <FormField
+                            control={control}
+                            name={`skills.${categoryIndex}.skills.${skillIndex}.name`}
+                            render={({ field }) => (
+                                <FormItem className="flex-grow">
+                                    <FormControl><Input placeholder="e.g., Laravel" {...field} /></FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={control}
+                            name={`skills.${categoryIndex}.skills.${skillIndex}.icon`}
+                             render={({ field }) => (
+                                <FormItem>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                            <SelectTrigger><SelectValue placeholder="Icon" /></SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {allIcons.map(icon => <SelectItem key={icon.name} value={icon.name}><icon.component className="h-4 w-4 mr-2" />{icon.name}</SelectItem>)}
+                                        </SelectContent>
+                                    </Select>
+                                </FormItem>
+                            )}
+                        />
+                         <Button variant="ghost" size="icon" onClick={() => remove(skillIndex)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                    </div>
+                ))}
+            </div>
+            <Button type="button" variant="link" size="sm" onClick={() => append({ name: "", icon: "Code" })}>
+                <PlusCircle className="mr-2 h-4 w-4" /> Add Skill
+            </Button>
+        </Card>
+    );
+}
+
+function ThemeCustomizer() {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(updateThemeColors, { success: false, message: "" });
+
+    const form = useForm<z.infer<typeof themeFormSchema>>({
+        resolver: zodResolver(themeFormSchema),
+        defaultValues: {
+            primary: "240 5.9% 10%",
+            background: "0 0% 100%",
+            accent: "240 5.9% 10%",
+            primaryDark: "0 0% 98%",
+            backgroundDark: "0 0% 0%",
+            accentDark: "0 0% 98%",
+        },
+    });
+    
+     useEffect(() => {
+      if (form.formState.isSubmitSuccessful && state.success) {
+        toast({ description: state.message });
+      } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
+        toast({ description: state.message, variant: 'destructive' });
+      }
+    }, [form.formState.isSubmitSuccessful, state, toast]);
+
+    return (
+        <Card className="mt-6 bg-transparent border">
+            <CardHeader>
+                <CardTitle>Theme Customizer</CardTitle>
+                <CardDescription>Adjust the color scheme of your website. Enter HSL values to change the theme colors.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form action={formAction} className="space-y-8">
+                        <div className="space-y-6">
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Light Theme</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                     <FormField control={form.control} name="background" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Background</FormLabel>
+                                            <FormControl><Input placeholder="0 0% 100%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="primary" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Primary</FormLabel>
+                                            <FormControl><Input placeholder="240 5.9% 10%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="accent" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Accent</FormLabel>
+                                            <FormControl><Input placeholder="240 5.9% 10%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                </div>
+                            </div>
+                            <Separator />
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">Dark Theme</h3>
+                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                     <FormField control={form.control} name="backgroundDark" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Background</FormLabel>
+                                            <FormControl><Input placeholder="240 10% 3.9%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="primaryDark" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Primary</FormLabel>
+                                            <FormControl><Input placeholder="0 0% 98%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                    <FormField control={form.control} name="accentDark" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Accent</FormLabel>
+                                            <FormControl><Input placeholder="0 0% 98%" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                </div>
+                            </div>
+                        </div>
+                        <FormDescription>
+                            Enter colors as HSL values without the `hsl()` function (e.g., `240 5.9% 10%`).
+                        </FormDescription>
+                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Theme</>}
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    );
+}
+
+function TypographyCustomizer() {
+    const { toast } = useToast();
+    const [state, formAction] = useActionState(updateTypography, { success: false, message: "" });
+    
+    const form = useForm<z.infer<typeof typographySchema>>({
+        resolver: zodResolver(typographySchema),
+        defaultValues: {
+            fontBody: 'Inter',
+            fontHeadline: 'Space Grotesk',
+        },
+    });
+
+    useEffect(() => {
+        if (form.formState.isSubmitSuccessful && state.success) {
+            toast({ description: state.message });
+        } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
+            toast({ description: state.message, variant: 'destructive' });
+        }
+    }, [form.formState.isSubmitSuccessful, state, toast]);
+
+    return (
+        <Card className="mt-6 bg-transparent border">
+            <CardHeader>
+                <CardTitle>Typography</CardTitle>
+                <CardDescription>Change the fonts used for headlines and body text across your website.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Form {...form}>
+                    <form action={formAction} className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <FormField
+                                control={form.control}
+                                name="fontHeadline"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Headline Font</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl><SelectTrigger><SelectValue placeholder="Select a font" /></SelectTrigger></FormControl>
+                                            <SelectContent>{availableFonts.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="fontBody"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Body Font</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl><SelectTrigger><SelectValue placeholder="Select a font" /></SelectTrigger></FormControl>
+                                            <SelectContent>{availableFonts.map(f => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Fonts</>}
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    );
+}
+
 function ContentStudio() {
     const [generatedPost, setGeneratedPost] = useState<GenerateBlogPostOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -186,114 +603,3 @@ function ContentStudio() {
         </Card>
     )
 }
-
-// Theme Customizer Component
-function ThemeCustomizer() {
-    const { toast } = useToast();
-    const [state, formAction] = useActionState(updateThemeColors, { success: false, message: "" });
-
-    const form = useForm<z.infer<typeof themeFormSchema>>({
-        resolver: zodResolver(themeFormSchema),
-        defaultValues: {
-            primary: "240 5.9% 10%",
-            background: "0 0% 100%",
-            accent: "240 5.9% 10%",
-            primaryDark: "0 0% 98%",
-            backgroundDark: "240 10% 3.9%",
-            accentDark: "0 0% 98%",
-        },
-    });
-    
-     useEffect(() => {
-      if (form.formState.isSubmitSuccessful && state.success) {
-        toast({ description: state.message });
-      } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-        toast({ description: state.message, variant: 'destructive' });
-      }
-    }, [form.formState.isSubmitSuccessful, state, toast]);
-
-    const handleFormSubmit = (data: z.infer<typeof themeFormSchema>) => {
-        const formData = new FormData();
-        Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, value);
-        });
-        formAction(formData);
-    };
-
-    return (
-        <Card className="mt-6 bg-transparent border">
-            <CardHeader>
-                <CardTitle>Theme Customizer</CardTitle>
-                <CardDescription>Adjust the color scheme of your website. Enter HSL values to change the theme colors.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-8">
-                        <div className="space-y-6">
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Light Theme</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                     <FormField control={form.control} name="background" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Background</FormLabel>
-                                            <FormControl><Input placeholder="0 0% 100%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="primary" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Primary</FormLabel>
-                                            <FormControl><Input placeholder="240 5.9% 10%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="accent" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Accent</FormLabel>
-                                            <FormControl><Input placeholder="240 5.9% 10%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                </div>
-                            </div>
-                            <Separator />
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">Dark Theme</h3>
-                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                     <FormField control={form.control} name="backgroundDark" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Background</FormLabel>
-                                            <FormControl><Input placeholder="240 10% 3.9%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="primaryDark" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Primary</FormLabel>
-                                            <FormControl><Input placeholder="0 0% 98%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                    <FormField control={form.control} name="accentDark" render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Accent</FormLabel>
-                                            <FormControl><Input placeholder="0 0% 98%" {...field} /></FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )} />
-                                </div>
-                            </div>
-                        </div>
-                        <FormDescription>
-                            Enter colors as HSL values without the `hsl()` function (e.g., `240 5.9% 10%`).
-                        </FormDescription>
-                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Theme</>}
-                        </Button>
-                    </form>
-                </Form>
-            </CardContent>
-        </Card>
-    );
-}
-
