@@ -1,4 +1,3 @@
-
 import { PROJECTS_DATA, SITE_CONFIG } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -14,12 +13,16 @@ import { Github, ExternalLink } from 'lucide-react';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
+type Props = {
+  params: { slug: string };
+};
+
 const getProjectBySlug = (slug: string) => {
   return PROJECTS_DATA.find((p) => p.slug === slug);
 };
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } },
+  { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
@@ -59,7 +62,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
+export default function ProjectPage({ params }: Props) {
   const { slug } = params;
   const project = getProjectBySlug(slug);
 

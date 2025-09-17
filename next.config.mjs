@@ -1,4 +1,3 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -10,16 +9,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
-      },
+      }
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: [
-      '@genkit-ai/googleai',
-      'firebase-admin',
-      'long',
-    ],
-  },
+  serverExternalPackages: ['@genkit-ai/googleai', 'firebase-admin', 'long'],
 };
 
 export default nextConfig;
