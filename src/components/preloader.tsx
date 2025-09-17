@@ -29,7 +29,6 @@ export function Preloader() {
           },
         },
         exit: {
-          opacity: 0,
           y: '-100vh',
           transition: {
             duration: 0.75,
@@ -65,34 +64,36 @@ export function Preloader() {
       return (
         <AnimatePresence>
             <motion.div
-              className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-background"
+              className="fixed inset-0 z-[200] flex items-center justify-center bg-background"
               variants={containerVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
               aria-busy="true"
             >
-              <motion.h1
-                className="text-6xl md:text-8xl font-bold font-headline tracking-tighter text-foreground"
-                variants={containerVariants}
-                aria-label={text}
-              >
-                {text.split('').map((letter, index) => (
-                  <motion.span
-                    key={index}
-                    variants={letterVariants}
-                    className="inline-block"
-                  >
-                    {letter}
-                  </motion.span>
-                ))}
-              </motion.h1>
-              <motion.p 
-                className="mt-4 text-xl md:text-2xl font-medium text-muted-foreground"
-                variants={subtitleVariants}
-              >
-                Sunil Khobragade
-              </motion.p>
+              <div className="w-full max-w-lg px-4">
+                <motion.h1
+                  className="text-center text-6xl md:text-8xl font-bold font-headline tracking-tighter text-foreground"
+                  variants={containerVariants}
+                  aria-label={text}
+                >
+                  {text.split('').map((letter, index) => (
+                    <motion.span
+                      key={index}
+                      variants={letterVariants}
+                      className="inline-block"
+                    >
+                      {letter}
+                    </motion.span>
+                  ))}
+                </motion.h1>
+                <motion.p 
+                  className="mt-4 text-right text-lg md:text-xl font-medium text-muted-foreground"
+                  variants={subtitleVariants}
+                >
+                  Sunil Khobragade
+                </motion.p>
+              </div>
             </motion.div>
         </AnimatePresence>
       )
