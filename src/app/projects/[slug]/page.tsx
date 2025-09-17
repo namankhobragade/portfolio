@@ -60,7 +60,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export default function ProjectPage({ params }: Props) {
+export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
