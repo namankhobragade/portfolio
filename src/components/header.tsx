@@ -101,7 +101,7 @@ export function Header() {
         </motion.nav>
 
         {/* Mobile Header - Left Vertical Buttons */}
-        <div className="md:hidden fixed left-4 top-1/2 -translate-y-1/2 z-[101] flex flex-col gap-2">
+        <div className="md:hidden fixed left-4 top-4 z-[101] flex flex-col gap-2">
             <div className="flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
                 <ThemeToggle />
                 <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
