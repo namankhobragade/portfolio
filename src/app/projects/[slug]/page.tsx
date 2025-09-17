@@ -12,10 +12,6 @@ import type { Metadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import { Github, ExternalLink } from 'lucide-react';
 
-type ProjectPageProps = {
-  params: { slug: string };
-};
-
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
 // Find project data by slug
@@ -23,7 +19,7 @@ const getProjectBySlug = (slug: string) => {
   return PROJECTS_DATA.find((p) => p.slug === slug);
 };
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
@@ -60,7 +56,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
