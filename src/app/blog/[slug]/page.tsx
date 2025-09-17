@@ -9,7 +9,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import { format } from 'date-fns';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
 import { PostCard } from '@/components/post-card';
@@ -17,7 +17,16 @@ import { SITE_CONFIG } from '@/lib/data';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+interface BlogPageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export async function generateMetadata(
+  { params }: BlogPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -27,7 +36,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
-  const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
+  const imageUrl = postImage
+    ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`
+    : `${siteUrl}/og-image.png`;
 
   return {
     title: post.frontmatter.title,
@@ -47,18 +58,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: post.frontmatter.description,
       images: [imageUrl],
       creator: '@naman-mahi',
-    }
+    },
   };
 }
 
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
+export async function generateStaticParams(): Promise<BlogPageProps['params'][]> {
   const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: BlogPageProps) {
   const { slug } = params;
   const post = await getPostBySlug(slug);
 
@@ -68,11 +79,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
   const allPosts = await getAllPosts();
   const relatedPosts = allPosts
-    .filter(p => p.slug !== post.slug) // Exclude current post
-    .slice(0, 2); // Get the next 2 posts
+    .filter((p) => p.slug !== post.slug)
+    .slice(0, 2);
 
   const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
-  const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
+  const imageUrl = postImage
+    ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`
+    : `${siteUrl}/og-image.png`;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -89,11 +102,11 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       "name": SITE_CONFIG.name,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/favicon.svg`
-      }
+        "url": `${siteUrl}/favicon.svg`,
+      },
     },
     "datePublished": new Date(post.frontmatter.date).toISOString(),
-    "description": post.frontmatter.description
+    "description": post.frontmatter.description,
   };
 
   return (
@@ -114,11 +127,13 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           <ShareButtons title={post.frontmatter.title} slug={post.slug} />
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-2">{post.frontmatter.title}</h1>
+        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-2">
+          {post.frontmatter.title}
+        </h1>
         <p className="text-muted-foreground mb-4">
           Posted on {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
         </p>
-        
+
         {postImage && (
           <Image
             src={postImage.imageUrl}
@@ -134,12 +149,14 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
         <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
           <MarkdownContent content={post.content} />
         </div>
-        
+
         <Separator className="my-12" />
 
-         {relatedPosts.length > 0 && (
+        {relatedPosts.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-2xl font-bold tracking-tight font-headline mb-8 text-center">You might also like</h2>
+            <h2 className="text-2xl font-bold tracking-tight font-headline mb-8 text-center">
+              You might also like
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {relatedPosts.map((relatedPost) => (
                 <PostCard key={relatedPost.slug} post={relatedPost} orientation="vertical" />
