@@ -198,20 +198,27 @@ function SkillsManager() {
         }
     });
 
-    const { control, handleSubmit, formState: { isSubmitting } } = formMethods;
+    const { control, handleSubmit, formState, trigger } = formMethods;
+    const { isSubmitting } = formState;
 
     const { fields, append, remove, move } = useFieldArray({
         control,
         name: "skills",
     });
 
-    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
-        formAction(data.skills);
+    const handleFormAction = async () => {
+        const isValid = await trigger();
+        if (isValid) {
+            const formData = new FormData();
+            formData.append('skills', JSON.stringify(formMethods.getValues().skills));
+             formAction(formMethods.getValues('skills') as any);
+        }
     };
+
 
     useEffect(() => {
         if (isSubmitting) return; // Prevent toast on initial load
-        if (state.success) {
+        if (state.success && state.message) {
             toast({ description: state.message });
         } else if (!state.success && state.message) {
             toast({ description: state.message, variant: 'destructive' });
@@ -226,7 +233,7 @@ function SkillsManager() {
             </CardHeader>
             <CardContent>
                 <FormProvider {...formMethods}>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <form action={formAction} onSubmit={e => { e.preventDefault(); handleSubmit(() => handleFormAction())()}} className="space-y-8">
                         <div className="space-y-6">
                             {fields.map((field, index) => (
                                 <SkillCategoryField key={field.id} categoryIndex={index} control={control} removeCategory={remove} />
@@ -605,5 +612,7 @@ function ContentStudio() {
         </Card>
     )
 }
+
+    
 
     
