@@ -1,5 +1,5 @@
 
-import { PROJECTS_DATA } from '@/lib/data';
+import { PROJECTS_DATA, SITE_CONFIG } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${project.title} | Case Study`,
     description: project.description,
+    authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.linkedinUrl }],
     openGraph: {
       title: `${project.title} | Case Study`,
       description: project.description,
@@ -60,7 +61,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
+export default function ProjectPage({ params }: Props) {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {

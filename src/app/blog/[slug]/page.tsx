@@ -13,6 +13,7 @@ import type { Metadata } from 'next';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
 import { PostCard } from '@/components/post-card';
+import { SITE_CONFIG } from '@/lib/data';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
@@ -35,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.description,
-    authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
+    authors: [{ name: SITE_CONFIG.name, url: SITE_CONFIG.linkedinUrl }],
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.description,
@@ -61,7 +62,7 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
   }));
 }
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -83,12 +84,12 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     "image": imageUrl,
     "author": {
       "@type": "Person",
-      "name": "Sunil Khobragade",
-      "url": "https://www.linkedin.com/in/sunilkhobragade"
+      "name": SITE_CONFIG.name,
+      "url": SITE_CONFIG.linkedinUrl,
     },
     "publisher": {
       "@type": "Organization",
-      "name": "DevSec",
+      "name": SITE_CONFIG.name,
       "logo": {
         "@type": "ImageObject",
         "url": `${siteUrl}/favicon.svg`
