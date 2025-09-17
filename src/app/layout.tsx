@@ -13,6 +13,9 @@ import { GoogleAnalytics } from '@/components/google-analytics';
 import { Inter, Space_Grotesk, Source_Code_Pro } from 'next/font/google';
 import { QuoteRotator } from '@/components/quote-rotator';
 import { ClientInfoWidget } from '@/components/client-info-widget';
+import Link from 'next/link';
+import { Github, Linkedin } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -138,6 +141,20 @@ export default function RootLayout({
             <Header />
             <div className="relative flex min-h-dvh flex-col">
                 <main className="flex-1 pt-32">{children}</main>
+                <div className="fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-2">
+                    <Button variant="ghost" size="icon" asChild>
+                        <Link href="https://github.com/naman-mahi" target="_blank" rel="noopener noreferrer">
+                            <Github className="h-6 w-6" />
+                            <span className="sr-only">GitHub</span>
+                        </Link>
+                    </Button>
+                    <Button variant="ghost" size="icon" asChild>
+                        <Link href="https://www.linkedin.com/in/sunilkhobragade" target="_blank" rel="noopener noreferrer">
+                            <Linkedin className="h-6 w-6" />
+                            <span className="sr-only">LinkedIn</span>
+                        </Link>
+                    </Button>
+                </div>
                 <Footer />
             </div>
             <Toaster />
