@@ -44,14 +44,14 @@ export function Hero() {
       >
         <motion.div className="lg:col-span-5 flex justify-center items-center" variants={itemVariants}>
           {profileImage && (
-            <div className="relative aspect-square w-full max-w-[400px] lg:max-w-none">
+            <div className="w-full max-w-[400px] lg:max-w-none">
              <Image
                 src={profileImage.imageUrl}
                 alt={profileImage.description}
                 data-ai-hint={profileImage.imageHint}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover rounded-lg"
+                width={400}
+                height={400}
+                className="rounded-lg object-cover w-full h-auto"
                 priority
               />
             </div>
@@ -110,4 +110,3 @@ export function Hero() {
     </section>
   );
 }
-
