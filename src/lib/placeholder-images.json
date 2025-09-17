@@ -8,12 +8,6 @@
       "imageHint": "professional headshot"
     },
     {
-      "id": "profile-picture",
-      "description": "Professional headshot of the portfolio owner for the hero section.",
-      "imageUrl": "/images/sunilkhobragade.png",
-      "imageHint": "professional portrait"
-    },
-    {
       "id": "project-1",
       "description": "Abstract visualization of a secure network.",
       "imageUrl": "https://picsum.photos/seed/project1/600/400",

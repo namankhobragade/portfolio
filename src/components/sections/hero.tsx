@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Download, Github, Linkedin, Send, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useTheme } from '@/components/theme-provider';
 
 export function Hero() {
-  const profileImage = PlaceHolderImages.find(p => p.id === 'profile-picture');
+  const { theme } = useTheme();
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -33,6 +33,9 @@ export function Hero() {
       },
     },
   };
+  
+  const lightImage = "/images/sunil-khobragade-light.png";
+  const darkImage = "/images/sunil-khobragade-dark.png";
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
@@ -43,19 +46,17 @@ export function Hero() {
         animate="visible"
       >
         <motion.div className="lg:col-span-5 flex justify-center items-center" variants={itemVariants}>
-          {profileImage && (
             <div className="w-full max-w-[400px] lg:max-w-none">
              <Image
-                src={profileImage.imageUrl}
-                alt={profileImage.description}
-                data-ai-hint={profileImage.imageHint}
+                key={theme}
+                src={theme === 'dark' ? darkImage : lightImage}
+                alt="Professional headshot of Sunil Khobragade"
                 width={400}
                 height={400}
                 className="rounded-lg object-cover w-full h-auto hero-image-effect"
                 priority
               />
             </div>
-          )}
         </motion.div>
         <motion.div className="lg:col-span-7 flex flex-col justify-center space-y-6" variants={itemVariants}>
             <div className="space-y-4">
