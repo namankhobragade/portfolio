@@ -50,7 +50,7 @@ export function Hero() {
                 data-ai-hint={profileImage.imageHint}
                 width={450}
                 height={450}
-                className="relative aspect-square overflow-hidden object-cover rounded-lg shadow-2xl w-[250px] h-[250px] md:w-[400px] md:h-[400px]"
+                className="relative aspect-square overflow-hidden object-cover"
                 priority
               />
           )}
