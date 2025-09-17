@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useActionState, useEffect, useTransition } from 'react';
-import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
+import { useForm, useFieldArray, FormProvider, useFormContext } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from "@/components/ui/button";
@@ -99,7 +99,7 @@ export default function StudioPage() {
                 <TabsTrigger value="skills">Skills</TabsTrigger>
                 <TabsTrigger value="theme">Theme</TabsTrigger>
                 <TabsTrigger value="typography">Typography</TabsTrigger>
-                <TabsTrigger value="content" className="md:col-span-4">Content</TabsTrigger>
+                <TabsTrigger value="content" className="col-span-2 md:col-span-4">Content</TabsTrigger>
               </TabsList>
               <TabsContent value="general"><GeneralSettings /></TabsContent>
               <TabsContent value="skills"><SkillsManager /></TabsContent>
@@ -136,12 +136,6 @@ function GeneralSettings() {
         }
     }, [state, toast]);
 
-    const handleFormAction = (formData: FormData) => {
-        startTransition(() => {
-            formAction(formData);
-        });
-    };
-
     return (
         <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
@@ -150,7 +144,7 @@ function GeneralSettings() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={handleFormAction} className="space-y-8">
+                    <form action={formAction} className="space-y-8">
                         <h3 className="text-lg font-semibold">Personal Information</h3>
                         <FormField control={form.control} name="name" render={({ field }) => (
                             <FormItem><FormLabel>Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -182,8 +176,8 @@ function GeneralSettings() {
                             <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
-                        <Button type="submit" disabled={isPending} className="w-full">
-                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
+                        <Button type="submit" className="w-full">
+                           <Settings className="mr-2 h-4 w-4" /> Update Settings
                         </Button>
                     </form>
                 </Form>
@@ -195,8 +189,7 @@ function GeneralSettings() {
 function SkillsManager() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
-    const [isPending, startTransition] = useTransition();
-
+    
     const formMethods = useForm<z.infer<typeof skillsFormSchema>>({
         resolver: zodResolver(skillsFormSchema),
         defaultValues: {
@@ -207,7 +200,7 @@ function SkillsManager() {
         }
     });
 
-    const { control, handleSubmit } = formMethods;
+    const { control } = formMethods;
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -223,14 +216,6 @@ function SkillsManager() {
         }
     }, [state, toast]);
     
-    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
-        const formData = new FormData();
-        formData.append('skills', JSON.stringify(data));
-        startTransition(() => {
-            formAction(formData);
-        });
-    };
-
     return (
          <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
@@ -239,7 +224,10 @@ function SkillsManager() {
             </CardHeader>
             <CardContent>
                 <FormProvider {...formMethods}>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <form action={formAction} className="space-y-8">
+                        {/* Add a hidden input to pass the form data */}
+                        <input type="hidden" name="skills" value={JSON.stringify(formMethods.watch('skills'))} />
+                        
                         <div className="space-y-6">
                             {fields.map((field, index) => (
                                 <SkillCategoryField key={field.id} categoryIndex={index} removeCategory={remove} />
@@ -249,8 +237,8 @@ function SkillsManager() {
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Category
                         </Button>
                         <Separator />
-                         <Button type="submit" disabled={isPending} className="w-full">
-                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
+                         <Button type="submit" className="w-full">
+                           <Save className="mr-2 h-4 w-4" /> Save Skills
                         </Button>
                     </form>
                 </FormProvider>
@@ -321,7 +309,7 @@ function SkillCategoryField({ categoryIndex, removeCategory }: { categoryIndex: 
                                             <SelectTrigger><SelectValue placeholder="Icon" /></SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {allIcons.map(icon => <SelectItem key={icon.name} value={icon.name}><icon.component className="h-4 w-4 mr-2" />{icon.name}</SelectItem>)}
+                                            {allIcons.map(icon => <SelectItem key={icon.name} value={icon.name}>{icon.name}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -342,8 +330,7 @@ function SkillCategoryField({ categoryIndex, removeCategory }: { categoryIndex: 
 function ThemeCustomizer() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateThemeColors, { success: false, message: "" });
-    const [isPending, startTransition] = useTransition();
-
+    
     const form = useForm<z.infer<typeof themeFormSchema>>({
         resolver: zodResolver(themeFormSchema),
         defaultValues: {
@@ -365,12 +352,6 @@ function ThemeCustomizer() {
         }
     }, [state, toast]);
 
-    const handleFormAction = (formData: FormData) => {
-        startTransition(() => {
-            formAction(formData);
-        });
-    };
-
     return (
         <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
@@ -379,7 +360,7 @@ function ThemeCustomizer() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={handleFormAction} className="space-y-8">
+                    <form action={formAction} className="space-y-8">
                         <div className="space-y-6">
                             <div>
                                 <h3 className="text-lg font-semibold mb-4">Light Theme</h3>
@@ -438,8 +419,8 @@ function ThemeCustomizer() {
                         <FormDescription>
                             Enter colors as HSL values without the `hsl()` function (e.g., `240 5.9% 10%`).
                         </FormDescription>
-                        <Button type="submit" disabled={isPending} className="w-full">
-                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Theme</>}
+                        <Button type="submit" className="w-full">
+                           <Palette className="mr-2 h-4 w-4" /> Update Theme
                         </Button>
                     </form>
                 </Form>
@@ -451,7 +432,6 @@ function ThemeCustomizer() {
 function TypographyCustomizer() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateTypography, { success: false, message: "" });
-    const [isPending, startTransition] = useTransition();
     
     const form = useForm<z.infer<typeof typographySchema>>({
         resolver: zodResolver(typographySchema),
@@ -470,12 +450,6 @@ function TypographyCustomizer() {
         }
     }, [state, toast]);
 
-    const handleFormAction = (formData: FormData) => {
-        startTransition(() => {
-            formAction(formData);
-        });
-    };
-
     return (
         <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
@@ -484,7 +458,7 @@ function TypographyCustomizer() {
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form action={handleFormAction} className="space-y-8">
+                    <form action={formAction} className="space-y-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <FormField
                                 control={form.control}
@@ -515,8 +489,8 @@ function TypographyCustomizer() {
                                 )}
                             />
                         </div>
-                        <Button type="submit" disabled={isPending} className="w-full">
-                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Palette className="mr-2 h-4 w-4" /> Update Fonts</>}
+                        <Button type="submit" className="w-full">
+                           <Palette className="mr-2 h-4 w-4" /> Update Fonts
                         </Button>
                     </form>
                 </Form>
@@ -637,5 +611,3 @@ function ContentStudio() {
         </Card>
     )
 }
-
-  
