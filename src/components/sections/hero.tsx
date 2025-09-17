@@ -51,7 +51,7 @@ export function Hero() {
                 data-ai-hint={profileImage.imageHint}
                 width={400}
                 height={400}
-                className="rounded-lg object-cover w-full h-auto"
+                className="rounded-lg object-cover w-full h-auto hero-image-effect"
                 priority
               />
             </div>
