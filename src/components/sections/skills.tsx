@@ -2,8 +2,8 @@
 "use client";
 
 import { SKILLS_DATA } from "@/lib/data";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "../ui/progress";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { AnimatedItem } from "../animated-item";
 
 export function Skills() {
@@ -22,22 +22,17 @@ export function Skills() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {SKILLS_DATA.map((category, index) => (
             <AnimatedItem key={category.category} delay={index * 0.1}>
-              <Card className="flex flex-col h-full bg-transparent border">
+              <Card className="flex flex-col h-full bg-transparent border hover:shadow-lg hover:-translate-y-1 transition-all">
                 <CardHeader>
                   <CardTitle className="font-headline text-xl">{category.category}</CardTitle>
+                  <CardDescription>{category.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="flex flex-col gap-6">
+                <CardContent className="flex flex-wrap gap-2">
                   {category.skills.map((skill) => (
-                    <div key={skill.name} className="flex flex-col gap-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <skill.icon className="h-5 w-5 text-accent" />
-                          <span className="font-medium">{skill.name}</span>
-                        </div>
-                        <span className="text-sm text-muted-foreground">{skill.proficiency}%</span>
-                      </div>
-                      <Progress value={skill.proficiency} aria-label={`${skill.name} proficiency`} />
-                    </div>
+                    <Badge key={skill.name} variant="secondary" className="flex items-center gap-2">
+                       <skill.icon className="h-4 w-4" />
+                       {skill.name}
+                    </Badge>
                   ))}
                 </CardContent>
               </Card>
