@@ -23,7 +23,7 @@ const getProjectBySlug = (slug: string) => {
   return PROJECTS_DATA.find((p) => p.slug === slug);
 };
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
@@ -54,13 +54,13 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return PROJECTS_DATA.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
+export default function ProjectPage({ params }: Props) {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {

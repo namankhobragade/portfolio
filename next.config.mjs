@@ -10,17 +10,11 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
-      },
+      }
     ],
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      config.externals.push({
-        '@google-cloud/functions-framework':
-          'commonjs @google-cloud/functions-framework',
-      });
-    }
-    return config;
+   experimental: {
+    serverComponentsExternalPackages: ['@genkit-ai/googleai', 'genkit'],
   },
 };
 
