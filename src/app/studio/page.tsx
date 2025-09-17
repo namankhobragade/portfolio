@@ -136,7 +136,7 @@ function GeneralSettings() {
     }, [form.formState.isSubmitSuccessful, state, toast]);
 
     return (
-        <Card className="mt-6 bg-transparent border">
+        <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
                 <CardTitle>General Settings</CardTitle>
                 <CardDescription>Update your personal information, social links, and website SEO settings.</CardDescription>
@@ -198,42 +198,35 @@ function SkillsManager() {
         }
     });
 
-    const { control, handleSubmit, formState, trigger } = formMethods;
+    const { control, handleSubmit, formState } = formMethods;
     const { isSubmitting } = formState;
 
-    const { fields, append, remove, move } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control,
         name: "skills",
     });
 
-    const handleFormAction = async () => {
-        const isValid = await trigger();
-        if (isValid) {
-            const formData = new FormData();
-            formData.append('skills', JSON.stringify(formMethods.getValues().skills));
-             formAction(formMethods.getValues('skills') as any);
-        }
+    const onSubmit = (data: z.infer<typeof skillsFormSchema>) => {
+        formAction(data.skills);
     };
 
-
     useEffect(() => {
-        if (isSubmitting) return; // Prevent toast on initial load
-        if (state.success && state.message) {
+        if (formState.isSubmitSuccessful && state.success && state.message) {
             toast({ description: state.message });
-        } else if (!state.success && state.message) {
+        } else if (formState.isSubmitSuccessful && !state.success && state.message) {
             toast({ description: state.message, variant: 'destructive' });
         }
-    }, [state, isSubmitting, toast]);
+    }, [formState.isSubmitSuccessful, state, toast]);
 
     return (
-         <Card className="mt-6 bg-transparent border">
+         <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
                 <CardTitle>Skills Manager</CardTitle>
                 <CardDescription>Add, edit, or remove skill categories and individual skills.</CardDescription>
             </CardHeader>
             <CardContent>
                 <FormProvider {...formMethods}>
-                    <form action={formAction} onSubmit={e => { e.preventDefault(); handleSubmit(() => handleFormAction())()}} className="space-y-8">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-6">
                             {fields.map((field, index) => (
                                 <SkillCategoryField key={field.id} categoryIndex={index} control={control} removeCategory={remove} />
@@ -260,7 +253,7 @@ function SkillCategoryField({ categoryIndex, control, removeCategory }: { catego
     });
 
     return (
-        <Card className="p-4 border-dashed">
+        <Card className="p-4 border-dashed border-2">
             <div className="flex justify-between items-start">
                 <div className="flex-grow space-y-4">
                     <FormField
@@ -300,6 +293,7 @@ function SkillCategoryField({ categoryIndex, control, removeCategory }: { catego
                             render={({ field }) => (
                                 <FormItem className="flex-grow">
                                     <FormControl><Input placeholder="e.g., Laravel" {...field} /></FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -316,6 +310,7 @@ function SkillCategoryField({ categoryIndex, control, removeCategory }: { catego
                                             {allIcons.map(icon => <SelectItem key={icon.name} value={icon.name}><icon.component className="h-4 w-4 mr-2" />{icon.name}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
@@ -355,7 +350,7 @@ function ThemeCustomizer() {
     }, [form.formState.isSubmitSuccessful, state, toast]);
 
     return (
-        <Card className="mt-6 bg-transparent border">
+        <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
                 <CardTitle>Theme Customizer</CardTitle>
                 <CardDescription>Adjust the color scheme of your website. Enter HSL values to change the theme colors.</CardDescription>
@@ -452,7 +447,7 @@ function TypographyCustomizer() {
     }, [form.formState.isSubmitSuccessful, state, toast]);
 
     return (
-        <Card className="mt-6 bg-transparent border">
+        <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
                 <CardTitle>Typography</CardTitle>
                 <CardDescription>Change the fonts used for headlines and body text across your website.</CardDescription>
@@ -553,7 +548,7 @@ function ContentStudio() {
     }
     
     return (
-        <Card className="mt-6 bg-transparent border">
+        <Card className="mt-6 bg-transparent border-2">
             <CardHeader>
                 <CardTitle>Blog Post Generator</CardTitle>
                 <CardDescription>Generate a high-quality, SEO-friendly blog post on any topic using AI, complete with a unique, AI-generated featured image.</CardDescription>
@@ -586,14 +581,14 @@ function ContentStudio() {
                         <div className="text-center">
                             <h2 className="text-3xl font-bold tracking-tighter font-headline">Generated Post</h2>
                         </div>
-                        <Card className="bg-transparent border">
+                        <Card className="bg-transparent border-2">
                             <CardHeader><CardTitle>Generated Image</CardTitle></CardHeader>
                             <CardContent>
-                                <Image src={generatedPost.imageDataUri} alt={generatedPost.title} width={1200} height={675} className="aspect-video w-full object-cover rounded-lg mb-4 border" />
+                                <Image src={generatedPost.imageDataUri} alt={generatedPost.title} width={1200} height={675} className="aspect-video w-full object-cover rounded-lg mb-4 border-2" />
                                 <p className="text-sm text-muted-foreground italic"><span className="font-semibold">Image Prompt:</span> "{generatedPost.imagePrompt}"</p>
                             </CardContent>
                         </Card>
-                        <Card className="bg-transparent border">
+                        <Card className="bg-transparent border-2">
                             <CardHeader>
                                 <CardTitle>{generatedPost.title}</CardTitle>
                                 <p className="text-sm text-muted-foreground pt-2">{generatedPost.description}</p>
@@ -612,6 +607,8 @@ function ContentStudio() {
         </Card>
     )
 }
+
+    
 
     
 
