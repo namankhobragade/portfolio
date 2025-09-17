@@ -99,17 +99,15 @@ export function Header() {
           </Button>
           <ThemeToggle />
         </motion.nav>
-
-        {/* Mobile Header - Left Vertical Buttons */}
-        <div className="md:hidden fixed left-4 top-4 z-[101] flex flex-col gap-2">
-            <div className="flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
-                <ThemeToggle />
-                <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-                    <Menu className="h-6 w-6" />
-                </Button>
-            </div>
-        </div>
       </header>
+      
+      {/* Mobile Control Buttons - Bottom Left */}
+      <div className="md:hidden fixed left-4 bottom-24 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+          <ThemeToggle />
+          <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
+              <Menu className="h-6 w-6" />
+          </Button>
+      </div>
       
       {/* Mobile Bottom Nav */}
       <nav className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
