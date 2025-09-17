@@ -2,11 +2,11 @@
 "use client";
 
 import Link from "next/link";
-import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X } from "lucide-react";
+import { Code2, Home, User, Briefcase, Wrench, FolderKanban, BookOpen, Menu, X, Mail } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
@@ -22,7 +22,42 @@ const navLinks = [
 
 export function Header() {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeLink, setActiveLink] = useState("/#home");
   const pathname = usePathname();
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveLink(window.location.hash || pathname);
+    };
+    
+    if (pathname === '/') {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveLink(`/#${entry.target.id}`);
+                }
+            });
+        }, { threshold: 0.5, rootMargin: '-50% 0px -50% 0px' });
+
+        navLinks.forEach(link => {
+            const id = link.href.split('#')[1];
+            if (id) {
+                const element = document.getElementById(id);
+                if (element) observer.observe(element);
+            }
+        });
+
+        handleHashChange(); // Set initial active link
+        window.addEventListener('hashchange', handleHashChange);
+        
+        return () => {
+            window.removeEventListener('hashchange', handleHashChange);
+            observer.disconnect();
+        };
+    } else {
+       setActiveLink(pathname);
+    }
+  }, [pathname]);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!isMobileMenuOpen);
 
@@ -47,8 +82,10 @@ export function Header() {
               key={label}
               href={href}
               className={cn(
-                "px-3 py-1.5 text-sm font-medium rounded-full transition-colors flex items-center gap-2",
-                 (pathname === href || (href.includes('#') && pathname === '/')) ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                "px-3 py-1.5 text-sm font-medium rounded-full transition-colors flex items-center gap-2 relative overflow-hidden",
+                 activeLink === href || (href.includes(activeLink) && activeLink !== '/#home' && href !== '/#home') || (activeLink.startsWith('/blog') && href === '/blog')
+                 ? "text-primary-foreground active-nav-link" 
+                 : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
               <Icon className="h-4 w-4" />
@@ -56,7 +93,7 @@ export function Header() {
             </Link>
           ))}
           <Button asChild size="sm" className="ml-2">
-            <Link href="/#contact">Contact Me</Link>
+            <Link href="/#contact"><Mail className="mr-2 h-4 w-4" />Contact</Link>
           </Button>
           <ThemeToggle />
         </motion.nav>
@@ -81,8 +118,10 @@ export function Header() {
                 <Link
                   href={href}
                   className={cn(
-                    "p-3 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-12 w-12",
-                    (pathname === href || (href.includes('#') && pathname === '/')) ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-accent/10"
+                    "p-3 text-sm font-medium rounded-full transition-colors flex items-center justify-center h-12 w-12 relative overflow-hidden",
+                    activeLink === href || (href.includes(activeLink) && activeLink !== '/#home' && href !== '/#home') || (activeLink.startsWith('/blog') && href === '/blog') 
+                    ? "text-primary-foreground active-nav-link" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )}
                 >
                   <Icon className="h-6 w-6" />
@@ -129,7 +168,7 @@ export function Header() {
                   </Link>
                 ))}
                  <Button asChild size="lg" className="mt-4">
-                  <Link href="/#contact" onClick={toggleMobileMenu}>Contact Me</Link>
+                  <Link href="/#contact" onClick={toggleMobileMenu}><Mail className="mr-2 h-4 w-4" />Contact Me</Link>
                 </Button>
               </nav>
             </div>

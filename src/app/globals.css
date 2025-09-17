@@ -125,4 +125,36 @@
       position: relative;
       z-index: 2;
   }
+
+  .active-nav-link {
+    @apply bg-primary;
+  }
+  .active-nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    padding: 2px; /* border thickness */
+    background: linear-gradient(60deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)), #e11d48, #9333ea, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: rainbow-spin 4s linear infinite;
+    z-index: 0;
+  }
+  .active-nav-link > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes rainbow-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 }
