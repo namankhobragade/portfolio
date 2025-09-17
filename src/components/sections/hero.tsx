@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Download, Github, Linkedin, Send } from 'lucide-react';
+import { Download, Github, Linkedin, Send, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
@@ -79,8 +79,14 @@ export function Hero() {
                         Hire Me
                     </Link>
                 </Button>
+                <Button asChild variant="secondary" size="lg">
+                    <Link href="#projects">
+                        <ArrowRight className="mr-2 h-4 w-4" />
+                        View My Work
+                    </Link>
+                </Button>
                 <Button asChild variant="outline" size="lg">
-                    <a href="/CV.pdf" download="Sunil-Khobragade-CV.pdf">
+                    <a href="/Sunil_Khobragade_CV.pdf" download="Sunil_Khobragade_CV.pdf">
                         <Download className="mr-2 h-4 w-4" />
                         Download CV
                     </a>
