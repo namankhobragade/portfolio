@@ -48,8 +48,7 @@ export function Hero() {
                 src={profileImage.imageUrl}
                 alt={profileImage.description}
                 data-ai-hint={profileImage.imageHint}
-                width={450}
-                height={450}
+                fill
                 className="relative aspect-square overflow-hidden object-cover"
                 priority
               />
@@ -108,3 +107,4 @@ export function Hero() {
     </section>
   );
 }
+
