@@ -189,3 +189,70 @@ export async function saveBlogPost(post: z.infer<typeof blogPostSchema>) {
     };
   }
 }
+
+// ========= Theme Customization Logic =========
+
+const themeColorSchema = z.object({
+    primary: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
+    background: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 100%"),
+    accent: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
+    primaryDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
+    backgroundDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 10% 3.9%"),
+    accentDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
+});
+
+export async function updateThemeColors(prevState: any, formData: FormData) {
+    const validatedFields = themeColorSchema.safeParse({
+        primary: formData.get('primary'),
+        background: formData.get('background'),
+        accent: formData.get('accent'),
+        primaryDark: formData.get('primaryDark'),
+        backgroundDark: formData.get('backgroundDark'),
+        accentDark: formData.get('accentDark'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            message: "Invalid HSL color format.",
+        };
+    }
+
+    const { primary, background, accent, primaryDark, backgroundDark, accentDark } = validatedFields.data;
+    const cssFilePath = path.join(process.cwd(), 'src/app/globals.css');
+
+    try {
+        let cssContent = await fs.readFile(cssFilePath, 'utf-8');
+
+        // Replace light theme colors
+        cssContent = cssContent.replace(/--primary:\s*[^;]+;/, `--primary: ${primary};`);
+        cssContent = cssContent.replace(/--background:\s*[^;]+;/, `--background: ${background};`);
+        cssContent = cssContent.replace(/--accent:\s*[^;]+;/, `--accent: ${accent};`);
+
+        // Replace dark theme colors
+        cssContent = cssContent.replace(/\.dark\s*{[^}]*--primary:\s*[^;]+;/, `.dark {\n    --primary: ${primaryDark};`);
+        cssContent = cssContent.replace(/\.dark\s*{[^}]*--background:\s*[^;]+;/, `.dark {\n    --background: ${backgroundDark};`);
+        cssContent = cssContent.replace(/\.dark\s*{[^}]*--accent:\s*[^;]+;/, `.dark {\n    --accent: ${accentDark};`);
+
+        // A more robust way to replace dark mode colors
+        cssContent = cssContent.replace(
+            /(\.dark\s*{)([\s\S]*?)(--background:\s*)[^;]+(;[\s\S]*?)(--primary:\s*)[^;]+(;[\s\S]*?)(--accent:\s*)[^;]+(;[\s\S]*?)}/,
+            `$1$2$3${backgroundDark}$4$5${primaryDark}$6$7${accentDark}$8}`
+        );
+
+
+        await fs.writeFile(cssFilePath, cssContent, 'utf-8');
+
+        return {
+            success: true,
+            message: "Theme updated successfully! Changes will be visible on next refresh.",
+        };
+
+    } catch (error: any) {
+        console.error("Failed to update theme:", error);
+        return {
+            success: false,
+            message: `Failed to update theme file: ${error.message}`,
+        };
+    }
+}
