@@ -1,17 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
-      },
-    ],
+  webpack: (config, { isServer }) => {
+    // This is to ensure that server-side dependencies are correctly bundled.
+    if (isServer) {
+      config.externalsPresets = { ...config.externalsPresets, node: true };
+    }
+    return config;
   },
 };
 
