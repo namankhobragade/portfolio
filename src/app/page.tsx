@@ -1,6 +1,5 @@
 
 import { Hero } from '@/components/sections/hero';
-import { About } from '@/components/sections/about';
 import { Skills } from '@/components/sections/skills';
 import { Projects } from '@/components/sections/projects';
 import { Experience } from '@/components/sections/experience';
@@ -17,7 +16,6 @@ export default function Home() {
   return (
     <div className="flex flex-col">
         <AnimatedSection id="home"><Hero /></AnimatedSection>
-        <AnimatedSection id="about"><About /></AnimatedSection>
         <AnimatedSection id="services"><Services /></AnimatedSection>
         <AnimatedSection id="skills"><Skills /></AnimatedSection>
         <AnimatedSection id="projects"><Projects /></AnimatedSection>

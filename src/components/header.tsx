@@ -13,7 +13,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/t
 
 const navLinks = [
   { href: "/#home", label: "Home", icon: Home },
-  { href: "/#about", label: "About", icon: User },
   { href: "/#services", label: "Services", icon: Briefcase },
   { href: "/#skills", label: "Skills", icon: Wrench },
   { href: "/#projects", label: "Projects", icon: FolderKanban },
@@ -102,7 +101,7 @@ export function Header() {
       </header>
       
       {/* Mobile Control Buttons - Bottom Left */}
-      <div className="md:hidden fixed left-4 bottom-24 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
+       <div className="md:hidden fixed left-4 bottom-16 z-[101] flex flex-col items-center gap-1 p-1 rounded-full bg-background/80 backdrop-blur-sm border shadow-lg">
           <ThemeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
               <Menu className="h-6 w-6" />
