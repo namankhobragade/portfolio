@@ -1,6 +1,6 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
@@ -11,6 +11,13 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'i.pravatar.cc',
       },
+    ],
+  },
+  experimental: {
+    serverComponentsExternalPackages: [
+      '@genkit-ai/googleai',
+      'firebase-admin',
+      'long',
     ],
   },
 };
