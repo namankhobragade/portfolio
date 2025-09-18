@@ -9,18 +9,18 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import { format } from 'date-fns';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
 import { PostCard } from '@/components/post-card';
 
-type BlogPostPageProps = {
+type Props = {
   params: { slug: string };
 };
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
-export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -61,7 +61,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params }: Props) {
   const post = await getPostBySlug(params.slug);
 
   if (!post) {

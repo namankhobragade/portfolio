@@ -8,11 +8,11 @@ import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
-import type { Metadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import { Github, ExternalLink } from 'lucide-react';
 
-type ProjectPageProps = {
+type Props = {
   params: { slug: string };
 };
 
@@ -23,7 +23,7 @@ const getProjectBySlug = (slug: string) => {
   return PROJECTS_DATA.find((p) => p.slug === slug);
 };
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
@@ -60,7 +60,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
+export default function ProjectPage({ params }: Props) {
   const project = getProjectBySlug(params.slug);
 
   if (!project) {
