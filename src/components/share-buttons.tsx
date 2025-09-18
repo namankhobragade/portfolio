@@ -18,7 +18,7 @@ export function ShareButtons({ title, slug }: { title: string; slug: string }) {
   const url = typeof window !== 'undefined' ? `${window.location.origin}/blog/${slug}` : '';
 
   useEffect(() => {
-    if (navigator.share) {
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
       setIsShareSupported(true);
     }
   }, []);

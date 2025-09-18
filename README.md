@@ -1,100 +1,363 @@
 # DevSec: AI-Powered Next.js Portfolio
 
-Welcome to DevSec, a modern, feature-rich, and secure portfolio website built with Next.js, TypeScript, and Tailwind CSS. This project is designed to showcase the skills of a cybersecurity professional and full-stack developer, with a special focus on integrating AI-powered tools.
+Welcome to DevSec, a modern, feature-rich, and secure portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. This project is designed to showcase the skills of a cybersecurity professional and full-stack developer, with a special focus on integrating AI-powered tools for enhanced client engagement.
 
-![DevSec Screenshot](public/screenshot.png)
+![DevSec Portfolio](https://img.shields.io/badge/Next.js-15.5.3-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.1-38B2AC?style=for-the-badge&logo=tailwind-css)
+![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)
 
-## ✨ Features
+## ✨ Key Features
 
-- **Modern & Responsive Design**: A sleek, professional layout built with Tailwind CSS and ShadCN UI that looks great on all devices.
-- **AI Proposal Generator**: An integrated Genkit flow that uses an LLM to generate personalized freelance proposals based on user input.
-- **Dynamic Content**: Easily update skills, projects, experience, and blog posts by editing simple data and markdown files.
-- **Smooth Animations & Transitions**: Engaging animations using Framer Motion to create a fluid and polished user experience.
-- **Blog with Markdown**: Write and manage blog posts using simple Markdown files. Code blocks are automatically highlighted.
-- **Dark & Light Mode**: Theme toggling with persistence in local storage.
-- **Contact Form with Honeypot**: A server-side contact form that includes a honeypot field to filter out spam bots.
-- **Optimized for Performance**: Built with Next.js App Router, Server Components, and image optimization.
+### 🤖 AI-Powered Tools
+- **Smart Proposal Generator**: Leverage Google's Gemini AI to create personalized freelance proposals in seconds
+- **AI Blog Writer**: Generate technical blog posts with integrated code examples and professional insights
+- **Intelligent Image Generation**: Create custom featured images for blog posts using AI
 
-## 🚀 Tech Stack
+### 🎨 Modern Design & UX
+- **Responsive Design**: Mobile-first approach with seamless experience across all devices
+- **Dark/Light Theme**: Automatic theme switching with user preference persistence
+- **Smooth Animations**: Fluid transitions using Framer Motion for professional polish
+- **Interactive Components**: Engaging UI elements with hover effects and micro-interactions
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [ShadCN UI](https://ui.shadcn.com/)
-- **AI Integration**: [Genkit (Google AI)](https://firebase.google.com/docs/genkit)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Form Handling**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
-- **Markdown**: [react-markdown](https://github.com/remarkjs/react-markdown)
-- **Icons**: [Lucide React](https://lucide.dev/guide/packages/lucide-react)
+### 📝 Content Management
+- **Markdown Blog System**: Write and manage technical blog posts with syntax highlighting
+- **Dynamic Project Showcase**: Case studies with detailed technical implementations
+- **Skills Matrix**: Categorized expertise display with visual icons
+- **Experience Timeline**: Professional journey with key achievements
 
-## 🔧 Getting Started
+### 🔒 Security & Performance
+- **Server-Side Rendering**: Optimized for SEO and performance with Next.js App Router
+- **Anti-Spam Protection**: Contact form with honeypot field and server-side validation
+- **Type Safety**: Full TypeScript implementation for robust code quality
+- **Optimized Assets**: Image optimization and code splitting for fast loading
+
+## 🛠 Tech Stack
+
+### Core Framework
+- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
+- **[TypeScript 5](https://www.typescriptlang.org/)** - Type-safe JavaScript
+- **[React 18](https://reactjs.org/)** - UI library with Server Components
+
+### Styling & UI
+- **[Tailwind CSS 3.4](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[ShadCN UI](https://ui.shadcn.com/)** - Re-usable components built on Radix UI
+- **[Framer Motion 11](https://www.framer.com/motion/)** - Production-ready motion library
+- **[Lucide React](https://lucide.dev/)** - Beautiful & consistent icon library
+
+### AI & Backend
+- **[Genkit 1.14](https://firebase.google.com/docs/genkit)** - Google's AI application framework
+- **[Google AI (Gemini)](https://ai.google.dev/)** - Advanced language model integration
+- **[Zod](https://zod.dev/)** - TypeScript-first schema validation
+
+### Content & Forms
+- **[React Markdown](https://github.com/remarkjs/react-markdown)** - Markdown renderer
+- **[React Syntax Highlighter](https://github.com/react-syntax-highlighter/react-syntax-highlighter)** - Code syntax highlighting
+- **[React Hook Form](https://react-hook-form.com/)** - Performant forms with validation
+- **[Gray Matter](https://github.com/jonschlinkert/gray-matter)** - Front matter parser
+
+### Development Tools
+- **[ESLint](https://eslint.org/)** - Code linting and formatting
+- **[PostCSS](https://postcss.org/)** - CSS transformation
+- **[Date-fns](https://date-fns.org/)** - Date utility library
+
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v18 or later)
-- npm or yarn
+Ensure you have the following installed:
+- **Node.js** (v18 or later) - [Download here](https://nodejs.org/)
+- **npm** (comes with Node.js) or **yarn**
+- **Git** for version control
 
-### Installation & Running Locally
+### Installation
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/naman-mahi/devsec.git
-    cd devsec
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/naman-mahi/devsec.git
+   cd devsec
+   ```
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+   
+3. **Environment setup:**
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Required for AI features
+   GEMINI_API_KEY=your_google_ai_api_key_here
+   
+   # Optional: Site URL for production
+   NEXT_PUBLIC_SITE_URL=https://your-domain.com
+   ```
+   
+   > 💡 Get your free Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-3.  **Set up environment variables:**
-    Create a `.env.local` file in the root of the project and add your Google AI API key for the proposal generator to work.
-    ```
-    GEMINI_API_KEY=your_google_ai_api_key
-    ```
-    You can get a free key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+### Development Server
 
-4.  **Run the development server:**
-    The application runs on two parallel processes: the Next.js frontend and the Genkit AI server.
+The project requires **two concurrent processes** for full functionality:
 
-    - **In your first terminal, run the Next.js app:**
-      ```bash
-      npm run dev
-      ```
-      This will start the website on [http://localhost:9002](http://localhost:9002).
+**Terminal 1 - Next.js Frontend:**
+```bash
+npm run dev
+```
+🌐 Opens at [http://localhost:9002](http://localhost:9002)
 
-    - **In your second terminal, run the Genkit AI server:**
-      ```bash
-      npm run genkit:dev
-      ```
-      This starts the local Genkit development server, which the Next.js app will call for AI features.
+**Terminal 2 - Genkit AI Server:**
+```bash
+npm run genkit:dev
+```
+🤖 Starts the AI service for proposal generation
 
-## 🎨 Customization
+### Build for Production
 
-This portfolio is designed to be easily personalized. For detailed instructions, please see the **[CUSTOMIZATION.md](docs/CUSTOMIZATION.md)** file.
+```bash
+# Create optimized production build
+npm run build
 
-Here's a quick overview of what you can change:
+# Start production server
+npm start
 
-- **Personal Information**: Edit `src/lib/data.ts` to update your skills, projects, experience, education, and certifications.
-- **Images**: Replace the images in the `public/images` folder. See the customization guide for exact file names.
-- **Blog Posts**: Add, edit, or delete Markdown files in the `content/blog` directory.
-- **Theme**: Modify the color scheme and fonts in `src/app/globals.css` and `tailwind.config.ts`.
-- **AI Prompt**: Fine-tune the AI proposal generator's prompt in `src/ai/flows/ai-service-proposal-tool.ts`.
+# Type checking
+npm run typecheck
+
+# Linting
+npm run lint
+```
+
+## 🎨 Customization Guide
+
+### Personal Information
+Update your details in `src/lib/data.ts`:
+```typescript
+// Site configuration
+export const SITE_CONFIG = {
+  name: "Your Name",
+  title: "Your Professional Title",
+  description: "Your professional description",
+  // ... other settings
+};
+
+// Skills, projects, experience data
+export const SKILLS_DATA = [...]; 
+export const PROJECTS_DATA = [...];
+export const EXPERIENCE_DATA = [...];
+```
+
+### Blog Content
+Add new blog posts in `content/blog/`:
+```markdown
+---
+title: "Your Blog Post Title"
+date: "2024-01-15"
+description: "Brief description"
+imageId: "your-image-id"
+---
+
+Your markdown content here...
+```
+
+### Styling & Themes
+- **Colors**: Modify `tailwind.config.ts` for theme colors
+- **Fonts**: Update font imports in `src/app/layout.tsx`
+- **Global styles**: Edit `src/app/globals.css`
+
+### AI Configuration
+Customize AI prompts in `src/ai/flows/`:
+- `ai-service-proposal-tool.ts` - Proposal generator
+- `generate-blog-post-flow.ts` - Blog writer
+- `generate-image-flow.ts` - Image generator
+
+### Component Structure
+```
+src/
+├── components/
+│   ├── sections/     # Page sections (hero, about, skills, etc.)
+│   ├── ui/          # Reusable UI components
+│   └── ...          # Utility components
+├── app/             # Next.js app router pages
+├── lib/             # Utilities and data
+└── ai/              # AI flows and configuration
+```
 
 ## 🚀 Deployment
 
-This project is configured for seamless deployment on platforms that support Next.js's full feature set, including server-side rendering and API routes.
+### Supported Platforms
 
-**Important**: Do not deploy this project to a static hosting provider like GitHub Pages, as it will break the AI features and contact form.
+✅ **Recommended Platforms:**
+- **[Vercel](https://vercel.com/)** - Optimal for Next.js with zero configuration
+- **[Firebase App Hosting](https://firebase.google.com/docs/hosting)** - Full Next.js support with Google ecosystem
+- **[Netlify](https://netlify.com/)** - Good Next.js support with edge functions
+- **[Railway](https://railway.app/)** - Simple deployment with database support
 
-### Recommended Platforms
+❌ **Not Compatible:**
+- GitHub Pages, Surge.sh, or other static-only hosts (breaks AI features and contact form)
 
-- **Vercel**: The easiest and most recommended way to deploy a Next.js application. Simply connect your Git repository, and Vercel handles the rest.
-- **Firebase App Hosting**: A great choice within the Google ecosystem, fully compatible with modern web frameworks like Next.js.
+### Vercel Deployment (Recommended)
 
-### Deployment Steps (Vercel Example)
+1. **Connect Repository:**
+   - Push your code to GitHub/GitLab/Bitbucket
+   - Visit [vercel.com/new](https://vercel.com/new)
+   - Import your repository
 
-1.  Push your code to a GitHub, GitLab, or Bitbucket repository.
-2.  Go to [Vercel](https://vercel.com/new) and create a new project.
-3.  Import your Git repository.
-4.  Add your `GEMINI_API_KEY` as an environment variable in the project settings.
-5.  Click "Deploy". Vercel will automatically build and deploy your site.
+2. **Configure Environment:**
+   ```env
+   GEMINI_API_KEY=your_google_ai_api_key
+   NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+   ```
+
+3. **Deploy:**
+   - Click "Deploy" - Vercel handles the build automatically
+   - Your site will be live with automatic HTTPS
+
+### Firebase App Hosting
+
+1. **Setup Firebase:**
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   firebase init apphosting
+   ```
+
+2. **Configure `apphosting.yaml`:**
+   ```yaml
+   runConfig:
+     runtime: nodejs18
+   ```
+
+3. **Deploy:**
+   ```bash
+   firebase deploy --only apphosting
+   ```
+
+### Custom Server Deployment
+
+For VPS or dedicated servers:
+```bash
+# Build the application
+npm run build
+
+# Start with PM2 (recommended)
+npm install -g pm2
+pm2 start npm --name "devsec-portfolio" -- start
+
+# Or start directly
+npm start
+```
+
+### Environment Variables for Production
+
+```env
+# Required
+GEMINI_API_KEY=your_google_ai_api_key
+
+# Recommended
+NEXT_PUBLIC_SITE_URL=https://your-domain.com
+NODE_ENV=production
+
+# Optional
+ANALYTICS_ID=your_analytics_id
+```
+
+## 📁 Project Structure
+
+```
+devsec-portfolio/
+├── 📂 src/
+│   ├── 📂 app/                    # Next.js App Router
+│   │   ├── 📂 blog/[slug]/        # Dynamic blog routes
+│   │   ├── 📂 projects/[slug]/    # Dynamic project routes
+│   │   ├── 📂 studio/             # Content management
+│   │   ├── 📄 layout.tsx          # Root layout
+│   │   ├── 📄 page.tsx            # Homepage
+│   │   └── 📄 actions.ts          # Server actions
+│   ├── 📂 components/
+│   │   ├── 📂 sections/           # Page sections
+│   │   │   ├── 📄 hero.tsx
+│   │   │   ├── 📄 about.tsx
+│   │   │   ├── 📄 skills.tsx
+│   │   │   ├── 📄 projects.tsx
+│   │   │   ├── 📄 blog.tsx
+│   │   │   └── 📄 contact.tsx
+│   │   ├── 📂 ui/                 # Reusable UI components
+│   │   └── 📄 markdown-content.tsx
+│   ├── 📂 ai/                     # AI integration
+│   │   ├── 📂 flows/              # Genkit AI flows
+│   │   │   ├── 📄 ai-service-proposal-tool.ts
+│   │   │   ├── 📄 generate-blog-post-flow.ts
+│   │   │   └── 📄 generate-image-flow.ts
+│   │   ├── 📄 genkit.ts           # AI configuration
+│   │   └── 📄 dev.ts              # Development server
+│   ├── 📂 lib/                    # Utilities and data
+│   │   ├── 📄 data.ts             # Site content and configuration
+│   │   ├── 📄 blog.ts             # Blog utilities
+│   │   ├── 📄 utils.ts            # Helper functions
+│   │   └── 📄 icons.ts            # Icon mappings
+│   └── 📂 hooks/                  # Custom React hooks
+├── 📂 content/
+│   └── 📂 blog/                   # Markdown blog posts
+├── 📂 public/                     # Static assets
+├── 📄 package.json               # Dependencies and scripts
+├── 📄 tailwind.config.ts         # Tailwind configuration
+├── 📄 tsconfig.json              # TypeScript configuration
+├── 📄 next.config.mjs            # Next.js configuration
+└── 📄 README.md                  # This file
+```
+
+## 🧪 Available Scripts
+
+```bash
+# Development
+npm run dev          # Start Next.js development server (port 9002)
+npm run genkit:dev   # Start Genkit AI development server
+npm run genkit:watch # Start Genkit with file watching
+
+# Production
+npm run build        # Build optimized production bundle
+npm start           # Start production server
+
+# Code Quality
+npm run lint        # Run ESLint
+npm run typecheck   # Run TypeScript compiler check
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) for the amazing React framework
+- [Vercel](https://vercel.com/) for seamless deployment
+- [Google AI](https://ai.google.dev/) for powerful AI integration
+- [ShadCN](https://ui.shadcn.com/) for beautiful UI components
+- [Tailwind CSS](https://tailwindcss.com/) for utility-first styling
+
+## 📞 Support
+
+If you have any questions or need help with setup, please:
+
+1. Check the [Issues](https://github.com/naman-mahi/devsec/issues) page
+2. Create a new issue with detailed information
+3. Join discussions in the [Discussions](https://github.com/naman-mahi/devsec/discussions) tab
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by <strong>Proffid</strong></p>
+  <p>
+    <a href="https://github.com/naman-mahi/devsec">⭐ Star this repository</a> if you found it helpful!
+  </p>
+</div>

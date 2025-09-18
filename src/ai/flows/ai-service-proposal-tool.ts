@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 const GenerateProposalInputSchema = z.object({
   clientName: z.string().optional().describe("The name of the client."),
@@ -33,6 +34,7 @@ const prompt = ai.definePrompt({
   name: 'generateProposalPrompt',
   input: {schema: GenerateProposalInputSchema},
   output: {schema: GenerateProposalOutputSchema},
+  model: googleAI.model('gemini-2.0-flash-exp'),
   prompt: `You are an expert freelance proposal writer. Generate a compelling and personalized sales proposal based on the client's needs and the service offered.
 
 **Client Name:** {{{clientName}}}

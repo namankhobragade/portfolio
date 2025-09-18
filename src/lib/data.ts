@@ -24,7 +24,7 @@ export const SITE_CONFIG = {
   linkedinUrl: "https://www.linkedin.com/in/sunilkhobragade",
 };
 
-export const SKILLS_DATA: Omit<SkillCategory, 'skills'> & { skills: { name: string; icon: string }[] }[] = [
+export const SKILLS_DATA = [
   {
     category: 'Backend Development',
     description: 'Building robust server-side logic, APIs, and database integrations.',

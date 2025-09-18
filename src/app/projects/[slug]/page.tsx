@@ -15,7 +15,7 @@ import { Github, ExternalLink } from 'lucide-react';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 const getProjectBySlug = (slug: string) => {
@@ -26,7 +26,8 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const project = getProjectBySlug(params.slug);
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -57,14 +58,14 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<Props['params'][]> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   return PROJECTS_DATA.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function ProjectPage({ params }: Props) {
-  const { slug } = params;
+export default async function ProjectPage({ params }: Props) {
+  const { slug } = await params;
   const project = getProjectBySlug(slug);
 
   if (!project) {

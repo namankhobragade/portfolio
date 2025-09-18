@@ -9,7 +9,7 @@ import { PostCard } from "@/components/post-card";
 export async function Blog() {
   const allPosts = await getAllPosts();
   const featuredPost = allPosts[0];
-  const otherPosts = allPosts.slice(1, 5); // Show next 4 posts
+  const otherPosts = allPosts.slice(1, 3); // Show next 4 posts
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">

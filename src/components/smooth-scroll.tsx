@@ -8,9 +8,7 @@ export function SmoothScroll() {
     const lenis = new Lenis({
       lerp: 0.1,
       wheelMultiplier: 0.7,
-      gestureOrientation: 'vertical',
-      normalizeWheel: false,
-      smoothTouch: false
+      gestureOrientation: 'vertical'
     });
 
     function raf(time: number) {

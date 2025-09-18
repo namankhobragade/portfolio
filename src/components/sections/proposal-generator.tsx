@@ -28,7 +28,7 @@ const formSchema = z.object({
   companyName: z.string().optional(),
   clientNeeds: z.string().min(20, 'Please provide more details on client needs (min 20 characters).'),
   serviceDescription: z.string().min(20, 'Please describe your service in more detail (min 20 characters).'),
-  userSkills: z.string().min(5, 'Please list at least one relevant skill.').transform(s => s.split(',').map(skill => skill.trim())),
+  userSkills: z.string().min(5, 'Please list at least one relevant skill.'),
 });
 
 export function ProposalGenerator() {
@@ -53,7 +53,12 @@ export function ProposalGenerator() {
         setIsLoading(true);
         setProposal('');
         try {
-            const result = await generateProposal(values);
+            // Transform userSkills string to array
+            const formattedValues = {
+                ...values,
+                userSkills: values.userSkills.split(',').map(skill => skill.trim())
+            };
+            const result = await generateProposal(formattedValues);
             setProposal(result.proposalText);
             setIsModalOpen(true);
         } catch (error) {

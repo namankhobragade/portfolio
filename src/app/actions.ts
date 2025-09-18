@@ -414,7 +414,7 @@ export async function updateTypography(prevState: any, formData: FormData) {
 });`;
         
         layoutContent = layoutContent.replace(bodyRegex, `const inter = ${fontBodyConst}({...});`); // temporary placeholder
-        layoutContent = layoutcontent.replace(headlineRegex, `const spaceGrotesk = ${fontHeadlineConst}({...});`); // temporary placeholder
+        layoutContent = layoutContent.replace(headlineRegex, `const spaceGrotesk = ${fontHeadlineConst}({...});`); // temporary placeholder
 
         layoutContent = layoutContent.replace(/const\s+inter\s*=.*/, newBodyConst);
         layoutContent = layoutContent.replace(/const\s+spaceGrotesk\s*=.*/, newHeadlineConst);

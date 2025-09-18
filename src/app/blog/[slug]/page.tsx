@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
@@ -23,7 +23,8 @@ export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     return {
@@ -58,7 +59,7 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams(): Promise<Props['params'][]> {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
@@ -66,7 +67,8 @@ export async function generateStaticParams(): Promise<Props['params'][]> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();

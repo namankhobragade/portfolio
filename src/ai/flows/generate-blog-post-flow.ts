@@ -9,6 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 import { generateImage } from './generate-image-flow';
 
 const GenerateBlogPostInputSchema = z.object({
@@ -44,6 +45,7 @@ const prompt = ai.definePrompt({
     content: z.string(),
     imagePrompt: z.string(),
   })},
+  model: googleAI.model('gemini-2.0-flash-exp'),
   prompt: `You are an expert tech blogger and content creator specializing in web development, cybersecurity, and AI. Your writing style is clear, informative, and engaging.
 
 **Your Task:**

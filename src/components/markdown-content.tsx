@@ -3,7 +3,7 @@
 
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vs2015 } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { Button } from './ui/button';
 import { Clipboard, Check } from 'lucide-react';
 import { useState } from 'react';
@@ -31,10 +31,9 @@ export function MarkdownContent({ content }: { content: string }) {
                 </Button>
               </div>
               <SyntaxHighlighter
-                style={vscDarkPlus}
+                style={vs2015}
                 language={match[1]}
                 PreTag="div"
-                {...props}
               >
                 {String(children).replace(/\n$/, '')}
               </SyntaxHighlighter>

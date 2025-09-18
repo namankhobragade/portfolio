@@ -1,25 +1,13 @@
 'use client';
 
 import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
+// import { Canvas } from '@react-three/fiber';
+// import { OrbitControls, Sphere, MeshDistortMaterial } from '@react-three/drei';
 
 export function ThreeDShape() {
   return (
-    <Canvas>
-      <Suspense fallback={null}>
-        <OrbitControls enableZoom={false} />
-        <ambientLight intensity={1} />
-        <directionalLight position={[3, 2, 1]} />
-        <Sphere args={[1, 100, 200]} scale={2}>
-          <MeshDistortMaterial
-            color="#3b82f6"
-            attach="material"
-            distort={0.5}
-            speed={2}
-          />
-        </Sphere>
-      </Suspense>
-    </Canvas>
+    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg">
+      <div className="w-32 h-32 bg-blue-500/30 rounded-full animate-pulse" />
+    </div>
   );
 }
