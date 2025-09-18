@@ -2,7 +2,8 @@
 
 Welcome to DevSec, a modern, feature-rich, and secure portfolio website built with Next.js 15, TypeScript, and Tailwind CSS. This project is designed to showcase the skills of a cybersecurity professional and full-stack developer, with a special focus on integrating AI-powered tools for enhanced client engagement.
 
-![DevSec Portfolio](https://img.shields.io/badge/Next.js-15.5.3-black?style=for-the-badge&logo=next.js)
+![Next.js 15](https://img.shields.io/badge/Next.js-15.5.3-black?style=for-the-badge&logo=next.js)
+![React 19](https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.1-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)
@@ -36,8 +37,8 @@ Welcome to DevSec, a modern, feature-rich, and secure portfolio website built wi
 
 ### Core Framework
 - **[Next.js 15](https://nextjs.org/)** - React framework with App Router
+- **[React 19](https://react.dev/)** - Latest React with new features and improvements
 - **[TypeScript 5](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[React 18](https://reactjs.org/)** - UI library with Server Components
 
 ### Styling & UI
 - **[Tailwind CSS 3.4](https://tailwindcss.com/)** - Utility-first CSS framework
