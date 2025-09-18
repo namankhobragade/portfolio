@@ -2,24 +2,15 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i.pravatar.cc',
-        port: '',
-        pathname: '/**',
-      },
+      { protocol: 'https', hostname: 'picsum.photos' },
+      { protocol: 'https', hostname: 'i.pravatar.cc' },
     ],
   },
   serverExternalPackages: [
     '@genkit-ai/googleai',
     'firebase-admin',
     'long',
+    '@opentelemetry/api'
   ],
 };
 
