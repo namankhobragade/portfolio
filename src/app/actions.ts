@@ -21,8 +21,8 @@ const resumeRequestSchema = z.object({
   }),
 });
 
-export async function submitResumeRequest(prevState: any, formData: FormData) {
-    const validatedFields = resumeRequestSchema.safeParse(Object.fromEntries(formData));
+export async function submitResumeRequest(prevState: any, formData: z.infer<typeof resumeRequestSchema>) {
+    const validatedFields = resumeRequestSchema.safeParse(formData);
 
     if (!validatedFields.success) {
         const errorMessages = Object.values(validatedFields.error.flatten().fieldErrors).flat().join(' ');
@@ -319,47 +319,13 @@ const skillSchema = z.object({
     name: z.string(),
     icon: z.string(),
 });
-const skillCategorySchema = z.object({
-    category: z.string(),
-    description: z.string(),
-    skills: z.array(skillSchema),
+const skillsFormSchema = z.object({
+    skills: z.array(z.object({
+        category: z.string(),
+        description: z.string(),
+        skills: z.array(skillSchema),
+    })),
 });
-
-export async function updateSkills(skillsData: z.infer<typeof skillsFormSchema>['skills']) {
-    const skillsFormSchema = z.object({
-        skills: z.array(skillCategorySchema),
-    });
-
-    const validatedFields = skillsFormSchema.safeParse({ skills: skillsData });
-
-    if (!validatedFields.success) {
-        console.error("Skill validation failed:", validatedFields.error.flatten());
-        return { success: false, message: 'Invalid skills data submitted.' };
-    }
-    
-    const skillsToUpsert = validatedFields.data.skills.map((category, index) => ({
-      id: index + 1, // Using order as id for simplicity. Be cautious with this in production.
-      order: index + 1,
-      category: category.category,
-      description: category.description,
-      skills: category.skills,
-    }));
-
-    try {
-        const { error } = await supabase.from('skills').upsert(skillsToUpsert, { onConflict: 'id' });
-        if (error) throw error;
-        
-        // Delete any skills that are no longer present
-        const skillIds = skillsToUpsert.map(s => s.id);
-        const { error: deleteError } = await supabase.from('skills').delete().not('id', 'in', `(${skillIds.join(',')})`);
-        if (deleteError) throw deleteError;
-
-
-        return { success: true, message: 'Skills updated successfully!' };
-    } catch (error: any) {
-        return { success: false, message: `Failed to update skills: ${error.message}` };
-    }
-}
 
 export async function updateSkillsAction(prevState: any, formData: FormData) {
     const rawData = Object.fromEntries(formData.entries());
@@ -398,7 +364,35 @@ export async function updateSkillsAction(prevState: any, formData: FormData) {
     // Filter out any potentially empty/undefined array elements
     const cleanedSkillsData = skillsData.filter(Boolean);
 
-    return updateSkills(cleanedSkillsData);
+     const validatedFields = skillsFormSchema.safeParse({ skills: cleanedSkillsData });
+
+    if (!validatedFields.success) {
+        console.error("Skill validation failed:", validatedFields.error.flatten());
+        return { success: false, message: 'Invalid skills data submitted.' };
+    }
+    
+    const skillsToUpsert = validatedFields.data.skills.map((category, index) => ({
+      id: index + 1, // Using order as id for simplicity. Be cautious with this in production.
+      order: index + 1,
+      category: category.category,
+      description: category.description,
+      skills: category.skills,
+    }));
+
+    try {
+        const { error } = await supabase.from('skills').upsert(skillsToUpsert, { onConflict: 'id' });
+        if (error) throw error;
+        
+        // Delete any skills that are no longer present
+        const skillIds = skillsToUpsert.map(s => s.id);
+        const { error: deleteError } = await supabase.from('skills').delete().not('id', 'in', `(${skillIds.join(',')})`);
+        if (deleteError) throw deleteError;
+
+
+        return { success: true, message: 'Skills updated successfully!' };
+    } catch (error: any) {
+        return { success: false, message: `Failed to update skills: ${error.message}` };
+    }
 }
 
 // ---- Theme Customizer ----
@@ -512,7 +506,7 @@ export async function updateTypography(prevState: any, formData: FormData) {
   display: 'swap',
   variable: '--font-${fontBody.toLowerCase().replace(/ /g, '-')}',
 });`;
-         const newHeadlineConst = `const ${fontHeadlineConst.toLowerCase()} = ${fontHeadlineConst}({
+         const newHeadlineConst = `const ${fontHeadlineConst.toLowerCase()} = ${headlineConst}({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-${fontHeadline.toLowerCase().replace(/ /g, '-')}',
@@ -575,3 +569,5 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
+
+    
