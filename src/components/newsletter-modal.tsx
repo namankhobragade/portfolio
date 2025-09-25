@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Mail } from 'lucide-react';
+import { Mail, Loader2 } from 'lucide-react';
 import { subscribeToNewsletter } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,7 +23,7 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
+  const [state, formAction, isPending] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
     const lastPromptTime = localStorage.getItem(LAST_PROMPT_KEY);
@@ -44,17 +44,19 @@ export function NewsletterModal() {
   });
   
   useEffect(() => {
-    if (form.formState.isSubmitSuccessful && state.success) {
-      toast({
-        description: state.message,
-      });
-      setIsOpen(false);
-      form.reset();
-    } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-      toast({
-        description: state.message,
-        variant: 'destructive',
-      });
+    if (form.formState.isSubmitSuccessful && state.message) {
+        if (state.success) {
+            toast({
+                description: state.message,
+            });
+            setIsOpen(false);
+            form.reset();
+        } else {
+            toast({
+                description: state.message,
+                variant: 'destructive',
+            });
+        }
     }
   }, [form.formState.isSubmitSuccessful, state, toast, form]);
 
@@ -66,12 +68,6 @@ export function NewsletterModal() {
     setIsOpen(open);
   };
   
-  const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
-    const formData = new FormData();
-    formData.append('email', data.email);
-    formAction(formData);
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -83,7 +79,7 @@ export function NewsletterModal() {
         </DialogHeader>
         <Form {...form}>
           <form 
-            onSubmit={form.handleSubmit(handleFormSubmit)}
+            action={formAction}
             className="space-y-4"
           >
             <FormField
@@ -100,9 +96,9 @@ export function NewsletterModal() {
               )}
             />
             <DialogFooter>
-               <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                    <Mail className="mr-2 h-4 w-4" />
-                    Subscribe
+               <Button type="submit" className="w-full" disabled={isPending}>
+                    {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mail className="mr-2 h-4 w-4" />}
+                    {isPending ? 'Subscribing...' : 'Subscribe'}
                 </Button>
             </DialogFooter>
           </form>

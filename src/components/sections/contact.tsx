@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Send } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from '@/app/actions';
 
@@ -29,7 +29,7 @@ const formSchema = z.object({
 
 export function Contact() {
     const { toast } = useToast();
-    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
+    const [state, formAction, isPending] = useActionState(submitContactForm, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -41,16 +41,18 @@ export function Contact() {
     });
 
     useEffect(() => {
-      if (form.formState.isSubmitSuccessful && state.success) {
-        toast({
-          description: state.message,
-        });
-        form.reset();
-      } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-        toast({
-          description: state.message,
-          variant: 'destructive',
-        });
+      if (form.formState.isSubmitSuccessful && state.message) {
+        if (state.success) {
+          toast({
+            description: state.message,
+          });
+          form.reset();
+        } else {
+          toast({
+            description: state.message,
+            variant: 'destructive',
+          });
+        }
       }
     }, [form.formState.isSubmitSuccessful, state, toast, form]);
 
@@ -67,13 +69,7 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            onSubmit={form.handleSubmit((data) => {
-                                const formData = new FormData();
-                                formData.append('name', data.name);
-                                formData.append('email', data.email);
-                                formData.append('message', data.message);
-                                formAction(formData);
-                            })}
+                            action={formAction}
                             className="space-y-4 text-left"
                         >
                              <FormField
@@ -115,9 +111,9 @@ export function Contact() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                                <Send className="mr-2 h-4 w-4" />
-                                Send Message
+                            <Button type="submit" className="w-full" disabled={isPending}>
+                                {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                                {isPending ? "Sending..." : "Send Message"}
                             </Button>
                         </form>
                     </Form>
