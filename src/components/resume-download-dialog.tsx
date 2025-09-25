@@ -52,12 +52,20 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
 
   useEffect(() => {
     if (state.message && !state.success) {
-        toast({ description: state.message, variant: 'destructive' });
+        toast({ description: `Submission failed: ${state.message}`, variant: 'destructive' });
     }
   }, [state, toast]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
+    if (!open) {
+      form.reset();
+      // A bit of a hack to reset the action state. In newer react versions, useFormState has a reset function.
+      if (state.success) {
+        (state as any).success = false;
+        (state as any).message = "";
+      }
+    }
   };
   
   const handleDownload = () => {

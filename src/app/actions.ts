@@ -29,10 +29,10 @@ export async function submitResumeRequest(prevState: any, formData: FormData) {
     });
 
     if (!validatedFields.success) {
+        const errorMessages = Object.values(validatedFields.error.flatten().fieldErrors).flat().join(' ');
         return {
             success: false,
-            message: "There was an error with your submission.",
-            errors: validatedFields.error.flatten().fieldErrors,
+            message: errorMessages || "There was an error with your submission.",
         };
     }
 
