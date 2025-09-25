@@ -51,15 +51,7 @@ export function ClientInfoWidget() {
         
         const state: ClientInfoState = {
             ip: geoData.ip,
-            geolocation: {
-                city: geoData.city,
-                region: geoData.region,
-                country: geoData.country_name,
-                lat: geoData.latitude,
-                lon: geoData.longitude,
-                tz: geoData.timezone,
-                isp: geoData.org,
-            },
+            geolocation: geoData, // Store the whole object
             userAgent: navigator.userAgent,
             platform: navigator.platform,
             language: navigator.language,
@@ -160,9 +152,9 @@ export function ClientInfoWidget() {
                     <InfoItem label='IP Address' value={info.ip} />
                     <InfoItem label='City' value={info.geolocation?.city} />
                     <InfoItem label='Region' value={info.geolocation?.region} />
-                    <InfoItem label='Country' value={info.geolocation?.country} />
-                    <InfoItem label='Timezone' value={info.geolocation?.tz} />
-                    <InfoItem label='ISP' value={info.geolocation?.isp} />
+                    <InfoItem label='Country' value={info.geolocation?.country_name} />
+                    <InfoItem label='Timezone' value={info.geolocation?.timezone} />
+                    <InfoItem label='ISP' value={info.geolocation?.org} />
                 </CardContent>
             </Card>
 
@@ -266,5 +258,3 @@ export function ClientInfoWidget() {
     </Dialog>
   );
 }
-
-    
