@@ -40,13 +40,21 @@ export default async function Home() {
             <Experience />
           </Suspense>
         </AnimatedSection>
-        <AnimatedSection id="studies"><Education /></AnimatedSection>
+        <AnimatedSection id="studies">
+          <Suspense fallback={<SectionSkeleton />}>
+            <Education />
+          </Suspense>
+        </AnimatedSection>
         <AnimatedSection id="certifications">
            <Suspense fallback={<SectionSkeleton />}>
             <Certifications />
           </Suspense>
         </AnimatedSection>
-        <AnimatedSection id="testimonials"><Testimonials /></AnimatedSection>
+        <AnimatedSection id="testimonials">
+          <Suspense fallback={<SectionSkeleton />}>
+            <Testimonials />
+          </Suspense>
+        </AnimatedSection>
         <AnimatedSection id="blog">
           <Suspense fallback={<SectionSkeleton />}>
             <Blog />

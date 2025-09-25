@@ -1,11 +1,7 @@
-
-"use client";
-
 import { AnimatedItem } from "../animated-item";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { allIcons } from "@/lib/icons";
 import { supabase } from "@/lib/supabase/client";
-import { useEffect, useState } from "react";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
@@ -19,30 +15,15 @@ interface EducationData {
     icon: string;
 }
 
-export function Education() {
-  const [educationData, setEducationData] = useState<EducationData[]>([]);
-  const [error, setError] = useState<string | null>(null);
+export async function Education() {
+  const { data: educationData, error } = await supabase
+    .from('education')
+    .select('*')
+    .order('order', { ascending: true });
 
-  useEffect(() => {
-    const fetchEducation = async () => {
-      const { data, error } = await supabase
-        .from('education')
-        .select('*')
-        .order('order', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching education:', error.message || error);
-        setError('Error loading education data.');
-      } else {
-        setEducationData(data as EducationData[]);
-      }
-    };
-
-    fetchEducation();
-  }, []);
-  
   if (error) {
-    return <p>{error}</p>;
+    console.error('Error fetching education:', error.message || error);
+    return <p>Error loading education data.</p>;
   }
 
   return (
