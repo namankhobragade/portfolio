@@ -8,8 +8,9 @@ import path from 'path';
 import matter from 'gray-matter';
 import { format } from 'date-fns';
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
-import { SKILLS_DATA, SITE_CONFIG, EXPERIENCE_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, SERVICES_DATA, PROJECTS_DATA } from "@/lib/data";
+import { SITE_CONFIG } from "@/lib/data";
 import { cookies } from 'next/headers';
+import { supabase } from "@/lib/supabase/client";
 
 // ========= Contact Form Logic =========
 
@@ -76,6 +77,11 @@ export async function subscribeToNewsletter(prevState: any, formData: FormData) 
 // ========= Blog Post Saving Logic =========
 
 const blogPostSchema = z.object({
+  topic: z.string(),
+  imageUrl: z.string().optional(),
+});
+
+const generatedPostSchema = z.object({
   title: z.string(),
   slug: z.string(),
   description: z.string(),
@@ -84,8 +90,8 @@ const blogPostSchema = z.object({
   imagePrompt: z.string(),
 });
 
-export async function saveBlogPost(post: z.infer<typeof blogPostSchema>) {
-  const validatedPost = blogPostSchema.safeParse(post);
+export async function saveBlogPost(post: z.infer<typeof generatedPostSchema>) {
+  const validatedPost = generatedPostSchema.safeParse(post);
 
   if (!validatedPost.success) {
     return {
@@ -196,6 +202,8 @@ export async function saveBlogPost(post: z.infer<typeof blogPostSchema>) {
 
 const dataFilePath = path.join(process.cwd(), 'src/lib/data.ts');
 
+// This function is currently not used as data is moving to Supabase
+// but we'll keep it for now.
 async function writeDataFile(content: string) {
     const header = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';\n\n`;
     const fullContent = header + content;
@@ -230,16 +238,10 @@ export async function updateGeneralSettings(prevState: any, formData: FormData) 
         keywords: siteKeywords.split(',').map(k => k.trim()),
     };
 
-    const newContent = `export const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n\n`
-        + `export const SKILLS_DATA = ${JSON.stringify(SKILLS_DATA, null, 2)};\n\n`
-        + `export const PROJECTS_DATA = ${JSON.stringify(PROJECTS_DATA, null, 2)};\n\n`
-        + `export const EXPERIENCE_DATA = ${JSON.stringify(EXPERIENCE_DATA, null, 2)};\n\n`
-        + `export const EDUCATION_DATA = ${JSON.stringify(EDUCATION_DATA, null, 2)};\n\n`
-        + `export const CERTIFICATIONS_DATA = ${JSON.stringify(CERTIFICATIONS_DATA, null, 2)};\n\n`
-        + `export const SERVICES_DATA = ${JSON.stringify(SERVICES_DATA, null, 2)};`;
+    const newContent = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';\n\nexport const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n`;
 
     try {
-        await writeDataFile(newContent);
+        await fs.writeFile(dataFilePath, newContent, 'utf-8');
         return { success: true, message: 'General settings updated successfully!' };
     } catch (error: any) {
         return { success: false, message: `Failed to update settings: ${error.message}` };
@@ -250,47 +252,87 @@ export async function updateGeneralSettings(prevState: any, formData: FormData) 
 // ---- Skills Management ----
 const skillSchema = z.object({
     name: z.string(),
-    icon: z.string(), // We'll just store the name. The component will map it to the icon.
+    icon: z.string(),
 });
 const skillCategorySchema = z.object({
     category: z.string(),
     description: z.string(),
     skills: z.array(skillSchema),
 });
-const skillsFormSchema = z.object({
-    skills: z.array(skillCategorySchema),
-});
 
-export async function updateSkills(prevState: any, data: any) {
-     const validatedFields = skillsFormSchema.safeParse({ skills: data });
+export async function updateSkills(skillsData: z.infer<typeof skillsFormSchema>['skills']) {
+    const skillsFormSchema = z.object({
+        skills: z.array(skillCategorySchema),
+    });
+
+    const validatedFields = skillsFormSchema.safeParse({ skills: skillsData });
 
     if (!validatedFields.success) {
-        return { success: false, message: 'Invalid skills data.' };
+        console.error("Skill validation failed:", validatedFields.error.flatten());
+        return { success: false, message: 'Invalid skills data submitted.' };
     }
-
-     // The icon names are strings, which is what we need.
-    const newSkillsData = validatedFields.data.skills;
-
-    const newContent = `export const SITE_CONFIG = ${JSON.stringify(SITE_CONFIG, null, 2)};\n\n`
-        + `export const SKILLS_DATA = ${JSON.stringify(newSkillsData, (key, value) => {
-            if (key === 'icon') return value; // Keep icon as string for now
-            return value;
-        }, 2)};\n\n`
-        + `export const PROJECTS_DATA = ${JSON.stringify(PROJECTS_DATA, null, 2)};\n\n`
-        + `export const EXPERIENCE_DATA = ${JSON.stringify(EXPERIENCE_DATA, null, 2)};\n\n`
-        + `export const EDUCATION_DATA = ${JSON.stringify(EDUCATION_DATA, null, 2)};\n\n`
-        + `export const CERTIFICATIONS_DATA = ${JSON.stringify(CERTIFICATIONS_DATA, null, 2)};\n\n`
-        + `export const SERVICES_DATA = ${JSON.stringify(SERVICES_DATA, null, 2)};`;
     
+    const skillsToUpsert = validatedFields.data.skills.map((category, index) => ({
+      order: index + 1,
+      category: category.category,
+      description: category.description,
+      skills: category.skills,
+    }));
+
     try {
-        await writeDataFile(newContent);
+        // Delete all existing skills to handle reordering and deletions
+        const { error: deleteError } = await supabase.from('skills').delete().neq('id', 0);
+        if (deleteError) throw deleteError;
+
+        // Insert the new set of skills
+        const { error: upsertError } = await supabase.from('skills').upsert(skillsToUpsert);
+        if (upsertError) throw upsertError;
+
         return { success: true, message: 'Skills updated successfully!' };
     } catch (error: any) {
         return { success: false, message: `Failed to update skills: ${error.message}` };
     }
 }
 
+export async function updateSkillsAction(prevState: any, formData: FormData) {
+    const rawData = Object.fromEntries(formData.entries());
+    const skillsData: any[] = [];
 
+    // This logic reconstructs the nested array structure from the flat form data
+    for (const [key, value] of Object.entries(rawData)) {
+        const categoryMatch = key.match(/^skills\[(\d+)\]\.category$/);
+        const descriptionMatch = key.match(/^skills\[(\d+)\]\.description$/);
+        const skillNameMatch = key.match(/^skills\[(\d+)\]\.skills\[(\d+)\]\.name$/);
+        const skillIconMatch = key.match(/^skills\[(\d+)\]\.skills\[(\d+)\]\.icon$/);
+
+        if (categoryMatch) {
+            const index = parseInt(categoryMatch[1], 10);
+            if (!skillsData[index]) skillsData[index] = { skills: [] };
+            skillsData[index].category = value;
+        } else if (descriptionMatch) {
+            const index = parseInt(descriptionMatch[1], 10);
+            if (!skillsData[index]) skillsData[index] = { skills: [] };
+            skillsData[index].description = value;
+        } else if (skillNameMatch) {
+            const catIndex = parseInt(skillNameMatch[1], 10);
+            const skillIndex = parseInt(skillNameMatch[2], 10);
+            if (!skillsData[catIndex]) skillsData[catIndex] = { skills: [] };
+            if (!skillsData[catIndex].skills[skillIndex]) skillsData[catIndex].skills[skillIndex] = {};
+            skillsData[catIndex].skills[skillIndex].name = value;
+        } else if (skillIconMatch) {
+            const catIndex = parseInt(skillIconMatch[1], 10);
+            const skillIndex = parseInt(skillIconMatch[2], 10);
+            if (!skillsData[catIndex]) skillsData[catIndex] = { skills: [] };
+            if (!skillsData[catIndex].skills[skillIndex]) skillsData[catIndex].skills[skillIndex] = {};
+            skillsData[catIndex].skills[skillIndex].icon = value;
+        }
+    }
+    
+    // Filter out any potentially empty/undefined array elements
+    const cleanedSkillsData = skillsData.filter(Boolean);
+
+    return updateSkills(cleanedSkillsData);
+}
 
 // ---- Theme Customizer ----
 const themeColorSchema = z.object({
@@ -371,7 +413,7 @@ export async function updateTypography(prevState: any, formData: FormData) {
         const fontBodyVar = `var(--font-${fontBody.toLowerCase().replace(/ /g, '-')})`;
         const fontHeadlineVar = `var(--font-${fontHeadline.toLowerCase().replace(/ /g, '-')})`;
 
-        tailwindConfig = tailwindConfig.replace(/body: \['[^']+_TS_DELIMITER'[^\]]+\]/, `body: ['${fontBodyVar}', 'sans-serif']`);
+        tailwindConfig = tailwindConfig.replace(/body: \['[^']+'[^\]]+\]/, `body: ['${fontBodyVar}', 'sans-serif']`);
         tailwindConfig = tailwindConfig.replace(/headline: \['[^']+'[^\]]+\]/, `headline: ['${fontHeadlineVar}', 'sans-serif']`);
         
         await fs.writeFile(tailwindConfigPath, tailwindConfig, 'utf-8');
@@ -383,17 +425,20 @@ export async function updateTypography(prevState: any, formData: FormData) {
         const fontHeadlineConst = fontHeadline.replace(/ /g, '_');
         
         // Remove old font imports, but keep Source Code Pro
-        layoutContent = layoutContent.replace(/import { Inter, Space_Grotesk, /g, 'import { ');
-
-        // Add new font imports
-        const newImport = `import { ${fontBodyConst}, ${fontHeadlineConst}, Source_Code_Pro } from 'next/font/google';`;
-        if (!layoutContent.includes(newImport)) {
-             layoutContent = layoutContent.replace(/import {[^}]+} from 'next\/font\/google';/, newImport);
+        const importRegex = /import { [^}]+ } from 'next\/font\/google';/;
+        const currentImportMatch = layoutContent.match(importRegex);
+        
+        if (currentImportMatch) {
+            // Add new fonts to the existing import
+            const existingFonts = currentImportMatch[0].match(/{([^}]+)}/)?.[1].split(',').map(f => f.trim()) || [];
+            const newFontSet = new Set([...existingFonts, fontBodyConst, fontHeadlineConst, 'Source_Code_Pro']);
+            const newImport = `import { ${Array.from(newFontSet).filter(f => f).join(', ')} } from 'next/font/google';`;
+            layoutContent = layoutContent.replace(importRegex, newImport);
         }
 
         // Update font instantiation
-        const bodyRegex = /const inter = Inter\({[\s\S]*?}\);/;
-        const headlineRegex = /const spaceGrotesk = Space_Grotesk\({[\s\S]*?}\);/;
+        const bodyRegex = /const \w+ = \w+\({[\s\S]*?variable: '--font-inter'[\s\S]*?}\);/;
+        const headlineRegex = /const \w+ = \w+\({[\s\S]*?variable: '--font-space-grotesk'[\s\S]*?}\);/;
         
         const newBodyConst = `const ${fontBodyConst.toLowerCase()} = ${fontBodyConst}({
   subsets: ['latin'],
@@ -406,13 +451,19 @@ export async function updateTypography(prevState: any, formData: FormData) {
   variable: '--font-${fontHeadline.toLowerCase().replace(/ /g, '-')}',
 });`;
         
-        layoutContent = layoutContent.replace(bodyRegex, newBodyConst);
-        layoutContent = layoutContent.replace(headlineRegex, newHeadlineConst);
+        // This is tricky. Let's find a more robust way.
+        // We'll replace the variables in the className instead.
+        const bodyVarName = layoutContent.match(/const (\w+) = \w+\({[\s\S]+?variable: '--font-inter'[\s\S]+?}\);/)?.[1];
+        const headlineVarName = layoutContent.match(/const (\w+) = \w+\({[\s\S]+?variable: '--font-space-grotesk'[\s\S]+?}\);/)?.[1];
 
-        // Update html className
-        const htmlClassRegex = /className={\`\$\{inter.variable\} \$\{spaceGrotesk.variable\}/;
-        layoutContent = layoutContent.replace(htmlClassRegex, `className={\`\$\{${fontBodyConst.toLowerCase()}.variable\} \$\{${fontHeadlineConst.toLowerCase()}.variable\}`);
+        if (bodyVarName && headlineVarName) {
+            const htmlClassRegex = new RegExp(`className={\`\\\$\\{${bodyVarName}.variable\\} \\\$\\{${headlineVarName}.variable\\}`);
+            layoutContent = layoutContent.replace(htmlClassRegex, `className={\`\$\{${fontBodyConst.toLowerCase()}.variable\} \$\{${fontHeadlineConst.toLowerCase()}.variable\}`);
+        }
         
+        layoutContent = layoutContent.replace(/const inter = Inter\({[\s\S]*?}\);/, newBodyConst);
+        layoutContent = layoutContent.replace(/const spaceGrotesk = Space_Grotesk\({[\s\S]*?}\);/, newHeadlineConst);
+
         await fs.writeFile(layoutFilePath, layoutContent, 'utf-8');
         
         return { success: true, message: 'Typography updated! Please wait for the server to restart.' };
@@ -457,3 +508,5 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
+
+    

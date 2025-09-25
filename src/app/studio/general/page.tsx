@@ -36,7 +36,7 @@ const generalSettingsSchema = z.object({
 
 export default function GeneralSettingsPage() {
     const { toast } = useToast();
-    const [state, formAction] = useActionState(updateGeneralSettings, { success: false, message: "" });
+    const [state, formAction, isPending] = useActionState(updateGeneralSettings, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof generalSettingsSchema>>({
         resolver: zodResolver(generalSettingsSchema),
@@ -47,10 +47,12 @@ export default function GeneralSettingsPage() {
     });
     
     useEffect(() => {
-        if (form.formState.isSubmitSuccessful && state.success) {
-            toast({ description: state.message });
-        } else if (form.formState.isSubmitSuccessful && !state.success && state.message) {
-            toast({ description: state.message, variant: 'destructive' });
+        if (form.formState.isSubmitSuccessful && state.message) {
+            if (state.success) {
+                toast({ description: state.message });
+            } else {
+                toast({ description: state.message, variant: 'destructive' });
+            }
         }
     }, [form.formState.isSubmitSuccessful, state, toast]);
 
@@ -94,8 +96,8 @@ export default function GeneralSettingsPage() {
                             <FormItem><FormLabel>LinkedIn URL</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
 
-                        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
+                        <Button type="submit" disabled={isPending} className="w-full">
+                           {isPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Updating...</> : <><Settings className="mr-2 h-4 w-4" /> Update Settings</>}
                         </Button>
                     </form>
                 </Form>
