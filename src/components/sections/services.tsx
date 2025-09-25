@@ -5,7 +5,7 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 import { allIcons } from "@/lib/icons";
-import { SERVICES_DATA } from "@/lib/dynamic-data";
+import { supabase } from "@/lib/supabase/client";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
@@ -14,7 +14,15 @@ const iconMap = allIcons.reduce((map, icon) => {
 
 
 export async function Services() {
-  const servicesData = SERVICES_DATA;
+  const { data: servicesData, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching services:', error.message || error);
+    return <p className="text-center text-destructive">Error loading services.</p>;
+  }
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
