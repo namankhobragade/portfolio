@@ -38,10 +38,6 @@ const InfoItem = ({ label, value, unit = '' }: { label: string; value: any; unit
     );
 };
 
-const getIstTimestamp = () => {
-    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
-};
-
 export function ClientInfoWidget() {
   const [info, setInfo] = useState<ClientInfoState>({});
   const [loading, setLoading] = useState(false);
@@ -126,7 +122,7 @@ export function ClientInfoWidget() {
       const clientInfo = await getClientInfo();
       if (clientInfo) {
         const { error } = await supabase.from('visitors').insert({
-          created_at: getIstTimestamp(),
+          created_at: new Date().toISOString(), // Use ISO string for Supabase timestamp
           user_agent: clientInfo.userAgent,
           platform: clientInfo.platform,
           language: clientInfo.language,
@@ -144,10 +140,7 @@ export function ClientInfoWidget() {
       }
     };
     
-    // Don't run this during development to avoid cluttering the DB
-    if (process.env.NODE_ENV === 'production') {
-        logVisitor();
-    }
+    logVisitor();
   }, [getClientInfo]);
   
   const perf = info.performance;
@@ -273,3 +266,5 @@ export function ClientInfoWidget() {
     </Dialog>
   );
 }
+
+    

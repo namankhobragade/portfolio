@@ -13,7 +13,7 @@ import { cookies } from 'next/headers';
 import { supabase } from "@/lib/supabase/client";
 
 const getIstTimestamp = () => {
-    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+    return new Date().toISOString();
 };
 
 // ========= Resume Download Logic =========
