@@ -23,8 +23,7 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
-  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
+  const [state, formAction, isPending] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
     const lastPromptTime = localStorage.getItem(LAST_PROMPT_KEY);
@@ -62,11 +61,8 @@ export function NewsletterModal() {
   }, [state, toast, form]);
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    const formData = new FormData();
-    formData.append('email', data.email);
-
     startTransition(() => {
-      formAction(formData);
+      formAction(data);
     });
 
     // Also submit to formsubmit.co

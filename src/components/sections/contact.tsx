@@ -29,8 +29,7 @@ const formSchema = z.object({
 
 export function Contact() {
     const { toast } = useToast();
-    const [isPending, startTransition] = useTransition();
-    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
+    const [state, formAction, isPending] = useActionState(submitContactForm, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -58,28 +57,23 @@ export function Contact() {
     }, [state, toast, form]);
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        const formData = new FormData();
-        formData.append('name', data.name);
-        formData.append('email', data.email);
-        formData.append('message', data.message);
-
         startTransition(() => {
-            formAction(formData);
+            formAction(data);
         });
 
         // Also submit to formsubmit.co
         const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
-        const fsFormData = new FormData();
-        fsFormData.append('name', data.name);
-        fsFormData.append('email', data.email);
-        fsFormData.append('message', data.message);
-        fsFormData.append('_subject', `New Contact Form Submission from ${data.name}`);
-        fsFormData.append('_template', 'table');
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('message', data.message);
+        formData.append('_subject', `New Contact Form Submission from ${data.name}`);
+        formData.append('_template', 'table');
 
         try {
             await fetch(formSubmitEndpoint, {
                 method: 'POST',
-                body: fsFormData,
+                body: formData,
                 headers: {
                     'Accept': 'application/json'
                 }
