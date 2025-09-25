@@ -8,7 +8,6 @@ import { Loader2, Eye, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
-import Link from 'next/link';
 
 type Visitor = {
     id: number;
@@ -30,21 +29,10 @@ type Visitor = {
     performance?: any;
 };
 
-const InfoItem = ({ label, value }: { label: string; value: any }) => {
-    if (value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) return null;
+const InfoItem = ({ label, value, unit = '' }: { label: string; value: any; unit?: string }) => {
+    if (value === undefined || value === null || value === '') return null;
 
-    let displayValue: React.ReactNode;
-    if (typeof value === 'boolean') {
-        displayValue = value ? 'Yes' : 'No';
-    } else if (typeof value === 'object') {
-        displayValue = (
-            <pre className="text-left text-xs bg-muted/50 p-2 rounded-md font-mono whitespace-pre-wrap break-all">
-                {JSON.stringify(value, null, 2)}
-            </pre>
-        );
-    } else {
-        displayValue = String(value);
-    }
+    const displayValue = typeof value === 'boolean' ? (value ? 'Yes' : 'No') : `${String(value)}${unit}`;
     
     return (
         <div className="grid grid-cols-3 items-start text-sm py-2 border-b">
@@ -165,10 +153,9 @@ export default function VisitorsPage() {
                 </DialogHeader>
                 {selectedVisitor && (
                     <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-2">
-                        <InfoItem label="Timestamp" value={selectedVisitor.created_at} />
+                        <h4 className="font-semibold mt-4 text-base">Location & Network</h4>
                         <InfoItem label="IP Address" value={selectedVisitor.ip} />
-                        
-                        <div className="grid grid-cols-3 items-start text-sm py-2 border-b">
+                         <div className="grid grid-cols-3 items-start text-sm py-2 border-b">
                             <span className="text-muted-foreground font-medium col-span-1">Location</span>
                             <div className="text-right col-span-2">
                                 <p>{`${selectedVisitor.geolocation?.city || 'N/A'}, ${selectedVisitor.geolocation?.region || 'N/A'}, ${selectedVisitor.geolocation?.country_name || 'N/A'}`}</p>
@@ -185,27 +172,37 @@ export default function VisitorsPage() {
                                 )}
                             </div>
                         </div>
-                        
                         <InfoItem label="Latitude" value={selectedVisitor.geolocation?.latitude} />
                         <InfoItem label="Longitude" value={selectedVisitor.geolocation?.longitude} />
                         <InfoItem label="Timezone" value={selectedVisitor.geolocation?.timezone} />
                         <InfoItem label="ISP" value={selectedVisitor.geolocation?.org} />
-                        <InfoItem label="Platform" value={selectedVisitor.platform} />
-                        <InfoItem label="Language" value={selectedVisitor.language} />
+                        <InfoItem label="Is Online" value={selectedVisitor.is_online} />
                         <InfoItem label="Connection Type" value={selectedVisitor.connection_type} />
-                        <InfoItem label="Network Info" value={selectedVisitor.network_info} />
+                        <InfoItem label="Effective Type" value={selectedVisitor.network_info?.effectiveType} />
+                        <InfoItem label="Est. Speed" value={selectedVisitor.network_info?.downlink} unit=" Mbps" />
+                        <InfoItem label="Est. RTT" value={selectedVisitor.network_info?.rtt} unit=" ms" />
+                        <InfoItem label="Data Saver" value={selectedVisitor.network_info?.saveData} />
+
+                        <h4 className="font-semibold mt-6 text-base">Device & Browser</h4>
+                        <InfoItem label="Platform" value={selectedVisitor.platform} />
                         <InfoItem label="CPU Cores" value={selectedVisitor.cpu_cores} />
                         <InfoItem label="Memory (GB)" value={selectedVisitor.memory} />
                         <InfoItem label="Screen Resolution" value={selectedVisitor.screen_resolution} />
                         <InfoItem label="Touch Enabled" value={selectedVisitor.is_touch_enabled} />
                         <InfoItem label="GPU" value={selectedVisitor.gpu} />
-                        <InfoItem label="Is Online" value={selectedVisitor.is_online} />
+                        <InfoItem label="Language" value={selectedVisitor.language} />
                         <InfoItem label="Do Not Track" value={selectedVisitor.do_not_track} />
-                        <InfoItem label="Page Performance" value={selectedVisitor.performance} />
                         <InfoItem label="User Agent" value={selectedVisitor.user_agent} />
+                        
+                        <h4 className="font-semibold mt-6 text-base">Performance Metrics</h4>
+                        <InfoItem label="Page Load" value={selectedVisitor.performance?.loadTime} unit=" s" />
+                        <InfoItem label="Time to First Byte" value={selectedVisitor.performance?.ttfb} unit=" ms" />
+                        <InfoItem label="DOM Interactive" value={selectedVisitor.performance?.domInteractive} unit=" ms" />
+                        <InfoItem label="DOM Complete" value={selectedVisitor.performance?.domComplete} unit=" ms" />
                     </div>
                 )}
             </DialogContent>
         </Dialog>
     );
 }
+
