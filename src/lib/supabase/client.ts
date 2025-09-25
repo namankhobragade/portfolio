@@ -122,6 +122,24 @@ interface Database {
           avatar: string;
         };
       };
+      posts: {
+        Row: {
+            id: number;
+            created_at: string;
+            title: string;
+            slug: string;
+            description: string;
+            image_id: string;
+            content: string;
+        };
+        Insert: {
+            title: string;
+            slug: string;
+            description: string;
+            image_id: string;
+            content: string;
+        };
+      };
       visitors: {
         Row: {
           id: number;
@@ -167,5 +185,3 @@ interface Database {
 
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
-
-    

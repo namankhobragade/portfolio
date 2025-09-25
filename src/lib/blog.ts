@@ -1,46 +1,40 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-
-const postsDirectory = path.join(process.cwd(), 'content/blog');
-
-export type PostFrontmatter = {
-  title: string;
-  date: string;
-  imageId: string;
-  description: string;
-};
+import { supabase } from '@/lib/supabase/client';
 
 export type Post = {
+  id: number;
+  created_at: string;
+  title: string;
   slug: string;
-  frontmatter: PostFrontmatter;
+  description: string;
+  image_id: string;
   content: string;
 };
 
-export async function getPostBySlug(slug: string): Promise<Post | undefined> {
-  try {
-    const realSlug = slug.replace(/\.md$/, '');
-    const fullPath = path.join(postsDirectory, `${realSlug}.md`);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data, content } = matter(fileContents);
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-    return {
-      slug: realSlug,
-      frontmatter: data as PostFrontmatter,
-      content,
-    };
-  } catch (error) {
-    console.error(`Error reading post ${slug}:`, error);
-    return undefined;
+  if (error) {
+    console.error(`Error fetching post by slug "${slug}":`, error);
+    return null;
   }
+
+  return data;
 }
 
 export async function getAllPosts(): Promise<Post[]> {
-  const slugs = fs.readdirSync(postsDirectory);
-  const posts = await Promise.all(slugs.map((slug) => getPostBySlug(slug)));
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-  // Filter out any undefined posts and sort by date
-  return posts
-    .filter((post): post is Post => !!post)
-    .sort((post1, post2) => (post1.frontmatter.date > post2.frontmatter.date ? -1 : 1));
+  if (error) {
+    console.error('Error fetching all posts:', error);
+    return [];
+  }
+  
+  return data || [];
 }

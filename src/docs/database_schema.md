@@ -157,4 +157,28 @@ ADD COLUMN IF NOT EXISTS do_not_track text,
 ADD COLUMN IF NOT EXISTS performance jsonb;
 ```
 
-    
+---
+
+### 5. Posts Table
+
+This table stores your blog posts.
+
+```sql
+-- Create the posts table
+CREATE TABLE public.posts (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  title text NOT NULL,
+  slug text NOT NULL UNIQUE,
+  description text NOT NULL,
+  image_id text NOT NULL,
+  content text NOT NULL
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
+
+-- Create a policy to allow public read access
+CREATE POLICY "Enable read access for all users" ON public.posts
+  FOR SELECT USING (true);
+```

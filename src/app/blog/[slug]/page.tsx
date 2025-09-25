@@ -29,25 +29,25 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     };
   }
 
-  const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
+  const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
   const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
 
   return {
-    title: post.frontmatter.title,
-    description: post.frontmatter.description,
+    title: post.title,
+    description: post.description,
     authors: [{ name: 'Sunil Khobragade', url: 'https://www.linkedin.com/in/sunilkhobragade' }],
     openGraph: {
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
+      title: post.title,
+      description: post.description,
       type: 'article',
-      publishedTime: new Date(post.frontmatter.date).toISOString(),
+      publishedTime: new Date(post.created_at).toISOString(),
       url: `${siteUrl}/blog/${post.slug}`,
       images: [{ url: imageUrl }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.frontmatter.title,
-      description: post.frontmatter.description,
+      title: post.title,
+      description: post.description,
       images: [imageUrl],
       creator: '@naman-mahi',
     }
@@ -73,13 +73,13 @@ export default async function BlogPostPage({ params }: Props) {
     .filter(p => p.slug !== post.slug) // Exclude current post
     .slice(0, 2); // Get the next 2 posts
 
-  const postImage = PlaceHolderImages.find((p) => p.id === post.frontmatter.imageId);
+  const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
   const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
 
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": post.frontmatter.title,
+    "headline": post.title,
     "image": imageUrl,
     "author": {
       "@type": "Person",
@@ -94,8 +94,8 @@ export default async function BlogPostPage({ params }: Props) {
         "url": `${siteUrl}/favicon.svg`
       }
     },
-    "datePublished": new Date(post.frontmatter.date).toISOString(),
-    "description": post.frontmatter.description
+    "datePublished": new Date(post.created_at).toISOString(),
+    "description": post.description
   };
 
   return (
@@ -113,18 +113,18 @@ export default async function BlogPostPage({ params }: Props) {
               Back to Blog
             </Link>
           </Button>
-          <ShareButtons title={post.frontmatter.title} slug={post.slug} />
+          <ShareButtons title={post.title} slug={post.slug} />
         </div>
 
-        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-2">{post.frontmatter.title}</h1>
+        <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-2">{post.title}</h1>
         <p className="text-muted-foreground mb-4">
-          Posted on {format(new Date(post.frontmatter.date), 'MMMM d, yyyy')}
+          Posted on {format(new Date(post.created_at), 'MMMM d, yyyy')}
         </p>
         
         {postImage && (
           <Image
             src={postImage.imageUrl}
-            alt={post.frontmatter.title}
+            alt={post.title}
             data-ai-hint={postImage.imageHint}
             width={1200}
             height={675}

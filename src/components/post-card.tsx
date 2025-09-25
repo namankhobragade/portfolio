@@ -6,23 +6,16 @@ import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { AnimatedItem } from "./animated-item";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import type { Post } from "@/lib/blog";
 
 type PostCardProps = {
-  post: {
-    slug: string;
-    frontmatter: {
-      title: string;
-      date: string;
-      imageId: string;
-      description: string;
-    };
-  };
+  post: Post;
   orientation?: "vertical" | "horizontal";
   priority?: boolean;
 };
 
 export function PostCard({ post, orientation = "vertical", priority = false }: PostCardProps) {
-  const postImage = PlaceHolderImages.find(p => p.id === post.frontmatter.imageId);
+  const postImage = PlaceHolderImages.find(p => p.id === post.image_id);
 
   return (
     <AnimatedItem>
@@ -38,7 +31,7 @@ export function PostCard({ post, orientation = "vertical", priority = false }: P
                 )}>
                     <Image
                         src={postImage.imageUrl}
-                        alt={post.frontmatter.title}
+                        alt={post.title}
                         data-ai-hint={postImage.imageHint}
                         width={orientation === 'horizontal' ? 800 : 600}
                         height={orientation === 'horizontal' ? 450 : 400}
@@ -58,15 +51,15 @@ export function PostCard({ post, orientation = "vertical", priority = false }: P
                         </Avatar>
                         <span>Sunil Khobragade</span>
                         <span className="text-xs">·</span>
-                        <time dateTime={post.frontmatter.date}>
-                            {format(new Date(post.frontmatter.date), "MMMM d, yyyy")}
+                        <time dateTime={post.created_at}>
+                            {format(new Date(post.created_at), "MMMM d, yyyy")}
                         </time>
                     </div>
                     <h3 className="text-xl font-bold font-headline tracking-tight group-hover:text-primary transition-colors">
-                        {post.frontmatter.title}
+                        {post.title}
                     </h3>
                     <p className="mt-2 text-muted-foreground text-sm line-clamp-2">
-                        {post.frontmatter.description}
+                        {post.description}
                     </p>
                 </div>
             </div>
