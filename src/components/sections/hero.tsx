@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Download, Github, Linkedin, Send, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
-import { useTheme } from '@/components/theme-provider';
+import { useTheme } from 'next-themes';
 import { SITE_CONFIG } from '@/lib/config';
 import { ResumeDownloadDialog } from '../resume-download-dialog';
 import { useState } from 'react';

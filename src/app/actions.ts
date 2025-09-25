@@ -5,9 +5,6 @@ import { z } from "zod";
 import { redirect } from 'next/navigation';
 import fs from 'fs/promises';
 import path from 'path';
-import matter from 'gray-matter';
-import { format } from 'date-fns';
-import type { ImagePlaceholder } from "@/lib/placeholder-images";
 import { SITE_CONFIG } from "@/lib/config";
 import { cookies } from 'next/headers';
 import { supabase } from "@/lib/supabase/client";
@@ -538,5 +535,3 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
-
-    
