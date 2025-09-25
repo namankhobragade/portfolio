@@ -2,16 +2,64 @@
 'use client';
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Quote } from "lucide-react";
-import React from "react";
+import { Quote, Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { AnimatedItem } from "../animated-item";
-import { TESTIMONIALS_DATA } from "@/lib/dynamic-data";
+import { supabase } from "@/lib/supabase/client";
+
+interface Testimonial {
+    name: string;
+    title: string;
+    quote: string;
+    avatar: string;
+}
 
 export function Testimonials() {
-  const testimonials = TESTIMONIALS_DATA;
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching testimonials:', error.message || error);
+        setError('Error loading testimonials.');
+      } else {
+        setTestimonials(data);
+      }
+      setLoading(false);
+    };
+
+    fetchTestimonials();
+  }, []);
+
+  if (loading) {
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container flex justify-center">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        </section>
+    );
+  }
   
+  if (error) {
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container text-center">
+                <p className="text-destructive">{error}</p>
+            </div>
+        </section>
+    );
+  }
+
   if (testimonials.length === 0) {
-    return null; // Don't render the section if there are no testimonials yet
+    return null; // Don't render the section if there are no testimonials
   }
 
   return (
