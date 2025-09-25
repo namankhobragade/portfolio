@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Preloader } from '@/components/preloader';
-import { SITE_CONFIG } from '@/lib/data';
+import { SITE_CONFIG } from '@/lib/config';
 import { CopyProtection } from '@/components/copy-protection';
 
 const inter = Inter({

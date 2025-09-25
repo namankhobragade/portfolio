@@ -5,11 +5,12 @@ import Link from "next/link";
 import { Briefcase } from "lucide-react";
 import { allIcons } from "@/lib/icons";
 import { supabase } from "@/lib/supabase/client";
+import type { FC } from "react";
 
-const iconMap = allIcons.reduce((map, icon) => {
+const iconMap: Record<string, FC<any>> = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
     return map;
-}, {} as Record<string, React.FC<any>>);
+}, {} as Record<string, FC<any>>);
 
 
 export async function Services() {

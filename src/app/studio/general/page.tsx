@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Loader2, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { SITE_CONFIG } from '@/lib/data';
+import { SITE_CONFIG } from '@/lib/config';
 import { updateGeneralSettings } from '@/app/actions';
 import { Separator } from '@/components/ui/separator';
 

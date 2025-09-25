@@ -8,7 +8,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { format } from 'date-fns';
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
-import { SITE_CONFIG } from "@/lib/data";
+import { SITE_CONFIG } from "@/lib/config";
 import { cookies } from 'next/headers';
 import { supabase } from "@/lib/supabase/client";
 
@@ -145,8 +145,6 @@ export async function subscribeToNewsletter(prevState: any, data: z.infer<typeof
 
 
 // ========= Blog Post Saving Logic =========
-const placeholderImagesPath = path.join(process.cwd(), 'src/lib/placeholder-images.json');
-
 const generatedPostSchema = z.object({
   title: z.string(),
   slug: z.string(),
@@ -194,19 +192,17 @@ export async function saveBlogPost(post: z.infer<typeof generatedPostSchema>) {
     if (!base64Data) throw new Error('Invalid image data URI.');
     await fs.writeFile(imageFilePath, base64Data, 'base64');
     
-    // 2. Update placeholder-images.json manifest
-    const manifestFile = await fs.readFile(placeholderImagesPath, 'utf-8');
-    const manifestData = JSON.parse(manifestFile);
-    
-    const newImageEntry: ImagePlaceholder = {
-        id: imageId,
+    // 2. Add new image to 'images' table in Supabase
+    const { error: imageInsertError } = await supabase
+      .from('images')
+      .insert({
+        image_id: imageId,
         description: `Featured image for blog post titled: ${title}`,
-        imageUrl: publicImageUrl,
-        imageHint: imagePrompt.split(' ').slice(0, 2).join(' '),
-    };
+        image_url: publicImageUrl,
+        image_hint: imagePrompt.split(' ').slice(0, 2).join(' '),
+      });
 
-    manifestData.placeholderImages.unshift(newImageEntry);
-    await fs.writeFile(placeholderImagesPath, JSON.stringify(manifestData, null, 2));
+    if (imageInsertError) throw imageInsertError;
 
     // 3. Save the blog post to Supabase
     const { error: insertError } = await supabase
@@ -240,15 +236,7 @@ export async function saveBlogPost(post: z.infer<typeof generatedPostSchema>) {
 
 // ========= Studio Settings Logic =========
 
-const dataFilePath = path.join(process.cwd(), 'src/lib/data.ts');
-
-// This function is currently not used as data is moving to Supabase
-// but we'll keep it for now.
-async function writeDataFile(content: string) {
-    const header = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';\n\n`;
-    const fullContent = header + content;
-    await fs.writeFile(dataFilePath, fullContent, 'utf-8');
-}
+const dataFilePath = path.join(process.cwd(), 'src/lib/config.ts');
 
 // ---- General Settings ----
 const generalSettingsSchema = z.object({
@@ -278,7 +266,13 @@ export async function updateGeneralSettings(prevState: any, formData: FormData) 
         keywords: siteKeywords.split(',').map(k => k.trim()),
     };
 
-    const newContent = `export const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n`;
+    const newContent = `// src/lib/config.ts
+
+// This is a server-safe file for storing site-wide configuration.
+// It should not import any client-side components or libraries.
+
+export const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};
+`;
 
     try {
         await fs.writeFile(dataFilePath, newContent, 'utf-8');

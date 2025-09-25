@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Code2 } from 'lucide-react';
 import { Separator } from './ui/separator';
 import { useState, useEffect } from 'react';
-import { SITE_CONFIG } from '@/lib/data';
+import { SITE_CONFIG } from '@/lib/config';
 
 interface LocationInfo {
   ip: string;

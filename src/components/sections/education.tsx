@@ -2,18 +2,13 @@ import { AnimatedItem } from "../animated-item";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { allIcons } from "@/lib/icons";
 import { supabase } from "@/lib/supabase/client";
+import type { FC } from "react";
 
-const iconMap = allIcons.reduce((map, icon) => {
+const iconMap: Record<string, FC<any>> = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
     return map;
-}, {} as Record<string, React.FC<any>>);
+}, {} as Record<string, FC<any>>);
 
-interface EducationData {
-    degree: string;
-    institution: string;
-    status: string;
-    icon: string;
-}
 
 export async function Education() {
   const { data: educationData, error } = await supabase
