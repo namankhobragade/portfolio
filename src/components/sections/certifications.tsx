@@ -1,15 +1,25 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CERTIFICATIONS_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
 import { allIcons } from "@/lib/icons";
+import { supabase } from "@/lib/supabase/client";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
     return map;
 }, {} as Record<string, React.FC<any>>);
 
-export function Certifications() {
+export async function Certifications() {
+  const { data: certificationsData, error } = await supabase
+    .from('certifications')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching certifications:', error.message || error);
+    return <p>Error loading certifications.</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -22,7 +32,7 @@ export function Certifications() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl justify-center gap-6 py-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-8">
-          {CERTIFICATIONS_DATA.map((cert, index) => {
+          {certificationsData.map((cert, index) => {
             const Icon = iconMap[cert.icon as keyof typeof iconMap] || iconMap['Star'];
             return (
                 <AnimatedItem key={cert.name} delay={index * 0.1}>

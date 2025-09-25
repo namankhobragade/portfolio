@@ -1,11 +1,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SERVICES_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
 import { allIcons } from "@/lib/icons";
+import { supabase } from "@/lib/supabase/client";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
@@ -13,7 +13,17 @@ const iconMap = allIcons.reduce((map, icon) => {
 }, {} as Record<string, React.FC<any>>);
 
 
-export function Services() {
+export async function Services() {
+  const { data: servicesData, error } = await supabase
+    .from('services')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching services:', error.message || error);
+    return <p>Error loading services.</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -26,7 +36,7 @@ export function Services() {
           </div>
         </div>
         <div className="mx-auto grid max-w-5xl items-stretch gap-8 py-12 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-4">
-          {SERVICES_DATA.map((service, index) => {
+          {servicesData.map((service, index) => {
             const Icon = iconMap[service.icon as keyof typeof iconMap] || iconMap['Settings'];
             return (
                 <AnimatedItem key={service.title} delay={index * 0.1}>

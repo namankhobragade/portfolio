@@ -1,17 +1,50 @@
 
 "use client";
 
-import { EDUCATION_DATA } from "@/lib/data";
 import { AnimatedItem } from "../animated-item";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { allIcons } from "@/lib/icons";
+import { supabase } from "@/lib/supabase/client";
+import { useEffect, useState } from "react";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
     return map;
 }, {} as Record<string, React.FC<any>>);
 
+interface EducationData {
+    degree: string;
+    institution: string;
+    status: string;
+    icon: string;
+}
+
 export function Education() {
+  const [educationData, setEducationData] = useState<EducationData[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEducation = async () => {
+      const { data, error } = await supabase
+        .from('education')
+        .select('*')
+        .order('order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching education:', error.message || error);
+        setError('Error loading education data.');
+      } else {
+        setEducationData(data as EducationData[]);
+      }
+    };
+
+    fetchEducation();
+  }, []);
+  
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -24,7 +57,7 @@ export function Education() {
           </div>
         </div>
         <div className="mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          {EDUCATION_DATA.map((edu, index) => {
+          {educationData.map((edu, index) => {
             const Icon = iconMap[edu.icon as keyof typeof iconMap] || iconMap['GraduationCap'];
             return (
              <AnimatedItem key={edu.degree} delay={index * 0.1}>

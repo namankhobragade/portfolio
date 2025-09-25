@@ -15,6 +15,7 @@ import { supabase } from '@/lib/supabase/client';
 
 const GenerateBlogPostInputSchema = z.object({
   topic: z.string().describe('The topic for the blog post.'),
+  imageUrl: z.string().optional().describe('An optional URL for a user-provided image.'),
 });
 export type GenerateBlogPostInput = z.infer<typeof GenerateBlogPostInputSchema>;
 
@@ -69,13 +70,25 @@ Your final output must be a single JSON object matching the defined schema.
 `,
 });
 
+async function urlToDataUri(url: string): Promise<string> {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch image from URL: ${url}`);
+    }
+    const contentType = response.headers.get('content-type') || 'image/png';
+    const buffer = await response.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    return `data:${contentType};base64,${base64}`;
+}
+
+
 const generateBlogPostFlow = ai.defineFlow(
   {
     name: 'generateBlogPostFlow',
     inputSchema: GenerateBlogPostInputSchema,
     outputSchema: GenerateBlogPostOutputSchema,
   },
-  async ({ topic }) => {
+  async ({ topic, imageUrl }) => {
     const { data: skillsData, error } = await supabase
       .from('skills')
       .select('skills');
@@ -92,11 +105,17 @@ const generateBlogPostFlow = ai.defineFlow(
         throw new Error('Failed to generate blog post text content.');
     }
     
-    const { imageDataUri } = await generateImage({ prompt: textOutput.imagePrompt });
+    let finalImageDataUri;
+    if (imageUrl) {
+        finalImageDataUri = await urlToDataUri(imageUrl);
+    } else {
+        const { imageDataUri } = await generateImage({ prompt: textOutput.imagePrompt });
+        finalImageDataUri = imageDataUri;
+    }
 
     return {
         ...textOutput,
-        imageDataUri: imageDataUri,
+        imageDataUri: finalImageDataUri,
     };
   }
 );

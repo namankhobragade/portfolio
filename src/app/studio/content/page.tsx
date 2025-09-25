@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,6 +26,7 @@ import Image from 'next/image';
 
 const blogFormSchema = z.object({
   topic: z.string().min(10, 'Please provide a more detailed topic (min 10 characters).'),
+  imageUrl: z.string().url().optional().or(z.literal('')),
 });
 
 export default function ContentStudio() {
@@ -36,7 +38,7 @@ export default function ContentStudio() {
 
     const form = useForm<z.infer<typeof blogFormSchema>>({
         resolver: zodResolver(blogFormSchema),
-        defaultValues: { topic: "" },
+        defaultValues: { topic: "", imageUrl: "" },
     });
 
     async function onGenerate(values: z.infer<typeof blogFormSchema>) {
@@ -45,7 +47,7 @@ export default function ContentStudio() {
         setIsSaved(false);
 
         try {
-            const result = await generateBlogPost({ topic: values.topic });
+            const result = await generateBlogPost({ topic: values.topic, imageUrl: values.imageUrl });
             setGeneratedPost(result);
         } catch (error) {
             console.error(error);
@@ -82,7 +84,7 @@ export default function ContentStudio() {
         <Card className="bg-transparent border">
             <CardHeader>
                 <CardTitle>Blog Post Generator</CardTitle>
-                <CardDescription>Generate a high-quality, SEO-friendly blog post on any topic using AI, complete with a unique, AI-generated featured image.</CardDescription>
+                <CardDescription>Generate a high-quality, SEO-friendly blog post on any topic. Provide an image URL or let the AI create a unique one for you.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
@@ -96,6 +98,22 @@ export default function ContentStudio() {
                                     <FormControl>
                                         <Input placeholder="e.g., 'Best practices for API security in Node.js'" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="imageUrl"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Featured Image URL (Optional)</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="https://example.com/image.png" {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        If you leave this blank, the AI will generate a unique image for you.
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -116,7 +134,11 @@ export default function ContentStudio() {
                             <CardHeader><CardTitle>Generated Image</CardTitle></CardHeader>
                             <CardContent>
                                 <Image src={generatedPost.imageDataUri} alt={generatedPost.title} width={1200} height={675} className="aspect-video w-full object-cover rounded-lg mb-4 border" />
-                                <p className="text-sm text-muted-foreground italic"><span className="font-semibold">Image Prompt:</span> "{generatedPost.imagePrompt}"</p>
+                                {form.getValues('imageUrl') ? (
+                                    <p className="text-sm text-muted-foreground italic"><span className="font-semibold">Image Source:</span> User-provided URL</p>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground italic"><span className="font-semibold">AI Image Prompt:</span> "{generatedPost.imagePrompt}"</p>
+                                )}
                             </CardContent>
                         </Card>
                         <Card className="bg-transparent border">

@@ -1,9 +1,9 @@
--- Supabase Setup Script for DevSec Portfolio
--- This script creates all necessary tables and inserts the initial data.
--- Run this entire script in your Supabase SQL Editor.
 
--- 1. Create 'skills' table
-CREATE TABLE IF NOT EXISTS skills (
+-- Drop tables if they exist to start fresh
+DROP TABLE IF EXISTS skills, projects, experience, education, certifications, services;
+
+-- Create Skills Table
+CREATE TABLE skills (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   "order" INT,
   category TEXT NOT NULL,
@@ -11,8 +11,8 @@ CREATE TABLE IF NOT EXISTS skills (
   skills JSONB
 );
 
--- 2. Create 'projects' table
-CREATE TABLE IF NOT EXISTS projects (
+-- Create Projects Table
+CREATE TABLE projects (
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   "order" INT,
   title TEXT NOT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS projects (
   case_study TEXT
 );
 
--- 3. Create 'experience' table
-CREATE TABLE IF NOT EXISTS experience (
+-- Create Experience Table
+CREATE TABLE experience (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     "order" INT,
     role TEXT NOT NULL,
@@ -36,76 +36,118 @@ CREATE TABLE IF NOT EXISTS experience (
     responsibilities TEXT[]
 );
 
--- 4. Create 'education' table
-CREATE TABLE IF NOT EXISTS education (
+-- Create Education Table
+CREATE TABLE education (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    "order" INT,
     degree TEXT NOT NULL,
-    institution TEXT,
+    institution TEXT NOT NULL,
     status TEXT,
     icon TEXT
 );
 
--- 5. Create 'certifications' table
-CREATE TABLE IF NOT EXISTS certifications (
+-- Create Certifications Table
+CREATE TABLE certifications (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    "order" INT,
     name TEXT NOT NULL,
     issuer TEXT,
     icon TEXT
 );
 
--- 6. Create 'services' table
-CREATE TABLE IF NOT EXISTS services (
+-- Create Services Table
+CREATE TABLE services (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    "order" INT,
     title TEXT NOT NULL,
     description TEXT,
     icon TEXT
 );
 
+-- Insert Data for Skills
+INSERT INTO skills (category, description, skills, "order")
+VALUES 
+(
+  'Full-Stack Development', 
+  'Expertise in both frontend and backend technologies to build complete, scalable applications.',
+  '[
+    {"name": "Laravel", "icon": "Code"},
+    {"name": "CodeIgniter", "icon": "Code"},
+    {"name": "Next.js", "icon": "Code"},
+    {"name": "MongoDB", "icon": "Database"},
+    {"name": "MySQLi", "icon": "Database"},
+    {"name": "REST APIs", "icon": "Server"}
+  ]',
+  1
+),
+(
+  'Cybersecurity', 
+  'Specialized in securing applications and infrastructures against modern threats.',
+  '[
+    {"name": "CEH v13 AI Certified", "icon": "ShieldCheck"},
+    {"name": "OWASP Practices", "icon": "Shield"},
+    {"name": "Penetration Testing", "icon": "Terminal"},
+    {"name": "Vulnerability Scanning", "icon": "SearchCheck"},
+    {"name": "Network Security", "icon": "Globe"},
+    {"name": "SOC & Risk Assessment", "icon": "GanttChartSquare"}
+  ]',
+  2
+),
+(
+  'AI & Innovation', 
+  'Leveraging artificial intelligence to create smarter, more efficient solutions.',
+  '[
+    {"name": "LLM Integration", "icon": "BrainCircuit"},
+    {"name": "Genkit", "icon": "Bot"},
+    {"name": "Chatbot Development", "icon": "Bot"},
+    {"name": "Secure AI Development", "icon": "ShieldCheck"}
+  ]',
+  3
+),
+(
+  'Tools & Platforms',
+  'Proficient with a wide range of industry-standard development and security tools.',
+  '[
+    {"name": "Git & GitHub", "icon": "GitBranch"},
+    {"name": "Linux", "icon": "Terminal"},
+    {"name": "Docker", "icon": "Container"},
+    {"name": "Nginx", "icon": "Server"},
+    {"name": "Burp Suite", "icon": "SearchCheck"},
+    {"name": "Wireshark", "icon": "Network"}
+  ]',
+  4
+);
 
--- =================================================================
---                   INSERT DATA
--- =================================================================
 
--- IMPORTANT: It's best practice to run these inserts only once.
--- If you need to re-run, you should clear the tables first.
-
--- Insert data for 'skills'
-INSERT INTO skills (category, description, skills, "order") VALUES
-('Backend Development', 'Building robust server-side logic, APIs, and database integrations.', '[{"name": "PHP", "icon": "Code"}, {"name": "Laravel", "icon": "Code"}, {"name": "CodeIgniter", "icon": "Code"}, {"name": "Node.js", "icon": "Code"}, {"name": "Express.js", "icon": "Code"}, {"name": "Python", "icon": "Code"}]', 1),
-('Frontend Development', 'Creating responsive and interactive user interfaces with modern JavaScript frameworks.', '[{"name": "Next.js", "icon": "Code"}, {"name": "JavaScript", "icon": "Code"}, {"name": "React", "icon": "Code"}, {"name": "TypeScript", "icon": "Code"}, {"name": "Tailwind CSS", "icon": "Code"}, {"name": "Framer Motion", "icon": "Code"}]', 2),
-('Databases', 'Designing and managing both relational and NoSQL databases for optimal performance and security.', '[{"name": "MySQL", "icon": "Database"}, {"name": "MongoDB", "icon": "Database"}, {"name": "PostgreSQL", "icon": "Database"}, {"name": "Supabase", "icon": "Database"}]', 3),
-('Cloud & DevOps', 'Deploying and managing applications in cloud environments with a focus on automation and security.', '[{"name": "AWS", "icon": "Cloud"}, {"name": "Docker", "icon": "Container"}, {"name": "Git", "icon": "GitBranch"}, {"name": "Nginx", "icon": "Server"}, {"name": "Linux", "icon": "Terminal"}]', 4),
-('Cybersecurity', 'Applying a deep understanding of security principles to protect applications and infrastructure.', '[{"name": "Penetration Testing", "icon": "Shield"}, {"name": "Vulnerability Scanning", "icon": "SearchCheck"}, {"name": "OWASP Practices", "icon": "ShieldCheck"}, {"name": "Network Security", "icon": "Globe"}, {"name": "SOC", "icon": "Users"}, {"name": "Risk Assessment", "icon": "GanttChartSquare"}]', 5),
-('AI Integration', 'Leveraging artificial intelligence and large language models to build intelligent features and tools.', '[{"name": "Genkit (Google AI)", "icon": "BrainCircuit"}, {"name": "LLM Integration", "icon": "Bot"}, {"name": "Chatbot Development", "icon": "Bot"}, {"name": "Prompt Engineering", "icon": "Terminal"}]', 6);
-
--- Insert data for 'projects'
+-- Insert Data for Projects
 INSERT INTO projects ("order", title, slug, description, tech_stack, security_focus, github_url, demo_url, image_id, case_study) VALUES
-(1, 'Proffid - Secure SaaS Identity Layer', 'proffid-secure-saas-identity', 'A secure, plug-and-play user authentication and identity management layer designed for modern SaaS applications. It simplifies adding features like role-based access, JWT session management, and social logins.', '{"Laravel", "MongoDB", "JWT", "OAuth 2.0"}', 'Role-Based Access Control (RBAC), JWT session hardening, secure password policies, and brute-force protection.', '#', '#', 'project-1', E'## Case Study: Building a Reusable and Secure Identity Layer\n\n### The Problem\nMany SaaS applications rebuild authentication and authorization from scratch, leading to inconsistencies and potential security vulnerabilities. The goal was to create a standalone, robust service that any application could use for identity management, saving development time and enforcing security best practices.\n\n### The Solution\nI built Proffid using Laravel for the backend API and MongoDB for its flexible data structure, which is ideal for storing varied user profiles and roles. The core of the system is built around JSON Web Tokens (JWT) for stateless, secure session management.\n\nKey features implemented:\n\n* **Stateless Authentication with JWT**: Every login request returns a signed JWT containing the user ID, role, and expiration. This token must be sent with every subsequent request to access protected resources.\n* **Role-Based Access Control (RBAC)**: The system defines roles (e.g., admin, editor, viewer) with specific permissions. Middleware on the API server checks the role from the JWT payload against the required permissions for each endpoint, denying access if the user is not authorized.\n* **Session Hardening**: Implemented refresh tokens to allow for short-lived access tokens, reducing the window of opportunity if a token is compromised. Secure, HTTP-only cookies were used to store refresh tokens, protecting them from XSS attacks.\n* **Secure Registration**: Enforced strong password policies and included email verification to prevent spam and ensure user authenticity.\n\n### Challenges & Learnings\nOne of the main challenges was ensuring the system was both secure and easy to integrate. I created detailed API documentation and provided simple client-side examples. This project deepened my understanding of OAuth 2.0 flows and the critical importance of stateless architecture in modern microservices.'),
-(2, 'AI-Powered SOC Assistant', 'ai-soc-assistant', 'A prototype of a conversational AI (chatbot) designed to assist Security Operations Center (SOC) analysts. It can parse security logs, summarize alerts, and suggest initial mitigation steps.', '{"Python", "Next.js", "LangChain", "Genkit"}', 'Securing the Large Language Model (LLM) from prompt injection attacks and ensuring data sanitization.', '#', NULL, 'project-2', E'## Case Study: Automating Alert Triage with an AI Assistant\n\n### The Problem\nSOC analysts are often overwhelmed by a high volume of alerts, many of which are false positives. This alert fatigue can lead to missed critical threats. The goal was to build a tool that could perform an initial, automated analysis of alerts to help analysts prioritize their work.\n\n### The Solution\nI developed a proof-of-concept AI assistant using Google\'s Genkit framework for the backend and Next.js for the user interface. The chatbot was designed to be a "first responder" for security alerts.\n\nHere’s how it works:\n\n1.  **Log Ingestion**: The system takes a security log entry (e.g., from a firewall or intrusion detection system) as input.\n2.  **AI Analysis**: The Genkit flow sends the log data to a Large Language Model (LLM) with a carefully crafted prompt. The prompt instructs the model to act as a junior SOC analyst, identify key information (IP addresses, timestamps, attack type), assess the severity, and check for known patterns.\n3.  **Structured Output**: The LLM returns a structured JSON object containing its analysis, a summary in plain English, and a suggested action (e.g., "Block IP," "Investigate further," "Likely false positive").\n4.  **Security Measures**: A key focus was securing the LLM itself. I implemented input sanitization to strip potentially malicious characters from the logs before sending them to the model. I also used instructional defense in the prompt, telling the model to ignore any instructions hidden within the user input to prevent prompt injection.\n\n### Challenges & Learnings\nThe biggest challenge was "prompt engineering" – creating a prompt that consistently produced accurate and safe analysis. It required many iterations to balance the model\'s analytical capabilities with strict security boundaries. This project was a fantastic exploration of the practical application of LLMs in cybersecurity and highlighted the new attack surfaces that AI introduces.');
+(1, 'Proffid - Secure Identity Platform', 'proffid-secure-identity', 'A secure, plug-and-play user authentication and identity management layer designed for SaaS applications, offering robust security features out-of-the-box.', '{"Laravel", "MongoDB", "JWT", "OAuth 2.0"}', 'Role-Based Access Control (RBAC), JWT session hardening, secure password policies, and rate limiting.', '#', '#', 'project-1', 'The Proffid platform was developed to solve the recurring challenge of building secure authentication systems for new projects. The case study involved designing a microservice architecture where the identity service is completely decoupled from the main application. Key security measures included implementing multi-factor authentication (MFA) flows, creating a granular permissions system using JWT custom claims, and ensuring all data at rest and in transit is encrypted. The platform successfully reduced development time for new applications by 40% while significantly improving their security posture.'),
+(2, 'Comprehensive E-Learning Platform', 'e-learning-platform', 'A full-stack e-learning platform for a client, featuring live video classes, integrated payment gateways, and separate, secure dashboards for students and teachers.', '{"CodeIgniter 4", "MySQLi", "BigBlueButton API", "Stripe"}', 'CSRF protection on all forms, strict access control lists (ACLs), and payment tokenization.', '#', NULL, 'project-2', 'This project involved building a multi-tenant e-learning system from scratch. The primary challenge was securely handling user data and payment information. We implemented a robust security model that included input validation to prevent XSS, parameterized queries to prevent SQL injection, and CSRF tokens on all state-changing requests. The integration with BigBlueButton for live classes required secure API key management and webhook validation to ensure the integrity of session data.'),
+(3, 'AI-Powered SOC Assistant', 'ai-soc-assistant', 'A prototype chatbot designed for Security Operations Centers (SOCs) to automate the initial triage of security alerts using Large Language Models (LLMs).', '{"Next.js", "Genkit", "Python", "Docker"}', 'Preventing prompt injection, securing API endpoints, and ensuring data sanitization.', '#', '#', 'project-3', 'This is an ongoing research project focused on leveraging AI for security automation. The goal is to build an LLM-based agent that can parse security alerts from various sources (like SIEMs), enrich them with threat intelligence, and suggest initial mitigation steps. The core security focus is on defending the LLM from prompt injection attacks by implementing input validation, output encoding, and instructional defense mechanisms. The system is containerized with Docker for easy deployment and scalability.');
 
--- Insert data for 'experience'
+-- Insert Data for Experience
 INSERT INTO experience ("order", role, company, period, responsibilities) VALUES
-(1, 'Technical Lead', 'Confidential', '2025–Present', '{"Leading a full-stack team in building secure, scalable web platforms.", "Integrating AI-based tools for security automation and enhanced functionality.", "Enforcing secure coding practices (OWASP) through code reviews and training.", "Architecting and maintaining CI/CD pipelines with integrated security scanning."}'),
-(2, 'Freelance Full-Stack Developer', 'Self-Employed', '2020–Present', '{"Delivered over 20 custom web platforms for clients in e-commerce, education, and SaaS.", "Integrated secure payment gateways like Stripe and Razorpay.", "Applied OWASP best practices to mitigate common vulnerabilities like XSS, CSRF, and SQL Injection.", "Managed client communication, project scoping, and delivery from end to end."}'),
-(3, 'Full-Stack Developer', 'IBM', '2021–2022', '{"Developed and maintained secure MERN stack applications with a focus on Angular CLI.", "Collaborated on system programming tasks involving mainframe modules.", "Participated in agile development cycles, including sprint planning and retrospectives."}');
+(1, 'Technical Lead', 'Confidential', '2025 – Present', '{"Leading a full-stack team in building secure, scalable web platforms.", "Integrating AI-based tools for security automation and enhanced functionality.", "Enforcing secure coding practices (OWASP Top 10) through code reviews and training.", "Architecting microservices and managing cloud infrastructure."}'),
+(2, 'Freelance Full-Stack Developer', 'Self-Employed', '2020 – Present', '{"Delivered over 20 custom web platforms for clients in e-commerce, education, and SaaS.", "Integrated secure payment systems using Stripe and Razorpay, ensuring PCI-DSS compliance.", "Applied deep knowledge of OWASP standards to mitigate common vulnerabilities like XSS, CSRF, and SQLi.", "Managed client communication, project scoping, and timely delivery."}'),
+(3, 'Full-Stack Developer', 'IBM', '2021 – 2022', '{"Developed and maintained secure MERN stack applications using Angular CLI for the frontend.", "Collaborated on system programming with mainframe modules, focusing on secure data exchange.", "Contributed to the development of internal tools and dashboards."}');
 
--- Insert data for 'education'
-INSERT INTO education (degree, institution, status, icon) VALUES
-('Master’s in Information Security', 'Indira Gandhi National Open University', '2025 - 2025', 'GraduationCap'),
-('PG Diploma in Information Security', 'Indira Gandhi National Open University', '2023 - 2024', 'Award'),
-('Bachelor of Commerce', 'Yashwantrao Chavan Maharashtra Open University', '2019 - 2022', 'GraduationCap'),
-('Diploma in IT', 'National Skill Training Institute Hyderabad', '2019 - 2022', 'Award');
+-- Insert Data for Education
+INSERT INTO education ("order", degree, institution, status, icon) VALUES
+(1, 'Master’s in Information Security', 'Indira Gandhi National Open University', '2025 - 2025', 'GraduationCap'),
+(2, 'PG Diploma in Information Security', 'Indira Gandhi National Open University', '2023 - 2024', 'Award'),
+(3, 'Bachelor of Commerce', 'Yashwantrao Chavan Maharashtra Open University', '2019 - 2022', 'GraduationCap'),
+(4, 'Diploma in IT', 'National Skill Training Institute Hyderabad', '2019 - 2022', 'Award');
 
--- Insert data for 'certifications'
-INSERT INTO certifications (name, issuer, icon) VALUES
-('Introduction to Cybersecurity', 'Cisco', 'ShieldCheck'),
-('IBM z/OS Mainframe Practitioner', 'IBM', 'CloudCog'),
-('Introduction to Packet Tracer', 'Cisco', 'Cpu'),
-('Cybersecurity Fundamentals', 'IBM', 'Star');
+-- Insert Data for Certifications
+INSERT INTO certifications ("order", name, issuer, icon) VALUES
+(1, 'Introduction to Cybersecurity', 'Cisco', 'ShieldCheck'),
+(2, 'IBM z/OS Mainframe Practitioner', 'IBM', 'CloudCog'),
+(3, 'Introduction to Packet Tracer', 'Cisco', 'Cpu'),
+(4, 'Cybersecurity Fundamentals', 'IBM', 'Star');
 
--- Insert data for 'services'
-INSERT INTO services (title, description, icon) VALUES
-('Secure Web Development', 'Building robust, scalable, and secure web applications from the ground up using modern frameworks like Next.js and Laravel.', 'Shield'),
-('Cybersecurity Audits', 'Comprehensive security assessments, including penetration testing and vulnerability scanning, to identify and mitigate risks.', 'SearchCheck'),
-('AI/Chatbot Prototyping', 'Developing intelligent chatbots and AI-powered tools to automate tasks and enhance security operations.', 'Bot'),
-('SOC Architecture Consulting', 'Designing and implementing effective Security Operations Center (SOC) architectures for proactive threat monitoring and response.', 'GanttChartSquare');
+-- Insert Data for Services
+INSERT INTO services ("order", title, description, icon) VALUES
+(1, 'Secure Web Development', 'Building robust, scalable, and secure web applications from the ground up using modern frameworks like Next.js and Laravel.', 'Shield'),
+(2, 'Cybersecurity Audits', 'Comprehensive security assessments, including penetration testing and vulnerability scanning, to identify and mitigate risks.', 'SearchCheck'),
+(3, 'AI/Chatbot Prototyping', 'Developing intelligent chatbots and AI-powered tools to automate tasks and enhance security operations.', 'Bot'),
+(4, 'SOC Architecture Consulting', 'Designing and implementing effective Security Operations Center (SOC) architectures for proactive threat monitoring and response.', 'GanttChartSquare');
