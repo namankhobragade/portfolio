@@ -153,6 +153,8 @@ export function ClientInfoWidget() {
                     <InfoItem label='City' value={info.geolocation?.city} />
                     <InfoItem label='Region' value={info.geolocation?.region} />
                     <InfoItem label='Country' value={info.geolocation?.country_name} />
+                    <InfoItem label='Latitude' value={info.geolocation?.latitude} />
+                    <InfoItem label='Longitude' value={info.geolocation?.longitude} />
                     <InfoItem label='Timezone' value={info.geolocation?.timezone} />
                     <InfoItem label='ISP' value={info.geolocation?.org} />
                 </CardContent>

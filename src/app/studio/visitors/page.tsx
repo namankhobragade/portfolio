@@ -77,7 +77,7 @@ export default function VisitorsPage() {
     }
 
     return (
-        <Dialog onOpenChange={() => setSelectedVisitor(null)}>
+        <Dialog onOpenChange={(isOpen) => !isOpen && setSelectedVisitor(null)}>
             <Card className="bg-transparent border">
                 <CardHeader>
                     <CardTitle>Visitor Logs</CardTitle>
@@ -124,30 +124,33 @@ export default function VisitorsPage() {
                 </CardContent>
             </Card>
 
-            {selectedVisitor && (
-                 <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Visitor Details</DialogTitle>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Visitor Details</DialogTitle>
+                    {selectedVisitor && (
                         <DialogDescription>
                             Full details for the visit on {formatDate(selectedVisitor.created_at)}.
                         </DialogDescription>
-                    </DialogHeader>
+                    )}
+                </DialogHeader>
+                {selectedVisitor && (
                     <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-2">
                         <InfoItem label="Timestamp" value={selectedVisitor.created_at} />
                         <InfoItem label="IP Address" value={selectedVisitor.ip} />
                         <InfoItem label="City" value={selectedVisitor.geolocation?.city} />
                         <InfoItem label="Region" value={selectedVisitor.geolocation?.region} />
                         <InfoItem label="Country" value={selectedVisitor.geolocation?.country_name} />
-                        <InfoItem label="Timezone" value={selectedVisitor.geolocation?.tz} />
-                        <InfoItem label="ISP" value={selectedVisitor.geolocation?.isp} />
+                        <InfoItem label="Latitude" value={selectedVisitor.geolocation?.latitude} />
+                        <InfoItem label="Longitude" value={selectedVisitor.geolocation?.longitude} />
+                        <InfoItem label="Timezone" value={selectedVisitor.geolocation?.timezone} />
+                        <InfoItem label="ISP" value={selectedVisitor.geolocation?.org} />
                         <InfoItem label="Platform" value={selectedVisitor.platform} />
                         <InfoItem label="Language" value={selectedVisitor.language} />
                         <InfoItem label="Connection" value={selectedVisitor.connection_type} />
                         <InfoItem label="User Agent" value={selectedVisitor.user_agent} />
                     </div>
-                </DialogContent>
-            )}
+                )}
+            </DialogContent>
         </Dialog>
     );
 }
-
