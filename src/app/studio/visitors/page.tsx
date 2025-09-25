@@ -35,6 +35,7 @@ const InfoItem = ({ label, value }: { label: string; value: any }) => {
     if (typeof value === 'boolean') {
         displayValue = value ? 'Yes' : 'No';
     } else if (typeof value === 'object') {
+        // Pretty print the object for readability in the modal
         displayValue = JSON.stringify(value, null, 2);
     }
     return (
