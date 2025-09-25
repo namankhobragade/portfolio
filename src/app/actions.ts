@@ -12,6 +12,53 @@ import { SITE_CONFIG } from "@/lib/data";
 import { cookies } from 'next/headers';
 import { supabase } from "@/lib/supabase/client";
 
+// ========= Resume Download Logic =========
+const resumeRequestSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  email: z.string().email("Invalid email address."),
+  purpose: z.enum(['developer', 'fullstack', 'cyber-security', 'lead', 'other'], {
+    required_error: "You need to select a purpose.",
+  }),
+});
+
+export async function submitResumeRequest(prevState: any, formData: FormData) {
+    const validatedFields = resumeRequestSchema.safeParse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        purpose: formData.get('purpose'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            message: "There was an error with your submission.",
+            errors: validatedFields.error.flatten().fieldErrors,
+        };
+    }
+
+    try {
+        const { error } = await supabase.from('resume_downloads').insert([
+            {
+                name: validatedFields.data.name,
+                email: validatedFields.data.email,
+                purpose: validatedFields.data.purpose,
+            }
+        ]);
+        if (error) throw error;
+
+        return {
+            success: true,
+            message: "Thank you! You can now download the resume.",
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            message: `Database error: ${error.message}`,
+        };
+    }
+}
+
+
 // ========= Contact Form Logic =========
 
 const contactFormSchema = z.object({
@@ -34,15 +81,28 @@ export async function submitContactForm(prevState: any, formData: FormData) {
         };
     }
     
-    // This is a server action, so we can safely handle form submissions here
-    // without exposing sensitive info to the client-side.
-    // In a real application, you would send an email or save to a database.
-    console.log('Contact form submitted:', validatedFields.data);
+    try {
+        const { error } = await supabase.from('contacts').insert([
+            {
+                name: validatedFields.data.name,
+                email: validatedFields.data.email,
+                message: validatedFields.data.message,
+            }
+        ]);
 
-    return {
-        success: true,
-        message: "Message sent successfully! 🚀 I'll be in touch soon.",
-    };
+        if (error) throw error;
+
+        return {
+            success: true,
+            message: "Message sent successfully! 🚀 I'll be in touch soon.",
+        };
+
+    } catch (error: any) {
+         return {
+            success: false,
+            message: `Database error: ${error.message}`,
+        };
+    }
 }
 
 
@@ -64,13 +124,27 @@ export async function subscribeToNewsletter(prevState: any, formData: FormData) 
     };
   }
 
-  // Same as above, handle the subscription server-side.
-  console.log('New newsletter subscription:', validatedFields.data.email);
-
-  return {
-    success: true,
-    message: "You're on the list! 🎉 Welcome aboard.",
-  };
+  try {
+      const { error } = await supabase.from('subscribers').insert([
+          { email: validatedFields.data.email }
+      ]);
+      if (error) {
+        // Handle potential unique constraint violation gracefully
+        if (error.code === '23505') {
+            return { success: true, message: "You're already on the list! 👍" };
+        }
+        throw error;
+      }
+      return {
+        success: true,
+        message: "You're on the list! 🎉 Welcome aboard.",
+      };
+  } catch (error: any) {
+    return {
+        success: false,
+        message: `Database error: ${error.message}`,
+    };
+  }
 }
 
 
@@ -238,7 +312,7 @@ export async function updateGeneralSettings(prevState: any, formData: FormData) 
         keywords: siteKeywords.split(',').map(k => k.trim()),
     };
 
-    const newContent = `import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';\n\nexport const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n`;
+    const newContent = `export const SITE_CONFIG = ${JSON.stringify(newSiteConfig, null, 2)};\n`;
 
     try {
         await fs.writeFile(dataFilePath, newContent, 'utf-8');
@@ -273,6 +347,7 @@ export async function updateSkills(skillsData: z.infer<typeof skillsFormSchema>[
     }
     
     const skillsToUpsert = validatedFields.data.skills.map((category, index) => ({
+      id: index + 1, // Using order as id for simplicity. Be cautious with this in production.
       order: index + 1,
       category: category.category,
       description: category.description,
@@ -280,13 +355,14 @@ export async function updateSkills(skillsData: z.infer<typeof skillsFormSchema>[
     }));
 
     try {
-        // Delete all existing skills to handle reordering and deletions
-        const { error: deleteError } = await supabase.from('skills').delete().neq('id', 0);
+        const { error } = await supabase.from('skills').upsert(skillsToUpsert, { onConflict: 'id' });
+        if (error) throw error;
+        
+        // Delete any skills that are no longer present
+        const skillIds = skillsToUpsert.map(s => s.id);
+        const { error: deleteError } = await supabase.from('skills').delete().not('id', 'in', `(${skillIds.join(',')})`);
         if (deleteError) throw deleteError;
 
-        // Insert the new set of skills
-        const { error: upsertError } = await supabase.from('skills').upsert(skillsToUpsert);
-        if (upsertError) throw upsertError;
 
         return { success: true, message: 'Skills updated successfully!' };
     } catch (error: any) {
@@ -308,23 +384,23 @@ export async function updateSkillsAction(prevState: any, formData: FormData) {
         if (categoryMatch) {
             const index = parseInt(categoryMatch[1], 10);
             if (!skillsData[index]) skillsData[index] = { skills: [] };
-            skillsData[index].category = value;
+            skillsData[index].category = value as string;
         } else if (descriptionMatch) {
             const index = parseInt(descriptionMatch[1], 10);
             if (!skillsData[index]) skillsData[index] = { skills: [] };
-            skillsData[index].description = value;
+            skillsData[index].description = value as string;
         } else if (skillNameMatch) {
             const catIndex = parseInt(skillNameMatch[1], 10);
             const skillIndex = parseInt(skillNameMatch[2], 10);
             if (!skillsData[catIndex]) skillsData[catIndex] = { skills: [] };
             if (!skillsData[catIndex].skills[skillIndex]) skillsData[catIndex].skills[skillIndex] = {};
-            skillsData[catIndex].skills[skillIndex].name = value;
+            skillsData[catIndex].skills[skillIndex].name = value as string;
         } else if (skillIconMatch) {
             const catIndex = parseInt(skillIconMatch[1], 10);
             const skillIndex = parseInt(skillIconMatch[2], 10);
             if (!skillsData[catIndex]) skillsData[catIndex] = { skills: [] };
             if (!skillsData[catIndex].skills[skillIndex]) skillsData[catIndex].skills[skillIndex] = {};
-            skillsData[catIndex].skills[skillIndex].icon = value;
+            skillsData[catIndex].skills[skillIndex].icon = value as string;
         }
     }
     
@@ -508,5 +584,3 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
-
-    
