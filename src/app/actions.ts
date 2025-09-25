@@ -12,6 +12,10 @@ import { SITE_CONFIG } from "@/lib/data";
 import { cookies } from 'next/headers';
 import { supabase } from "@/lib/supabase/client";
 
+const getIstTimestamp = () => {
+    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+};
+
 // ========= Resume Download Logic =========
 const resumeRequestSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -38,6 +42,7 @@ export async function submitResumeRequest(prevState: any, formData: z.infer<type
                 name: validatedFields.data.name,
                 email: validatedFields.data.email,
                 purpose: validatedFields.data.purpose,
+                created_at: getIstTimestamp(),
             }
         ]);
         if (error) throw error;
@@ -79,6 +84,7 @@ export async function submitContactForm(prevState: any, formData: FormData) {
                 name: validatedFields.data.name,
                 email: validatedFields.data.email,
                 message: validatedFields.data.message,
+                created_at: getIstTimestamp(),
             }
         ]);
 
@@ -116,7 +122,7 @@ export async function subscribeToNewsletter(prevState: any, formData: FormData) 
 
   try {
       const { error } = await supabase.from('subscribers').insert([
-          { email: validatedFields.data.email }
+          { email: validatedFields.data.email, created_at: getIstTimestamp() }
       ]);
       if (error) {
         // Handle potential unique constraint violation gracefully
@@ -399,7 +405,7 @@ const themeColorSchema = z.object({
     primary: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
     background: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 100%"),
     accent: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
-    primaryDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
+    primaryDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1.3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
     backgroundDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 10% 3.9%"),
     accentDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
 });
@@ -568,3 +574,5 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
+
+    
