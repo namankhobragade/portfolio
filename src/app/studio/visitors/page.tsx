@@ -32,16 +32,24 @@ type Visitor = {
 
 const InfoItem = ({ label, value }: { label: string; value: any }) => {
     if (value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) return null;
-    let displayValue: React.ReactNode = String(value);
+
+    let displayValue: React.ReactNode;
     if (typeof value === 'boolean') {
         displayValue = value ? 'Yes' : 'No';
     } else if (typeof value === 'object') {
-        displayValue = <pre className="text-right break-words whitespace-pre-wrap font-sans">{JSON.stringify(value, null, 2)}</pre>;
+        displayValue = (
+            <pre className="text-left text-xs bg-muted/50 p-2 rounded-md font-mono whitespace-pre-wrap break-all">
+                {JSON.stringify(value, null, 2)}
+            </pre>
+        );
+    } else {
+        displayValue = String(value);
     }
+    
     return (
-        <div className="flex justify-between items-start text-sm py-2 border-b">
-            <span className="text-muted-foreground font-medium whitespace-nowrap pr-4">{label}</span>
-            <div className="text-right break-words">{displayValue}</div>
+        <div className="grid grid-cols-3 items-start text-sm py-2 border-b">
+            <span className="text-muted-foreground font-medium col-span-1">{label}</span>
+            <div className="col-span-2 text-right break-words">{displayValue}</div>
         </div>
     );
 };
@@ -160,9 +168,9 @@ export default function VisitorsPage() {
                         <InfoItem label="Timestamp" value={selectedVisitor.created_at} />
                         <InfoItem label="IP Address" value={selectedVisitor.ip} />
                         
-                        <div className="flex justify-between items-center text-sm py-2 border-b">
-                            <span className="text-muted-foreground font-medium">Location</span>
-                            <div className="text-right">
+                        <div className="grid grid-cols-3 items-start text-sm py-2 border-b">
+                            <span className="text-muted-foreground font-medium col-span-1">Location</span>
+                            <div className="text-right col-span-2">
                                 <p>{`${selectedVisitor.geolocation?.city || 'N/A'}, ${selectedVisitor.geolocation?.region || 'N/A'}, ${selectedVisitor.geolocation?.country_name || 'N/A'}`}</p>
                                 {selectedVisitor.geolocation?.latitude && selectedVisitor.geolocation?.longitude && (
                                      <a 
