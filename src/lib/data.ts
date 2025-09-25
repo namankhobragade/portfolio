@@ -24,61 +24,6 @@ export const SITE_CONFIG = {
   linkedinUrl: "https://www.linkedin.com/in/sunilkhobragade",
 };
 
-export const EXPERIENCE_DATA = [
-  {
-    role: 'Freelance Full-Stack Developer & Security Consultant',
-    company: 'Self-Employed',
-    period: '2020 – Present',
-    responsibilities: [
-      'Delivered over 20 secure, custom web applications for clients in education, e-commerce, and SaaS.',
-      'Architected and built full-stack solutions using Laravel, Next.js, MongoDB, and MySQLi.',
-      'Integrated third-party services like Stripe, Razorpay, and OAuth, ensuring secure data handling.',
-      'Applied OWASP Top 10 practices to prevent XSS, CSRF, and SQLi vulnerabilities, conducting regular security audits.'
-    ],
-  },
-  {
-    role: 'Technical Lead',
-    company: 'Confidential',
-    period: 'March 2025 – Present',
-    responsibilities: [
-      'Led a cross-functional team to develop secure and scalable web applications.',
-      'Architecting full-stack solutions using Laravel, Next.js, MongoDB, and MySQLi.',
-      'Enforced secure coding practices and optimized performance across microservices.',
-      'Explored integration of AI/LLM tools to automate and enhance software security.',
-    ],
-  },
-  {
-    role: 'Full-stack Developer',
-    company: 'Confidential',
-    period: 'Aug 2024 – Present',
-    responsibilities: [
-      'Designed and maintained e-learning platforms with live class integrations (BigBlueButton).',
-      'Developed secure REST APIs with CodeIgniter 4 and integrated Stripe/Billplz payments.',
-      'Conducted vulnerability assessments and handled technical issue resolution.',
-    ],
-  },
-  {
-    role: 'Full-stack Developer',
-    company: 'Confidential',
-    period: 'Oct 2022 – July 2024',
-    responsibilities: [
-      'Collaborated with cross-functional teams to enhance our e-learning platform.',
-      'Designed, developed, and maintained responsive web applications for exceptional user experiences.',
-      'Ensured platform reliability, security, and optimization.',
-    ],
-  },
-  {
-    role: 'Full-stack Developer (Contract)',
-    company: 'IBM',
-    period: 'Sep 2021 – March 2022',
-    responsibilities: [
-      'Built MERN stack applications with focus on scalable architecture and UI/UX.',
-      'Designed secure RESTful APIs and implemented frontend using Angular CLI.',
-      'Collaborated on system programming modules with mainframe integrations.',
-    ],
-  },
-];
-
 export const EDUCATION_DATA = [
     {
         degree: 'Master’s in Information Security',

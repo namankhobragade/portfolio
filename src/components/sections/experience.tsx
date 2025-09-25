@@ -1,10 +1,20 @@
 
-import { EXPERIENCE_DATA } from "@/lib/data";
 import { CheckCircle2 } from "lucide-react";
 import { AnimatedItem } from "../animated-item";
 import { Badge } from "../ui/badge";
+import { supabase } from "@/lib/supabase/client";
 
-export function Experience() {
+export async function Experience() {
+  const { data: experienceData, error } = await supabase
+    .from('experience')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching experience:', error.message || error);
+    return <p>Error loading experience.</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -13,7 +23,7 @@ export function Experience() {
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl font-headline">Work Experience</h2>
             </div>
             <div className="space-y-12">
-                {EXPERIENCE_DATA.map((item, index) => (
+                {experienceData.map((item, index) => (
                     <AnimatedItem key={`${item.role}-${item.company}-${index}`} delay={index * 0.2}>
                         <div className="grid gap-4 pb-8 shadow-sm">
                             <div className="flex flex-col md:flex-row justify-between md:items-baseline gap-2">
