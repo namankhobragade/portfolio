@@ -44,9 +44,11 @@ export default function StudioLoginPage() {
           router.push('/studio');
         } else if (state.message) {
           toast({ description: state.message, variant: 'destructive' });
+          // Reset the password field on a failed attempt
+          form.reset({ password: '' });
         }
       }
-    }, [form.formState.isSubmitSuccessful, state, toast, router]);
+    }, [form.formState.isSubmitSuccessful, state, toast, router, form]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-background">
