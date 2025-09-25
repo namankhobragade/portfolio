@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/lib/supabase/client';
-import { Loader2, Eye } from 'lucide-react';
+import { Loader2, Eye, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 type Visitor = {
     id: number;
@@ -31,17 +32,16 @@ type Visitor = {
 
 const InfoItem = ({ label, value }: { label: string; value: any }) => {
     if (value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) return null;
-    let displayValue = String(value);
+    let displayValue: React.ReactNode = String(value);
     if (typeof value === 'boolean') {
         displayValue = value ? 'Yes' : 'No';
     } else if (typeof value === 'object') {
-        // Pretty print the object for readability in the modal
-        displayValue = JSON.stringify(value, null, 2);
+        displayValue = <pre className="text-right break-words whitespace-pre-wrap font-sans">{JSON.stringify(value, null, 2)}</pre>;
     }
     return (
         <div className="flex justify-between items-start text-sm py-2 border-b">
             <span className="text-muted-foreground font-medium whitespace-nowrap pr-4">{label}</span>
-            <pre className="text-right break-words whitespace-pre-wrap font-sans">{displayValue}</pre>
+            <div className="text-right break-words">{displayValue}</div>
         </div>
     );
 };
@@ -121,7 +121,13 @@ export default function VisitorsPage() {
                                             <TableCell>{formatDate(visitor.created_at)}</TableCell>
                                             <TableCell>{`${visitor.geolocation?.city || 'N/A'}, ${visitor.geolocation?.country_name || 'N/A'}`}</TableCell>
                                             <TableCell>{visitor.platform}</TableCell>
-                                            <TableCell>{visitor.ip}</TableCell>
+                                            <TableCell>
+                                                {visitor.ip ? (
+                                                    <a href={`https://ipinfo.io/${visitor.ip}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors underline">
+                                                        {visitor.ip}
+                                                    </a>
+                                                ) : 'N/A'}
+                                            </TableCell>
                                             <TableCell className="max-w-xs truncate">{visitor.user_agent}</TableCell>
                                             <TableCell className="text-right">
                                                 <DialogTrigger asChild>
@@ -153,9 +159,25 @@ export default function VisitorsPage() {
                     <div className="max-h-[60vh] overflow-y-auto pr-4 space-y-2">
                         <InfoItem label="Timestamp" value={selectedVisitor.created_at} />
                         <InfoItem label="IP Address" value={selectedVisitor.ip} />
-                        <InfoItem label="City" value={selectedVisitor.geolocation?.city} />
-                        <InfoItem label="Region" value={selectedVisitor.geolocation?.region} />
-                        <InfoItem label="Country" value={selectedVisitor.geolocation?.country_name} />
+                        
+                        <div className="flex justify-between items-center text-sm py-2 border-b">
+                            <span className="text-muted-foreground font-medium">Location</span>
+                            <div className="text-right">
+                                <p>{`${selectedVisitor.geolocation?.city || 'N/A'}, ${selectedVisitor.geolocation?.region || 'N/A'}, ${selectedVisitor.geolocation?.country_name || 'N/A'}`}</p>
+                                {selectedVisitor.geolocation?.latitude && selectedVisitor.geolocation?.longitude && (
+                                     <a 
+                                        href={`https://www.google.com/maps/search/?api=1&query=${selectedVisitor.geolocation.latitude},${selectedVisitor.geolocation.longitude}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-xs text-primary hover:underline flex items-center justify-end gap-1"
+                                    >
+                                        <MapPin className="h-3 w-3" />
+                                        View on Map
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                        
                         <InfoItem label="Latitude" value={selectedVisitor.geolocation?.latitude} />
                         <InfoItem label="Longitude" value={selectedVisitor.geolocation?.longitude} />
                         <InfoItem label="Timezone" value={selectedVisitor.geolocation?.timezone} />
@@ -179,5 +201,3 @@ export default function VisitorsPage() {
         </Dialog>
     );
 }
-
-    
