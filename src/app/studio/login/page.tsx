@@ -30,7 +30,7 @@ const formSchema = z.object({
 export default function StudioLoginPage() {
     const { toast } = useToast();
     const router = useRouter();
-    const [state, formAction] = useActionState(authenticateStudio, { success: false, message: "" });
+    const [state, formAction, isPending] = useActionState(authenticateStudio, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -38,17 +38,17 @@ export default function StudioLoginPage() {
     });
 
     useEffect(() => {
-      if (form.formState.isSubmitSuccessful) {
-        if (state.success) {
-          toast({ description: "Login successful! Redirecting..." });
-          router.push('/studio');
-        } else if (state.message) {
-          toast({ description: state.message, variant: 'destructive' });
-          // Reset the password field on a failed attempt
-          form.reset({ password: '' });
+        // This effect runs when the server action completes and updates the state.
+        if (state.message) {
+            if (state.success) {
+                toast({ description: "Login successful! Redirecting..." });
+                router.push('/studio');
+            } else {
+                toast({ description: state.message, variant: 'destructive' });
+                form.reset({ password: '' });
+            }
         }
-      }
-    }, [form.formState.isSubmitSuccessful, state, toast, router, form]);
+    }, [state, toast, router, form]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-background">
@@ -76,8 +76,8 @@ export default function StudioLoginPage() {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                                {form.formState.isSubmitting ? (
+                            <Button type="submit" className="w-full" disabled={isPending}>
+                                {isPending ? (
                                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Authenticating...</>
                                 ) : (
                                     <><LogIn className="mr-2 h-4 w-4" /> Sign In</>
