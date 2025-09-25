@@ -47,12 +47,6 @@ export default function StudioLoginPage() {
         }
       }
     }, [form.formState.isSubmitSuccessful, state, toast, router]);
-    
-    const onSubmit = (data: z.infer<typeof formSchema>) => {
-      const formData = new FormData();
-      formData.append('password', data.password);
-      formAction(formData);
-    };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-background">
@@ -64,7 +58,7 @@ export default function StudioLoginPage() {
                 <CardContent>
                     <Form {...form}>
                         <form
-                            onSubmit={form.handleSubmit(onSubmit)}
+                            action={formAction}
                             className="space-y-4"
                         >
                             <FormField
