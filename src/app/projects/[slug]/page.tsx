@@ -1,5 +1,4 @@
 
-import { PROJECTS_DATA } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
@@ -11,6 +10,7 @@ import { ShareButtons } from '@/components/share-buttons';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import { Github, ExternalLink } from 'lucide-react';
+import { supabase } from '@/lib/supabase/client';
 
 type Props = {
   params: { slug: string };
@@ -19,12 +19,21 @@ type Props = {
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://your-domain.com';
 
 // Find project data by slug
-const getProjectBySlug = (slug: string) => {
-  return PROJECTS_DATA.find((p) => p.slug === slug);
+const getProjectBySlug = async (slug: string) => {
+    const { data: project, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+    if (error) {
+        console.error('Error fetching project by slug:', error);
+        return null;
+    }
+    return project;
 };
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const project = getProjectBySlug(params.slug);
+  const project = await getProjectBySlug(params.slug);
 
   if (!project) {
     return {
@@ -32,7 +41,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     };
   }
 
-  const projectImage = PlaceHolderImages.find((p) => p.id === project.imageId);
+  const projectImage = PlaceHolderImages.find((p) => p.id === project.image_id);
   const imageUrl = projectImage ? `${siteUrl}${projectImage.imageUrl.startsWith('/') ? '' : '/'}${projectImage.imageUrl}` : `${siteUrl}/og-image.png`;
 
   return {
@@ -55,19 +64,23 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 export async function generateStaticParams() {
-  return PROJECTS_DATA.map((project) => ({
+  const { data: projects, error } = await supabase.from('projects').select('slug');
+  if (error || !projects) {
+    return [];
+  }
+  return projects.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function ProjectPage({ params }: Props) {
-  const project = getProjectBySlug(params.slug);
+export default async function ProjectPage({ params }: Props) {
+  const project = await getProjectBySlug(params.slug);
 
   if (!project) {
     notFound();
   }
 
-  const projectImage = PlaceHolderImages.find((p) => p.id === project.imageId);
+  const projectImage = PlaceHolderImages.find((p) => p.id === project.image_id);
 
   return (
     <article className="container max-w-4xl py-12 md:py-24">
@@ -100,33 +113,33 @@ export default function ProjectPage({ params }: Props) {
         <div className="md:col-span-2">
             <h3 className="font-semibold text-lg mb-2">Tech Stack</h3>
             <div className="flex flex-wrap gap-2">
-                {project.techStack.map((tech) => (
+                {project.tech_stack.map((tech: string) => (
                 <Badge key={tech} variant="secondary">{tech}</Badge>
                 ))}
             </div>
         </div>
         <div>
             <h3 className="font-semibold text-lg mb-2">Security Focus</h3>
-            <p className="text-muted-foreground">{project.securityFocus}</p>
+            <p className="text-muted-foreground">{project.security_focus}</p>
         </div>
       </div>
       
       <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-        <MarkdownContent content={project.caseStudy} />
+        <MarkdownContent content={project.case_study} />
       </div>
 
       <div className="flex flex-wrap gap-4 mt-12">
-        {project.demoUrl && (
+        {project.demo_url && (
             <Button asChild variant="outline">
-                <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                <Link href={project.demo_url} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="mr-2 h-4 w-4" />
                 View Live Demo
                 </Link>
             </Button>
         )}
-        {project.githubUrl && (
+        {project.github_url && (
             <Button asChild variant="secondary">
-                <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
                 <Github className="mr-2 h-4 w-4" />
                 View on GitHub
                 </Link>

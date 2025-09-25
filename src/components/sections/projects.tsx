@@ -5,12 +5,22 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Github, ExternalLink, BookText } from "lucide-react";
-import { PROJECTS_DATA } from "@/lib/data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { AnimatedItem } from "../animated-item";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { supabase } from "@/lib/supabase/client";
 
-export function Projects() {
+export async function Projects() {
+  const { data: projectsData, error } = await supabase
+    .from('projects')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching projects:', error);
+    return <p>Error loading projects.</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -26,13 +36,13 @@ export function Projects() {
             <Carousel
               opts={{
                 align: "start",
-                loop: PROJECTS_DATA.length > 3,
+                loop: projectsData.length > 3,
               }}
               className="w-full max-w-sm md:max-w-3xl lg:max-w-6xl mx-auto"
             >
               <CarouselContent>
-                {PROJECTS_DATA.map((project, index) => {
-                  const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
+                {projectsData.map((project, index) => {
+                  const projectImage = PlaceHolderImages.find(p => p.id === project.image_id);
                   return (
                     <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
@@ -55,14 +65,14 @@ export function Projects() {
                             <div>
                               <h4 className="font-semibold mb-2 text-sm">Tech Stack:</h4>
                               <div className="flex flex-wrap gap-2">
-                                {project.techStack.map((tech) => (
+                                {project.tech_stack.map((tech) => (
                                   <Badge key={tech} variant="secondary">{tech}</Badge>
                                 ))}
                               </div>
                             </div>
                             <div>
                               <h4 className="font-semibold mb-2 text-sm">Security Focus:</h4>
-                              <p className="text-sm text-muted-foreground">{project.securityFocus}</p>
+                              <p className="text-sm text-muted-foreground">{project.security_focus}</p>
                             </div>
                           </CardContent>
                           <CardFooter className="flex flex-wrap gap-2 mt-auto pt-4">
@@ -72,18 +82,18 @@ export function Projects() {
                                     Case Study
                                 </Link>
                             </Button>
-                            {project.demoUrl && (
+                            {project.demo_url && (
                               <Button asChild variant="outline" size="sm" className="flex-1 min-w-[120px]">
-                                <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                                <Link href={project.demo_url} target="_blank" rel="noopener noreferrer">
                                   <ExternalLink />
                                   View Demo
                                 </Link>
 
                               </Button>
                             )}
-                            {project.githubUrl && (
+                            {project.github_url && (
                               <Button asChild variant="secondary" size="sm" className="flex-1 min-w-[120px]">
-                                <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                                <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
                                   <Github />
                                   View on GitHub
                                 </Link>
