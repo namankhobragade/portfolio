@@ -26,7 +26,7 @@ const getProjectBySlug = async (slug: string) => {
         .eq('slug', slug)
         .single();
     if (error) {
-        console.error('Error fetching project by slug:', error);
+        console.error('Error fetching project by slug:', error.message || error);
         return null;
     }
     return project;

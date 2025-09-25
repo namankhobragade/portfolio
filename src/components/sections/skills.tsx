@@ -19,7 +19,7 @@ export async function Skills() {
     .order('order', { ascending: true });
 
   if (error) {
-    console.error('Error fetching skills:', error);
+    console.error('Error fetching skills:', error.message || error);
     return <p>Error loading skills.</p>;
   }
 

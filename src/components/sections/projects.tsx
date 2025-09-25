@@ -17,7 +17,7 @@ export async function Projects() {
     .order('order', { ascending: true });
 
   if (error) {
-    console.error('Error fetching projects:', error);
+    console.error('Error fetching projects:', error.message || error);
     return <p>Error loading projects.</p>;
   }
 
