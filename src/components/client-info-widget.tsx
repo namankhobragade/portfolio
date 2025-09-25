@@ -115,9 +115,12 @@ export function ClientInfoWidget() {
   useEffect(() => {
     // This effect runs once on component mount to log visitor data
     const logVisitor = async () => {
-      const loggedKey = 'devsec_visitor_logged';
-      if (sessionStorage.getItem(loggedKey)) {
-        return; // Already logged this session
+      const loggedKey = 'devsec_visitor_last_logged';
+      const lastLoggedTime = localStorage.getItem(loggedKey);
+      const tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
+
+      if (lastLoggedTime && (Date.now() - Number(lastLoggedTime)) < tenDaysInMillis) {
+        return; // Already logged within the last 10 days, so we don't log again.
       }
 
       const clientInfo = await getClientInfo();
@@ -135,7 +138,8 @@ export function ClientInfoWidget() {
         if (error) {
           console.error('Failed to log visitor:', error);
         } else {
-          sessionStorage.setItem(loggedKey, 'true');
+          // If successful, update the timestamp in localStorage
+          localStorage.setItem(loggedKey, String(Date.now()));
         }
       }
     };
