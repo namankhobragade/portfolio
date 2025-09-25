@@ -3,43 +3,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Quote } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AnimatedItem } from "../animated-item";
-import { supabase } from "@/lib/supabase/client";
-
-interface Testimonial {
-    name: string;
-    title: string;
-    quote: string;
-    avatar: string;
-}
+import { TESTIMONIALS_DATA } from "@/lib/dynamic-data";
 
 export function Testimonials() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchTestimonials = async () => {
-      const { data, error } = await supabase
-        .from('testimonials')
-        .select('*')
-        .order('order', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching testimonials:', error.message || error);
-        setError('Error loading testimonials.');
-      } else {
-        setTestimonials(data);
-      }
-    };
-    fetchTestimonials();
-  }, []);
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  const testimonials = TESTIMONIALS_DATA;
   
-  if (testimonials.length === 0 && !error) {
+  if (testimonials.length === 0) {
     return null; // Don't render the section if there are no testimonials yet
   }
 

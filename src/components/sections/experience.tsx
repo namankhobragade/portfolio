@@ -1,18 +1,10 @@
 
 import { AnimatedItem } from "../animated-item";
 import { Badge } from "../ui/badge";
-import { supabase } from "@/lib/supabase/client";
+import { EXPERIENCE_DATA } from "@/lib/dynamic-data";
 
 export async function Experience() {
-  const { data: experienceData, error } = await supabase
-    .from('experience')
-    .select('*')
-    .order('order', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching experience:', error.message || error);
-    return <p>Error loading experience.</p>;
-  }
+  const experienceData = EXPERIENCE_DATA;
 
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
