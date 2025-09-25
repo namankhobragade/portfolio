@@ -1,4 +1,3 @@
-
 // src/components/header.tsx
 "use client";
 
@@ -63,6 +62,10 @@ export function Header() {
   }, [pathname]);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!isMobileMenuOpen);
+  
+  if (pathname.startsWith('/studio')) {
+    return null;
+  }
 
   return (
     <>
