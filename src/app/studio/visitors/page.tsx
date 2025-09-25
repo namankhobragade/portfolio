@@ -12,20 +12,35 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 type Visitor = {
     id: number;
     created_at: string;
-    user_agent: string;
-    platform: string;
-    language: string;
-    ip: string;
-    geolocation: any;
-    connection_type: string;
+    user_agent?: string;
+    platform?: string;
+    language?: string;
+    ip?: string;
+    geolocation?: any;
+    connection_type?: string;
+    cpu_cores?: number;
+    memory?: number;
+    screen_resolution?: string;
+    is_touch_enabled?: boolean;
+    gpu?: string;
+    network_info?: any;
+    is_online?: boolean;
+    do_not_track?: string;
+    performance?: any;
 };
 
 const InfoItem = ({ label, value }: { label: string; value: any }) => {
-    if (value === undefined || value === null || value === '') return null;
+    if (value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) return null;
+    let displayValue = String(value);
+    if (typeof value === 'boolean') {
+        displayValue = value ? 'Yes' : 'No';
+    } else if (typeof value === 'object') {
+        displayValue = JSON.stringify(value, null, 2);
+    }
     return (
         <div className="flex justify-between items-start text-sm py-2 border-b">
-            <span className="text-muted-foreground font-medium">{label}</span>
-            <span className="text-right break-all">{String(value)}</span>
+            <span className="text-muted-foreground font-medium whitespace-nowrap pr-4">{label}</span>
+            <pre className="text-right break-words whitespace-pre-wrap font-sans">{displayValue}</pre>
         </div>
     );
 };
@@ -124,7 +139,7 @@ export default function VisitorsPage() {
                 </CardContent>
             </Card>
 
-            <DialogContent>
+            <DialogContent className="max-w-2xl">
                 <DialogHeader>
                     <DialogTitle>Visitor Details</DialogTitle>
                     {selectedVisitor && (
@@ -146,7 +161,16 @@ export default function VisitorsPage() {
                         <InfoItem label="ISP" value={selectedVisitor.geolocation?.org} />
                         <InfoItem label="Platform" value={selectedVisitor.platform} />
                         <InfoItem label="Language" value={selectedVisitor.language} />
-                        <InfoItem label="Connection" value={selectedVisitor.connection_type} />
+                        <InfoItem label="Connection Type" value={selectedVisitor.connection_type} />
+                        <InfoItem label="Network Info" value={selectedVisitor.network_info} />
+                        <InfoItem label="CPU Cores" value={selectedVisitor.cpu_cores} />
+                        <InfoItem label="Memory (GB)" value={selectedVisitor.memory} />
+                        <InfoItem label="Screen Resolution" value={selectedVisitor.screen_resolution} />
+                        <InfoItem label="Touch Enabled" value={selectedVisitor.is_touch_enabled} />
+                        <InfoItem label="GPU" value={selectedVisitor.gpu} />
+                        <InfoItem label="Is Online" value={selectedVisitor.is_online} />
+                        <InfoItem label="Do Not Track" value={selectedVisitor.do_not_track} />
+                        <InfoItem label="Page Performance" value={selectedVisitor.performance} />
                         <InfoItem label="User Agent" value={selectedVisitor.user_agent} />
                     </div>
                 )}

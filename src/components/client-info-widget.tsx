@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Smartphone, HardDrive, Cpu, ScreenShare, Wifi, Info, Loader2, Network, Gauge, Shield, Settings } from 'lucide-react';
+import { Smartphone, HardDrive, Cpu, ScreenShare, Wifi, Info, Loader2, Gauge, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from './ui/dialog';
 import { supabase } from '@/lib/supabase/client';
@@ -17,15 +17,17 @@ interface ClientInfoState {
   cpuCores?: number;
   memory?: number;
   screen?: { width: number; height: number; colorDepth: number; pixelRatio: number };
-  battery?: { level: number; charging: boolean };
   touch?: boolean;
-  gpu?: { vendor: string; renderer: string };
+  gpu?: string;
   connection?: { type: string; effectiveType: string; downlink?: number; rtt?: number; saveData?: boolean; };
-  mediaDevices?: { audio: number; video: number; others: number };
   online?: boolean;
   doNotTrack?: string;
-  plugins?: string[];
-  performance?: PerformanceNavigationTiming;
+  performance?: {
+    loadTime: number;
+    ttfb: number;
+    domInteractive: number;
+    domComplete: number;
+  };
 }
 
 const InfoItem = ({ label, value, unit = '' }: { label: string; value: any; unit?: string }) => {
@@ -51,7 +53,7 @@ export function ClientInfoWidget() {
         
         const state: ClientInfoState = {
             ip: geoData.ip,
-            geolocation: geoData, // Store the whole object
+            geolocation: geoData,
             userAgent: navigator.userAgent,
             platform: navigator.platform,
             language: navigator.language,
@@ -68,8 +70,6 @@ export function ClientInfoWidget() {
             online: navigator.onLine,
             // @ts-ignore
             doNotTrack: navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack,
-            plugins: Array.from(navigator.plugins).map(p => p.name),
-            performance: performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming,
         };
         
         // @ts-ignore
@@ -84,6 +84,25 @@ export function ClientInfoWidget() {
             };
         }
 
+        const perf = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
+        if (perf) {
+            state.performance = {
+                loadTime: parseFloat((perf.duration / 1000).toFixed(2)),
+                ttfb: parseFloat((perf.responseStart - perf.requestStart).toFixed(0)),
+                domInteractive: parseFloat(perf.domInteractive.toFixed(0)),
+                domComplete: parseFloat(perf.domComplete.toFixed(0)),
+            };
+        }
+
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+          const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+          if (debugInfo) {
+            state.gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+          }
+        }
+        
         setInfo(state);
         return state;
       } catch (error) {
@@ -101,32 +120,39 @@ export function ClientInfoWidget() {
   }, [isOpen, getClientInfo]);
   
   useEffect(() => {
-    // This effect runs once on component mount to log visitor data
     const logVisitor = async () => {
       const loggedKey = 'devsec_visitor_last_logged';
       const lastLoggedTime = localStorage.getItem(loggedKey);
       const tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
 
       if (lastLoggedTime && (Date.now() - Number(lastLoggedTime)) < tenDaysInMillis) {
-        return; // Already logged within the last 10 days, so we don't log again.
+        return;
       }
 
       const clientInfo = await getClientInfo();
       if (clientInfo) {
         const { error } = await supabase.from('visitors').insert({
-          created_at: new Date().toISOString(), // Use ISO string for Supabase timestamp
+          created_at: new Date().toISOString(),
           user_agent: clientInfo.userAgent,
           platform: clientInfo.platform,
           language: clientInfo.language,
           ip: clientInfo.ip,
           geolocation: clientInfo.geolocation,
           connection_type: clientInfo.connection?.type,
+          cpu_cores: clientInfo.cpuCores,
+          memory: clientInfo.memory,
+          screen_resolution: clientInfo.screen ? `${clientInfo.screen.width}x${clientInfo.screen.height}` : undefined,
+          is_touch_enabled: clientInfo.touch,
+          gpu: clientInfo.gpu,
+          network_info: clientInfo.connection,
+          is_online: clientInfo.online,
+          do_not_track: clientInfo.doNotTrack,
+          performance: clientInfo.performance,
         });
 
         if (error) {
           console.error('Failed to log visitor:', error);
         } else {
-          // If successful, update the timestamp in localStorage
           localStorage.setItem(loggedKey, String(Date.now()));
         }
       }
@@ -170,7 +196,6 @@ export function ClientInfoWidget() {
                     <InfoItem label='CPU Cores' value={info.cpuCores} />
                     <InfoItem label='Device Memory (GB)' value={info.memory} />
                     <InfoItem label='Touch Enabled' value={info.touch ? 'Yes' : 'No'} />
-                    {info.battery && <InfoItem label='Battery' value={`${info.battery.level}% ${info.battery.charging ? '(Charging)' : ''}`} />}
                 </CardContent>
             </Card>
             
@@ -198,8 +223,7 @@ export function ClientInfoWidget() {
                     <InfoItem label='Resolution' value={`${info.screen?.width}x${info.screen?.height}`} />
                     <InfoItem label='Pixel Ratio' value={info.screen?.pixelRatio} />
                     <InfoItem label='Color Depth' value={`${info.screen?.colorDepth}-bit`} />
-                    <InfoItem label='GPU Vendor' value={info.gpu?.vendor} />
-                    <InfoItem label='GPU Renderer' value={info.gpu?.renderer} />
+                    <InfoItem label='GPU' value={info.gpu} />
                 </CardContent>
             </Card>
 
@@ -209,10 +233,10 @@ export function ClientInfoWidget() {
                     <Gauge className="w-5 h-5 text-muted-foreground" />
                 </CardHeader>
                 <CardContent className="space-y-2">
-                    {perf && <InfoItem label='Page Load' value={(perf.duration / 1000).toFixed(2)} unit='s' />}
-                    {perf && <InfoItem label='Time to First Byte' value={(perf.responseStart - perf.requestStart).toFixed(0)} unit='ms' />}
-                    {perf && <InfoItem label='DOM Interactive' value={perf.domInteractive.toFixed(0)} unit='ms' />}
-                    {perf && <InfoItem label='DOM Complete' value={perf.domComplete.toFixed(0)} unit='ms' />}
+                    <InfoItem label='Page Load' value={perf?.loadTime} unit='s' />
+                    <InfoItem label='Time to First Byte' value={perf?.ttfb} unit='ms' />
+                    <InfoItem label='DOM Interactive' value={perf?.domInteractive} unit='ms' />
+                    <InfoItem label='DOM Complete' value={perf?.domComplete} unit='ms' />
                 </CardContent>
             </Card>
 
@@ -224,10 +248,7 @@ export function ClientInfoWidget() {
                 <CardContent className="space-y-2">
                     <InfoItem label='Language' value={info.language} />
                     <InfoItem label='Do Not Track' value={info.doNotTrack} />
-                    <InfoItem label='Microphones' value={info.mediaDevices?.audio} />
-                    <InfoItem label='Cameras' value={info.mediaDevices?.video} />
                     <InfoItem label='User Agent' value={info.userAgent} />
-                    {info.plugins && info.plugins.length > 0 && <InfoItem label='Plugins' value={info.plugins.join(', ')} />}
                 </CardContent>
             </Card>
         </div>

@@ -126,12 +126,21 @@ interface Database {
         Row: {
           id: number;
           created_at: string;
-          user_agent: string;
-          platform: string;
-          language: string;
-          ip: string;
-          geolocation: any;
-          connection_type: string;
+          user_agent?: string;
+          platform?: string;
+          language?: string;
+          ip?: string;
+          geolocation?: any;
+          connection_type?: string;
+          cpu_cores?: number;
+          memory?: number;
+          screen_resolution?: string;
+          is_touch_enabled?: boolean;
+          gpu?: string;
+          network_info?: any;
+          is_online?: boolean;
+          do_not_track?: string;
+          performance?: any;
         };
         Insert: {
           created_at: string;
@@ -141,6 +150,15 @@ interface Database {
           ip?: string;
           geolocation?: any;
           connection_type?: string;
+          cpu_cores?: number;
+          memory?: number;
+          screen_resolution?: string;
+          is_touch_enabled?: boolean;
+          gpu?: string;
+          network_info?: any;
+          is_online?: boolean;
+          do_not_track?: string;
+          performance?: any;
         };
       };
     };

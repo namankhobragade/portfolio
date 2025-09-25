@@ -1,7 +1,7 @@
 
 # Supabase Table Schemas
 
-To make your portfolio fully dynamic, you need to create the `services`, `experience`, and `testimonials` tables in your Supabase database.
+To make your portfolio fully dynamic, you need to create the `services`, `experience`, `testimonials`, and `visitors` tables in your Supabase database.
 
 ## Instructions
 
@@ -10,7 +10,7 @@ To make your portfolio fully dynamic, you need to create the `services`, `experi
 3.  Click on **+ New query**.
 4.  Copy the SQL code for each table below and paste it into the query editor.
 5.  Click **RUN** to create the table.
-6.  Repeat for all three tables.
+6.  Repeat for all tables.
 7.  After creating the tables, go to the **Table Editor** to add your content into the newly created tables.
 
 ---
@@ -104,4 +104,56 @@ INSERT INTO public.testimonials ("order", name, title, quote, avatar) VALUES
 (1, 'Amir Ahmed', 'Senior DevSecOps Engineer', 'Sunil’s mastery in full-stack development and unwavering dedication to security truly sets him apart. He consistently delivers code that is not only functional but also fortified against modern threats.', '/images/avatar-1.png'),
 (2, 'Priya Sharma', 'Product Manager, Ed-Tech Startup', 'Working with Sunil was a game-changer for our platform. He single-handedly built our secure e-learning portal, and his proactive approach to security saved us from potential vulnerabilities down the line.', '/images/avatar-2.png'),
 (3, 'Dr. Rajesh Gupta', 'Cybersecurity Professor', 'As a student in my Information Security program, Sunil shows a rare aptitude for bridging theoretical knowledge with practical application. His insights into AI''s role in cybersecurity are particularly impressive.', '/images/avatar-3.png');
+```
+
+---
+
+### 4. Visitors Table
+
+This table stores a log of visitor sessions for analytics.
+
+#### **Step 1: Create the initial table**
+Run this query first if you haven't created the `visitors` table yet.
+
+```sql
+-- Create the visitors table
+CREATE TABLE public.visitors (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  user_agent text,
+  platform text,
+  language text,
+  ip text,
+  geolocation jsonb,
+  connection_type text
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.visitors ENABLE ROW LEVEL SECURITY;
+
+-- Create a policy to allow anonymous inserts
+CREATE POLICY "Enable anon insert for all users" ON public.visitors
+  FOR INSERT WITH CHECK (true);
+
+-- Create a policy to allow you to read the data in the Studio
+CREATE POLICY "Enable read access for all users" ON public.visitors
+  FOR SELECT USING (true);
+```
+
+#### **Step 2: Add new columns for detailed analytics**
+Run this `ALTER TABLE` query to add all the new columns for storing detailed visitor information. It's safe to run even if the table already exists.
+
+```sql
+-- Add new columns to the visitors table for detailed client info
+ALTER TABLE public.visitors
+ADD COLUMN IF NOT EXISTS cpu_cores smallint,
+ADD COLUMN IF NOT EXISTS memory smallint,
+ADD COLUMN IF NOT EXISTS screen_resolution text,
+ADD COLUMN IF NOT EXISTS is_touch_enabled boolean,
+ADD COLUMN IF NOT EXISTS gpu text,
+ADD COLUMN IF NOT EXISTS network_info jsonb,
+ADD COLUMN IF NOT EXISTS is_online boolean,
+ADD COLUMN IF NOT EXISTS do_not_track text,
+ADD COLUMN IF NOT EXISTS performance jsonb;
+
 ```
