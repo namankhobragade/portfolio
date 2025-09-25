@@ -1,7 +1,7 @@
 
 'use client';
 import { useState, useActionState, useEffect } from 'react';
-import { useForm, useFieldArray } from 'react-hook-form';
+import { useForm, useFieldArray, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from "@/components/ui/button";
@@ -188,18 +188,19 @@ function GeneralSettings() {
 function SkillsManager() {
     const { toast } = useToast();
     const [state, formAction] = useActionState(updateSkills, { success: false, message: "" });
-    const { control, handleSubmit, formState: { isSubmitting } } = useForm<z.infer<typeof skillsFormSchema>>({
+    
+    const form = useForm<z.infer<typeof skillsFormSchema>>({
         resolver: zodResolver(skillsFormSchema),
         defaultValues: {
             skills: SKILLS_DATA.map(cat => ({
                 ...cat,
-                skills: cat.skills.map(skill => ({...skill, icon: skill.icon.displayName || 'Code' }))
+                skills: cat.skills.map(skill => ({...skill, icon: skill.icon || 'Code' }))
             }))
         }
     });
 
-    const { fields, append, remove, move } = useFieldArray({
-        control,
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
         name: "skills",
     });
 
@@ -208,13 +209,13 @@ function SkillsManager() {
     };
 
     useEffect(() => {
-        if (isSubmitting) return; // Prevent toast on initial load
+        if (form.formState.isSubmitting) return; // Prevent toast on initial load
         if (state.success) {
             toast({ description: state.message });
         } else if (!state.success && state.message) {
             toast({ description: state.message, variant: 'destructive' });
         }
-    }, [state, isSubmitting, toast]);
+    }, [state, form.formState.isSubmitting, toast]);
 
     return (
          <Card className="mt-6 bg-transparent border">
@@ -223,28 +224,29 @@ function SkillsManager() {
                 <CardDescription>Add, edit, or remove skill categories and individual skills.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Form {...{control, handleSubmit}}>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                <FormProvider {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-6">
                             {fields.map((field, index) => (
-                                <SkillCategoryField key={field.id} categoryIndex={index} control={control} removeCategory={remove} />
+                                <SkillCategoryField key={field.id} categoryIndex={index} removeCategory={remove} />
                             ))}
                         </div>
                         <Button type="button" variant="outline" onClick={() => append({ category: "", description: "", skills: [{ name: "", icon: "Code"}] })}>
                             <PlusCircle className="mr-2 h-4 w-4" /> Add Category
                         </Button>
                         <Separator />
-                         <Button type="submit" disabled={isSubmitting} className="w-full">
-                           {isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
+                         <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                           {form.formState.isSubmitting ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...</> : <><Save className="mr-2 h-4 w-4" /> Save Skills</>}
                         </Button>
                     </form>
-                </Form>
+                </FormProvider>
             </CardContent>
         </Card>
     );
 }
 
-function SkillCategoryField({ categoryIndex, control, removeCategory }: { categoryIndex: number, control: any, removeCategory: (index: number) => void }) {
+function SkillCategoryField({ categoryIndex, removeCategory }: { categoryIndex: number, removeCategory: (index: number) => void }) {
+    const { control } = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
         name: `skills.${categoryIndex}.skills`,
@@ -603,3 +605,5 @@ function ContentStudio() {
         </Card>
     )
 }
+
+    
