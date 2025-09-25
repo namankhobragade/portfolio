@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Home, Settings, Brush, Type, Bot, LayoutDashboard, Code } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { redirect } from 'next/navigation';
 
 const studioNavLinks = [
     { href: '/studio', label: 'Dashboard', icon: LayoutDashboard },
@@ -21,6 +22,11 @@ export default function StudioLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  if (pathname === '/studio/login') {
+    return <>{children}</>;
+  }
+
 
   return (
     <div className="flex min-h-screen">

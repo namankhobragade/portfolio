@@ -9,6 +9,7 @@ import matter from 'gray-matter';
 import { format } from 'date-fns';
 import type { ImagePlaceholder } from "@/lib/placeholder-images";
 import { SKILLS_DATA, SITE_CONFIG, EXPERIENCE_DATA, EDUCATION_DATA, CERTIFICATIONS_DATA, SERVICES_DATA, PROJECTS_DATA } from "@/lib/data";
+import { cookies } from 'next/headers';
 
 // ========= Contact Form Logic =========
 
@@ -418,4 +419,36 @@ export async function updateTypography(prevState: any, formData: FormData) {
     } catch (error: any) {
         return { success: false, message: `Failed to update typography: ${error.message}` };
     }
+}
+
+
+// ========= Studio Auth Logic =========
+
+const STUDIO_PASSWORD_COOKIE = 'devsec_studio_pass';
+const loginSchema = z.object({
+  password: z.string(),
+});
+
+export async function authenticateStudio(prevState: any, formData: FormData) {
+  const validatedFields = loginSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { success: false, message: 'Invalid data.' };
+  }
+
+  const { password } = validatedFields.data;
+
+  if (password === process.env.STUDIO_PASSWORD) {
+    cookies().set({
+      name: STUDIO_PASSWORD_COOKIE,
+      value: process.env.STUDIO_PASSWORD_COOKIE_VALUE!,
+      httpOnly: true,
+      path: '/',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24, // 1 day
+    });
+    return { success: true, message: 'Authentication successful.' };
+  } else {
+    return { success: false, message: 'Invalid password.' };
+  }
 }
