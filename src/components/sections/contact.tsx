@@ -1,11 +1,10 @@
 
 "use client";
 
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useActionState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -29,7 +28,8 @@ const formSchema = z.object({
 
 export function Contact() {
     const { toast } = useToast();
-    const [state, formAction, isPending] = useActionState(submitContactForm, { success: false, message: "" });
+    const [isPending, startTransition] = useTransition();
+    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

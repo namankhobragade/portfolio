@@ -39,7 +39,8 @@ interface ResumeDownloadDialogProps {
 
 export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDialogProps) {
   const { toast } = useToast();
-  const [state, formAction, isPending] = useActionState(submitResumeRequest, { success: false, message: "" });
+  const [isPending, startTransition] = useTransition();
+  const [state, formAction] = useActionState(submitResumeRequest, { success: false, message: "" });
   const [isSuccess, setIsSuccess] = useState(false);
   
   const form = useForm<FormSchema>({

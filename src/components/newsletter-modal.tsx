@@ -1,11 +1,10 @@
 
 "use client";
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useState, useTransition, useActionState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useActionState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,7 +22,8 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const [state, formAction, isPending] = useActionState(subscribeToNewsletter, { success: false, message: "" });
+  const [isPending, startTransition] = useTransition();
+  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
     const lastPromptTime = localStorage.getItem(LAST_PROMPT_KEY);
