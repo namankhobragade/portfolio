@@ -1,17 +1,6 @@
 
 import { ShieldCheck, Code, Cpu, Server, BrainCircuit, Bot, Award, CloudCog, GraduationCap, Briefcase, BookOpen, Star, Database, Cloud, GitBranch, Terminal, Globe, CreditCard, GitCommit, Container, Users, Settings, SearchCheck, Shield, GanttChartSquare, Layers, LucideIcon } from 'lucide-react';
 
-type Skill = {
-  name: string;
-  icon: LucideIcon;
-};
-
-type SkillCategory = {
-  category: string;
-  description: string;
-  skills: Skill[];
-};
-
 export const SITE_CONFIG = {
   name: "Sunil Khobragade",
   jobTitle: "Freelance Full-Stack Developer & Cybersecurity Specialist",
