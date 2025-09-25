@@ -45,7 +45,6 @@ export async function submitResumeRequest(prevState: any, formData: z.infer<type
         return {
             success: true,
             message: "Thank you! You can now download the resume.",
-            purpose: validatedFields.data.purpose,
         };
     } catch (error: any) {
         return {
@@ -569,5 +568,3 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
-
-    

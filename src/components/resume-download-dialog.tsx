@@ -41,7 +41,6 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
   const { toast } = useToast();
   const [state, formAction, isPending] = useActionState(submitResumeRequest, { success: false, message: "" });
   const [isSuccess, setIsSuccess] = useState(false);
-  const [resumeToShow, setResumeToShow] = useState<string | null>(null);
   
   const form = useForm<FormSchema>({
     resolver: zodResolver(resumeRequestSchema),
@@ -52,17 +51,18 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
     },
   });
 
+  const purposeValue = form.watch('purpose');
+
   useEffect(() => {
     if (state.message) {
-      if (state.success && state.purpose) {
+      if (state.success && purposeValue) {
         toast({ description: state.message });
         setIsSuccess(true);
-        setResumeToShow(resumeFiles[state.purpose as FormSchema['purpose']]);
       } else if (!state.success) {
         toast({ description: `Submission failed: ${state.message}`, variant: 'destructive' });
       }
     }
-  }, [state, toast]);
+  }, [state, toast, purposeValue]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
@@ -70,16 +70,19 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
       // Reset form and state when closing the dialog
       form.reset();
       setIsSuccess(false);
-      setResumeToShow(null);
     }
   };
   
   const handleViewResume = () => {
-    if (resumeToShow) {
-        window.open(resumeToShow, '_blank');
+    if (purposeValue) {
+        window.open(resumeFiles[purposeValue], '_blank');
         handleOpenChange(false);
     }
   }
+  
+  const onSubmit = (data: FormSchema) => {
+    formAction(data);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -100,7 +103,7 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
           </div>
         ) : (
           <Form {...form}>
-            <form action={formAction} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
