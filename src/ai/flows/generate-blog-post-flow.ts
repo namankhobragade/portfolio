@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates a complete blog post based on a topic.
@@ -10,10 +11,10 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { generateImage } from './generate-image-flow';
+import { supabase } from '@/lib/supabase/client';
 
 const GenerateBlogPostInputSchema = z.object({
   topic: z.string().describe('The topic for the blog post.'),
-  userSkills: z.array(z.string()).describe('A list of the user\'s key skills to subtly weave into the blog post.'),
 });
 export type GenerateBlogPostInput = z.infer<typeof GenerateBlogPostInputSchema>;
 
@@ -74,8 +75,19 @@ const generateBlogPostFlow = ai.defineFlow(
     inputSchema: GenerateBlogPostInputSchema,
     outputSchema: GenerateBlogPostOutputSchema,
   },
-  async input => {
-    const { output: textOutput } = await prompt(input);
+  async ({ topic }) => {
+    const { data: skillsData, error } = await supabase
+      .from('skills')
+      .select('skills');
+
+    if (error) {
+      console.error('Error fetching skills for blog post generation:', error);
+      throw new Error('Could not fetch skills from database.');
+    }
+    
+    const userSkills = skillsData.flatMap((category: any) => category.skills.map((skill: any) => skill.name));
+
+    const { output: textOutput } = await prompt({ topic, userSkills });
     if (!textOutput) {
         throw new Error('Failed to generate blog post text content.');
     }

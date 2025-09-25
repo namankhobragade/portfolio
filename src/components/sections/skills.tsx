@@ -1,11 +1,10 @@
 
-"use client";
-
 import { SKILLS_DATA } from "@/lib/data";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedItem } from "../animated-item";
 import { allIcons } from "@/lib/icons";
+import { supabase } from "@/lib/supabase/client";
 
 const iconMap = allIcons.reduce((map, icon) => {
     map[icon.name] = icon.component;
@@ -13,7 +12,17 @@ const iconMap = allIcons.reduce((map, icon) => {
 }, {} as Record<string, React.FC<any>>);
 
 
-export function Skills() {
+export async function Skills() {
+  const { data: skillsData, error } = await supabase
+    .from('skills')
+    .select('*')
+    .order('order', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching skills:', error);
+    return <p>Error loading skills.</p>;
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -27,7 +36,7 @@ export function Skills() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {SKILLS_DATA.map((category, index) => (
+          {skillsData.map((category, index) => (
             <AnimatedItem key={category.category} delay={index * 0.1}>
               <Card className="flex flex-col h-full bg-transparent border-2 hover:shadow-lg hover:-translate-y-1 transition-all">
                 <CardHeader>
@@ -35,7 +44,7 @@ export function Skills() {
                   <CardDescription>{category.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-2">
-                  {category.skills.map((skill) => {
+                  {category.skills.map((skill: { name: string, icon: string }) => {
                     const Icon = iconMap[skill.icon as keyof typeof iconMap] || iconMap['Code'];
                     return (
                         <Badge key={skill.name} variant="secondary" className="flex items-center gap-2">

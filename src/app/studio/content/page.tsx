@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,7 +19,6 @@ import { Bot, Loader2, Save, Check, Image as ImageIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { MarkdownContent } from '@/components/markdown-content';
 import { generateBlogPost, GenerateBlogPostOutput } from '@/ai/flows/generate-blog-post-flow';
-import { SKILLS_DATA } from '@/lib/data';
 import { saveBlogPost } from '@/app/actions';
 import { Separator } from '@/components/ui/separator';
 import Image from 'next/image';
@@ -45,8 +45,7 @@ export default function ContentStudio() {
         setIsSaved(false);
 
         try {
-            const userSkills = SKILLS_DATA.flatMap(category => category.skills.map(skill => skill.name));
-            const result = await generateBlogPost({ topic: values.topic, userSkills });
+            const result = await generateBlogPost({ topic: values.topic });
             setGeneratedPost(result);
         } catch (error) {
             console.error(error);
