@@ -1,3 +1,4 @@
+
 import { createClient } from '@supabase/supabase-js';
 
 // IMPORTANT: Replace with your actual Supabase URL and Anon Key
@@ -119,6 +120,27 @@ interface Database {
           title: string;
           quote: string;
           avatar: string;
+        };
+      };
+      visitors: {
+        Row: {
+          id: number;
+          created_at: string;
+          user_agent: string;
+          platform: string;
+          language: string;
+          ip: string;
+          geolocation: any;
+          connection_type: string;
+        };
+        Insert: {
+          created_at: string;
+          user_agent?: string;
+          platform?: string;
+          language?: string;
+          ip?: string;
+          geolocation?: any;
+          connection_type?: string;
         };
       };
     };

@@ -1,11 +1,12 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Smartphone, HardDrive, Cpu, ScreenShare, Wifi, Info, Loader2, Network, Gauge, Shield, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from './ui/dialog';
+import { supabase } from '@/lib/supabase/client';
 
 interface ClientInfoState {
   ip?: string;
@@ -37,15 +38,16 @@ const InfoItem = ({ label, value, unit = '' }: { label: string; value: any; unit
     );
 };
 
+const getIstTimestamp = () => {
+    return new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+};
+
 export function ClientInfoWidget() {
   const [info, setInfo] = useState<ClientInfoState>({});
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const getClientInfo = async () => {
+  const getClientInfo = useCallback(async () => {
       setLoading(true);
       try {
         const geoRes = await fetch('https://ipapi.co/json/');
@@ -81,30 +83,6 @@ export function ClientInfoWidget() {
             plugins: Array.from(navigator.plugins).map(p => p.name),
             performance: performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming,
         };
-
-        try {
-            // @ts-ignore
-            const battery = await navigator.getBattery();
-            state.battery = {
-                level: Math.round(battery.level * 100),
-                charging: battery.charging,
-            };
-        } catch (e) { console.warn('Battery API not supported'); }
-
-        try {
-            const canvas = document.createElement('canvas');
-            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-            if (gl) {
-                // @ts-ignore
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                state.gpu = {
-                    // @ts-ignore
-                    vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
-                    // @ts-ignore
-                    renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL),
-                };
-            }
-        } catch (e) { console.warn('WebGL not supported'); }
         
         // @ts-ignore
         const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -118,25 +96,55 @@ export function ClientInfoWidget() {
             };
         }
 
-        try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            state.mediaDevices = {
-                audio: devices.filter(d => d.kind === 'audioinput').length,
-                video: devices.filter(d => d.kind === 'videoinput').length,
-                others: devices.filter(d => d.kind !== 'audioinput' && d.kind !== 'videoinput').length,
-            };
-        } catch(e) { console.warn("Media device enumeration not supported"); }
-
         setInfo(state);
+        return state;
       } catch (error) {
         console.error("Failed to gather client info:", error);
+        return null;
       } finally {
         setLoading(false);
       }
-    };
+  }, []);
 
-    getClientInfo();
-  }, [isOpen]);
+  useEffect(() => {
+    if (isOpen) {
+        getClientInfo();
+    }
+  }, [isOpen, getClientInfo]);
+  
+  useEffect(() => {
+    // This effect runs once on component mount to log visitor data
+    const logVisitor = async () => {
+      const loggedKey = 'devsec_visitor_logged';
+      if (sessionStorage.getItem(loggedKey)) {
+        return; // Already logged this session
+      }
+
+      const clientInfo = await getClientInfo();
+      if (clientInfo) {
+        const { error } = await supabase.from('visitors').insert({
+          created_at: getIstTimestamp(),
+          user_agent: clientInfo.userAgent,
+          platform: clientInfo.platform,
+          language: clientInfo.language,
+          ip: clientInfo.ip,
+          geolocation: clientInfo.geolocation,
+          connection_type: clientInfo.connection?.type,
+        });
+
+        if (error) {
+          console.error('Failed to log visitor:', error);
+        } else {
+          sessionStorage.setItem(loggedKey, 'true');
+        }
+      }
+    };
+    
+    // Don't run this during development to avoid cluttering the DB
+    if (process.env.NODE_ENV === 'production') {
+        logVisitor();
+    }
+  }, [getClientInfo]);
   
   const perf = info.performance;
 
@@ -251,7 +259,7 @@ export function ClientInfoWidget() {
         <DialogHeader>
           <DialogTitle>Live Visitor Stats</DialogTitle>
           <DialogDescription>
-            This widget demonstrates what client-side JavaScript can see about your browser, device, and network. None of this data is stored.
+            This widget demonstrates what client-side JavaScript can see about your browser, device, and network. A summary of this data is logged once per session.
           </DialogDescription>
         </DialogHeader>
         <div className="max-h-[70vh] overflow-y-auto pr-4">
@@ -261,6 +269,3 @@ export function ClientInfoWidget() {
     </Dialog>
   );
 }
-
-    
-    

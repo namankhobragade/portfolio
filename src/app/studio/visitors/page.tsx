@@ -1,0 +1,103 @@
+
+'use client';
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { supabase } from '@/lib/supabase/client';
+import { Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+
+type Visitor = {
+    id: number;
+    created_at: string;
+    user_agent: string;
+    platform: string;
+    language: string;
+    ip: string;
+    geolocation: any;
+    connection_type: string;
+};
+
+export default function VisitorsPage() {
+    const [visitors, setVisitors] = useState<Visitor[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchVisitors = async () => {
+            setLoading(true);
+            setError(null);
+
+            const { data, error } = await supabase
+                .from('visitors')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(100);
+
+            if (error) {
+                setError(`Failed to fetch visitor data: ${error.message}`);
+                console.error("Error fetching visitors:", error);
+            } else {
+                setVisitors(data as Visitor[]);
+            }
+
+            setLoading(false);
+        };
+
+        fetchVisitors();
+    }, []);
+
+    const formatDate = (dateString: string) => {
+        try {
+            return format(new Date(dateString), "MMM d, yyyy, h:mm:ss a");
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-full"><Loader2 className="h-8 w-8 animate-spin" /></div>;
+    }
+    if (error) {
+        return <div className="text-destructive">{error}</div>;
+    }
+
+    return (
+        <Card className="bg-transparent border">
+            <CardHeader>
+                <CardTitle>Visitor Logs</CardTitle>
+                <CardDescription>A log of the last 100 visits to your portfolio.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                {visitors.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-8">No visitor data recorded yet.</p>
+                ) : (
+                    <div className="rounded-md border mt-4">
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Location</TableHead>
+                                    <TableHead>Platform</TableHead>
+                                    <TableHead>IP Address</TableHead>
+                                    <TableHead>User Agent</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {visitors.map(visitor => (
+                                    <TableRow key={visitor.id}>
+                                        <TableCell>{formatDate(visitor.created_at)}</TableCell>
+                                        <TableCell>{`${visitor.geolocation?.city || 'N/A'}, ${visitor.geolocation?.country || 'N/A'}`}</TableCell>
+                                        <TableCell>{visitor.platform}</TableCell>
+                                        <TableCell>{visitor.ip}</TableCell>
+                                        <TableCell className="max-w-xs truncate">{visitor.user_agent}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    );
+}
