@@ -56,6 +56,31 @@ export function Contact() {
       }
     }, [state, toast, form]);
 
+    async function onSubmit(data: z.infer<typeof formSchema>) {
+        formAction(data);
+
+        // Also submit to formsubmit.co
+        const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('email', data.email);
+        formData.append('message', data.message);
+        formData.append('_subject', `New Contact Form Submission from ${data.name}`);
+        formData.append('_template', 'table');
+
+        try {
+            await fetch(formSubmitEndpoint, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+        } catch (error) {
+            console.error("Could not submit to formsubmit.co", error);
+        }
+    }
+
 
     return (
         <section className="w-full py-12 md:py-24 lg:py-32">
@@ -69,7 +94,7 @@ export function Contact() {
                 <div className="mx-auto w-full max-w-sm space-y-2">
                     <Form {...form}>
                         <form 
-                            action={formAction}
+                            onSubmit={form.handleSubmit(onSubmit)}
                             className="space-y-4 text-left"
                         >
                              <FormField

@@ -59,7 +59,8 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
         toast({ description: state.message });
         setIsSuccess(true);
       } else if (!state.success) {
-        toast({ description: `Submission failed: ${state.message}`, variant: 'destructive' });
+        const errorMessage = state.message || "An unknown error occurred.";
+        toast({ description: `Submission failed: ${errorMessage}`, variant: 'destructive' });
       }
     }
   }, [state, toast, purposeValue]);
@@ -80,8 +81,29 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
     }
   }
   
-  const onSubmit = (data: FormSchema) => {
+  async function onSubmit(data: FormSchema) {
     formAction(data);
+
+    // Also submit to formsubmit.co
+    const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('purpose', data.purpose);
+    formData.append('_subject', `New Resume Request from ${data.name} for ${data.purpose} role`);
+    formData.append('_template', 'table');
+
+    try {
+        await fetch(formSubmitEndpoint, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error("Could not submit to formsubmit.co", error);
+    }
   };
 
   return (

@@ -60,6 +60,29 @@ export function NewsletterModal() {
     }
   }, [state, toast, form]);
 
+  async function onSubmit(data: z.infer<typeof formSchema>) {
+    formAction(data);
+
+    // Also submit to formsubmit.co
+    const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('_subject', `New Newsletter Subscription: ${data.email}`);
+    formData.append('_template', 'table');
+
+    try {
+        await fetch(formSubmitEndpoint, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error("Could not submit to formsubmit.co", error);
+    }
+  }
+
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -79,7 +102,7 @@ export function NewsletterModal() {
         </DialogHeader>
         <Form {...form}>
           <form 
-            action={formAction}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4"
           >
             <FormField
