@@ -141,7 +141,7 @@ export function ClientInfoWidget() {
           connection_type: clientInfo.connection?.type,
           cpu_cores: clientInfo.cpuCores,
           memory: clientInfo.memory,
-          screen_resolution: clientInfo.screen ? `${clientInfo.screen.width}x${clientInfo.screen.height}` : undefined,
+          screen_resolution: clientInfo.screen ? `${clientInfo.screen.width}x${clientInfo.screen.height} D:${clientInfo.screen.pixelRatio} C:${clientInfo.screen.colorDepth}` : undefined,
           is_touch_enabled: clientInfo.touch,
           gpu: clientInfo.gpu,
           network_info: clientInfo.connection,
