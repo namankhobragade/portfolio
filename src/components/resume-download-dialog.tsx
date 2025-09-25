@@ -39,9 +39,9 @@ interface ResumeDownloadDialogProps {
 
 export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDialogProps) {
   const { toast } = useToast();
-  const [isPending, startTransition] = useTransition();
   const [state, formAction] = useActionState(submitResumeRequest, { success: false, message: "" });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isPending, startTransition] = useTransition();
   
   const form = useForm<FormSchema>({
     resolver: zodResolver(resumeRequestSchema),
@@ -121,7 +121,6 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
 
         {isSuccess ? (
           <div className="space-y-4 text-center">
-            <p className="text-green-600 dark:text-green-400">Thank you! Click the button below to view the resume.</p>
             <Button onClick={handleViewResume} className="w-full">
               <FileText className="mr-2 h-4 w-4" /> View Now
             </Button>
