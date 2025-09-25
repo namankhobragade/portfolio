@@ -271,7 +271,7 @@ export function ClientInfoWidget() {
         <DialogHeader>
           <DialogTitle>Live Visitor Stats</DialogTitle>
           <DialogDescription>
-            This widget demonstrates what client-side JavaScript can see about your browser, device, and network. A summary of this data is logged once per session.
+            This widget demonstrates what client-side JavaScript can see about your browser, device, and network. A summary of this data is logged to the database periodically.
           </DialogDescription>
         </DialogHeader>
         <div className="max-h-[70vh] overflow-y-auto pr-4">
@@ -281,3 +281,5 @@ export function ClientInfoWidget() {
     </Dialog>
   );
 }
+
+    

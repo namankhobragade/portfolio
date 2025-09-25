@@ -156,3 +156,5 @@ ADD COLUMN IF NOT EXISTS is_online boolean,
 ADD COLUMN IF NOT EXISTS do_not_track text,
 ADD COLUMN IF NOT EXISTS performance jsonb;
 ```
+
+    
