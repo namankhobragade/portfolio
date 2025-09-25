@@ -132,11 +132,7 @@ ALTER TABLE public.visitors ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable anon insert for all users" ON public.visitors
   FOR INSERT WITH CHECK (true);
 
--- Create a policy to allow admin read access
--- IMPORTANT: This policy assumes you have a way to identify admins.
--- If you are reading this data from the client-side studio, you may need a more open read policy.
--- For a secure setup, you would typically use a service role key on the server to read this data.
--- For simplicity in the studio, we will allow all reads for now.
+-- Create a policy to allow you to read the data in the Studio
 CREATE POLICY "Enable read access for all users" ON public.visitors
   FOR SELECT USING (true);
 ```
