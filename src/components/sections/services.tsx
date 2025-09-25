@@ -16,7 +16,7 @@ const iconMap = allIcons.reduce((map, icon) => {
 export async function Services() {
   const { data: servicesData, error } = await supabase
     .from('services')
-    .select('*')
+    .select('title, description, icon')
     .order('order', { ascending: true });
 
   if (error) {
