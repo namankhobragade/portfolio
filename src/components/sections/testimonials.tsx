@@ -1,34 +1,48 @@
 
-"use client";
-
+'use client';
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Quote } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatedItem } from "../animated-item";
+import { supabase } from "@/lib/supabase/client";
 
-const testimonials = [
-  {
-    name: "Amir Ahmed",
-    title: "Senior DevSecOps Engineer",
-    quote: "Sunil’s mastery in full-stack development and dedication to security truly sets him apart. He is a proactive problem-solver and a great team player.",
-    avatar: "https://i.pravatar.cc/150?u=amir-ahmed",
-  },
-  {
-    name: "Jane Doe",
-    title: "Project Manager, Acme Inc.",
-    quote: "Working with Sunil was a breeze. He delivered a high-quality, secure e-commerce platform ahead of schedule and was always responsive to feedback.",
-    avatar: "https://i.pravatar.cc/150?u=jane-doe",
-  },
-  {
-    name: "John Smith",
-    title: "Startup Founder",
-    quote: "Sunil's expertise in both development and security was invaluable. He helped us build a scalable and robust SaaS application from the ground up.",
-    avatar: "https://i.pravatar.cc/150?u=john-smith",
-  },
-];
+interface Testimonial {
+    name: string;
+    title: string;
+    quote: string;
+    avatar: string;
+}
 
 export function Testimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('order', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching testimonials:', error.message || error);
+        setError('Error loading testimonials.');
+      } else {
+        setTestimonials(data);
+      }
+    };
+    fetchTestimonials();
+  }, []);
+
+  if (error) {
+    return <p>{error}</p>;
+  }
+  
+  if (testimonials.length === 0 && !error) {
+    return null; // Don't render the section if there are no testimonials yet
+  }
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">

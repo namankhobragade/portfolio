@@ -1,5 +1,4 @@
 
-import { CheckCircle2 } from "lucide-react";
 import { AnimatedItem } from "../animated-item";
 import { Badge } from "../ui/badge";
 import { supabase } from "@/lib/supabase/client";
@@ -32,7 +31,7 @@ export async function Experience() {
                             </div>
                              <p className="text-primary font-semibold">{item.role}</p>
                             <ul className="space-y-2 text-muted-foreground list-disc pl-5">
-                                {item.responsibilities.map((resp, i) => (
+                                {item.responsibilities.map((resp: string, i: number) => (
                                 <li key={i}>{resp}</li>
                                 ))}
                             </ul>
