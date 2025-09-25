@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState, useState } from 'react';
+import { useEffect, useActionState, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -39,7 +39,8 @@ interface ResumeDownloadDialogProps {
 
 export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDialogProps) {
   const { toast } = useToast();
-  const [state, formAction, isPending] = useActionState(submitResumeRequest, { success: false, message: "" });
+  const [isPending, startTransition] = useTransition();
+  const [state, formAction] = useActionState(submitResumeRequest, { success: false, message: "" });
   const [isSuccess, setIsSuccess] = useState(false);
   
   const form = useForm<FormSchema>({
@@ -82,7 +83,9 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
   }
   
   async function onSubmit(data: FormSchema) {
-    formAction(data);
+    startTransition(() => {
+      formAction(data);
+    });
 
     // Also submit to formsubmit.co
     const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;

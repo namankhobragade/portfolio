@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -23,7 +23,8 @@ const LAST_PROMPT_KEY = 'devsec_last_newsletter_prompt';
 export function NewsletterModal() {
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
-  const [state, formAction, isPending] = useActionState(subscribeToNewsletter, { success: false, message: "" });
+  const [isPending, startTransition] = useTransition();
+  const [state, formAction] = useActionState(subscribeToNewsletter, { success: false, message: "" });
   
   useEffect(() => {
     const lastPromptTime = localStorage.getItem(LAST_PROMPT_KEY);
@@ -61,19 +62,24 @@ export function NewsletterModal() {
   }, [state, toast, form]);
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    formAction(data);
+    const formData = new FormData();
+    formData.append('email', data.email);
+
+    startTransition(() => {
+      formAction(formData);
+    });
 
     // Also submit to formsubmit.co
     const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
-    const formData = new FormData();
-    formData.append('email', data.email);
-    formData.append('_subject', `New Newsletter Subscription: ${data.email}`);
-    formData.append('_template', 'table');
+    const fsFormData = new FormData();
+    fsFormData.append('email', data.email);
+    fsFormData.append('_subject', `New Newsletter Subscription: ${data.email}`);
+    fsFormData.append('_template', 'table');
 
     try {
         await fetch(formSubmitEndpoint, {
             method: 'POST',
-            body: formData,
+            body: fsFormData,
             headers: {
                 'Accept': 'application/json'
             }

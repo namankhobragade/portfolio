@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -29,7 +29,8 @@ const formSchema = z.object({
 
 export function Contact() {
     const { toast } = useToast();
-    const [state, formAction, isPending] = useActionState(submitContactForm, { success: false, message: "" });
+    const [isPending, startTransition] = useTransition();
+    const [state, formAction] = useActionState(submitContactForm, { success: false, message: "" });
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -57,21 +58,28 @@ export function Contact() {
     }, [state, toast, form]);
 
     async function onSubmit(data: z.infer<typeof formSchema>) {
-        formAction(data);
-
-        // Also submit to formsubmit.co
-        const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('email', data.email);
         formData.append('message', data.message);
-        formData.append('_subject', `New Contact Form Submission from ${data.name}`);
-        formData.append('_template', 'table');
+
+        startTransition(() => {
+            formAction(formData);
+        });
+
+        // Also submit to formsubmit.co
+        const formSubmitEndpoint = `https://formsubmit.co/${process.env.NEXT_PUBLIC_FORMSUBMIT_EMAIL}`;
+        const fsFormData = new FormData();
+        fsFormData.append('name', data.name);
+        fsFormData.append('email', data.email);
+        fsFormData.append('message', data.message);
+        fsFormData.append('_subject', `New Contact Form Submission from ${data.name}`);
+        fsFormData.append('_template', 'table');
 
         try {
             await fetch(formSubmitEndpoint, {
                 method: 'POST',
-                body: formData,
+                body: fsFormData,
                 headers: {
                     'Accept': 'application/json'
                 }
