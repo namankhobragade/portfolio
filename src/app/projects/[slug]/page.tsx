@@ -1,16 +1,15 @@
-
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { Badge } from '@/components/ui/badge';
 import { Github, ExternalLink } from 'lucide-react';
 import { supabase } from '@/lib/supabase/client';
+import { getImageById } from '@/lib/images';
 
 type Props = {
   params: { slug: string };
@@ -40,9 +39,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
       title: 'Project Not Found',
     };
   }
-
-  const projectImage = PlaceHolderImages.find((p) => p.id === project.image_id);
-  const imageUrl = projectImage ? `${siteUrl}${projectImage.imageUrl.startsWith('/') ? '' : '/'}${projectImage.imageUrl}` : `${siteUrl}/og-image.png`;
+  
+  const projectImage = project.image_id ? await getImageById(project.image_id) : null;
+  const imageUrl = projectImage ? `${siteUrl}${projectImage.image_url.startsWith('/') ? '' : '/'}${projectImage.image_url}` : `${siteUrl}/og-image.png`;
 
   return {
     title: `${project.title} | Case Study`,
@@ -80,7 +79,7 @@ export default async function ProjectPage({ params }: Props) {
     notFound();
   }
 
-  const projectImage = PlaceHolderImages.find((p) => p.id === project.image_id);
+  const projectImage = project.image_id ? await getImageById(project.image_id) : null;
 
   return (
     <article className="container max-w-4xl py-12 md:py-24">
@@ -99,9 +98,9 @@ export default async function ProjectPage({ params }: Props) {
       
       {projectImage && (
         <Image
-          src={projectImage.imageUrl}
+          src={projectImage.image_url}
           alt={project.title}
-          data-ai-hint={projectImage.imageHint}
+          data-ai-hint={projectImage.image_hint || ''}
           width={1200}
           height={675}
           className="aspect-video w-full object-cover rounded-lg mb-8 border"

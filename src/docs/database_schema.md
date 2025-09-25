@@ -766,3 +766,72 @@ ALTER TABLE public.certifications ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable read access for all users" ON public.certifications
   FOR SELECT USING (true);
 ```
+
+### 8. Images Table
+
+This table will store metadata for all images used in your portfolio, replacing the old JSON file system.
+
+#### **Step 1: Create the table**
+Run this query to create the new `images` table.
+
+```sql
+-- Create the images table
+CREATE TABLE public.images (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  image_id text NOT NULL UNIQUE,
+  description text NOT NULL,
+  image_url text NOT NULL,
+  image_hint text
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.images ENABLE ROW LEVEL SECURITY;
+
+-- Create a policy for public read access
+CREATE POLICY "Enable read access for all users" ON public.images
+  FOR SELECT USING (true);
+
+-- Create a policy to allow inserts (for Studio image uploads)
+CREATE POLICY "Enable insert for authenticated users" ON public.images
+  FOR INSERT WITH CHECK (true);
+
+-- Create a policy to allow deletes (for Studio image uploads)
+CREATE POLICY "Enable delete for authenticated users" ON public.images
+  FOR DELETE USING (true);
+```
+
+#### **Step 2: Migrate existing image data**
+Run this one-time query to move all your image metadata from the old `placeholder-images.json` file into this new table.
+
+```sql
+-- Insert all existing images from the JSON file
+INSERT INTO public.images (image_id, description, image_url, image_hint)
+VALUES
+  ('profile-picture-hero', 'Professional headshot of the portfolio owner for the hero section.', '/images/profile-hero.jpg', 'professional headshot'),
+  ('project-1', 'Abstract visualization of a secure network.', 'https://picsum.photos/seed/project1/600/400', 'secure network'),
+  ('project-2', 'Futuristic AI dashboard interface.', 'https://picsum.photos/seed/project2/600/400', 'AI dashboard'),
+  ('project-3', 'Lines of code on a dark screen.', 'https://picsum.photos/seed/project3/600/400', 'code screen'),
+  ('project-4', 'A cloud security dashboard with charts and alerts.', 'https://picsum.photos/seed/project4/600/400', 'cloud security'),
+  ('project-5', 'A digital vault with a glowing keyhole, representing encryption.', 'https://picsum.photos/seed/project5/600/400', 'digital encryption'),
+  ('project-6', 'A CI/CD pipeline with security gates.', 'https://picsum.photos/seed/project6/600/400', 'DevSecOps pipeline'),
+  ('project-7', 'An email inbox with a shield icon highlighting a safe email.', 'https://picsum.photos/seed/project7/600/400', 'email security'),
+  ('project-8', 'Architectural diagram of a multi-tenant application.', 'https://picsum.photos/seed/project8/600/400', 'SaaS architecture'),
+  ('project-9', 'A network of connected smart home devices.', 'https://picsum.photos/seed/project9/600/400', 'IoT network'),
+  ('project-10', 'A blockchain visualization with interconnected blocks.', 'https://picsum.photos/seed/project10/600/400', 'blockchain technology'),
+  ('blog-1', 'A padlock symbolizing digital security.', 'https://picsum.photos/seed/blog1/600/400', 'digital security'),
+  ('blog-2', 'An illustration of a neural network.', 'https://picsum.photos/seed/blog2/600/400', 'neural network'),
+  ('blog-3', 'A developer working at a multi-monitor setup.', 'https://picsum.photos/seed/blog3/600/400', 'developer setup'),
+  ('blog-4', 'A diagram of a CI/CD pipeline.', 'https://picsum.photos/seed/blog4/600/400', 'CI CD pipeline'),
+  ('blog-5', 'A robot brain with a lock icon.', 'https://picsum.photos/seed/blog5/600/400', 'AI security'),
+  ('blog-zero-trust', 'A network diagram showing zero trust principles.', 'https://picsum.photos/seed/blog6/600/400', 'zero trust'),
+  ('blog-serverless-security', 'Icons representing serverless functions and security shields.', 'https://picsum.photos/seed/blog7/600/400', 'serverless security'),
+  ('blog-api-security', 'An API endpoint with a padlock and shield.', 'https://picsum.photos/seed/blog8/600/400', 'API security'),
+  ('blog-cloud-native', 'Containers and Kubernetes logos inside a cloud.', 'https://picsum.photos/seed/blog9/600/400', 'cloud native'),
+  ('blog-owasp-top-10', 'The OWASP logo with a list of security risks.', 'https://picsum.photos/seed/blog10/600/400', 'OWASP security'),
+  ('blog-oauth-oidc', 'Diagram showing the flow of OAuth 2.0.', 'https://picsum.photos/seed/blog11/600/400', 'OAuth flow'),
+  ('blog-pwa-nextjs', 'A smartphone screen showing a web app being installed.', 'https://picsum.photos/seed/blog12/600/400', 'PWA install'),
+  ('blog-social-engineering', 'A person being tricked by a phishing email.', 'https://picsum.photos/seed/blog13/600/400', 'phishing attack'),
+  ('blog-incident-response', 'A flowchart of an incident response plan.', 'https://picsum.photos/seed/blog14/600/400', 'incident response'),
+  ('blog-es2022', 'The JavaScript logo with modern code in the background.', 'https://picsum.photos/seed/blog15/600/400', 'JavaScript code');
+```

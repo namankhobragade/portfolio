@@ -66,7 +66,7 @@ interface Database {
           title: string;
           slug: string;
           description: string;
-          image_id: string;
+          image_id: string | null;
           tech_stack: string[];
           security_focus: string;
           case_study: string;
@@ -141,6 +141,23 @@ interface Database {
             image_id?: string | null;
             image_url?: string | null;
             content: string;
+        };
+      };
+      images: {
+        Row: {
+            id: number;
+            created_at: string;
+            image_id: string;
+            description: string;
+            image_url: string;
+            image_hint: string | null;
+        };
+        Insert: {
+            created_at?: string;
+            image_id: string;
+            description: string;
+            image_url: string;
+            image_hint?: string | null;
         };
       };
       visitors: {

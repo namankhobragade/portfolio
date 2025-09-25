@@ -1,12 +1,11 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { cn } from "@/lib/utils";
 import { AnimatedItem } from "./animated-item";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import type { Post } from "@/lib/blog";
+import { getImageById } from "@/lib/images";
 
 type PostCardProps = {
   post: Post;
@@ -15,19 +14,6 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, orientation = "vertical", priority = false }: PostCardProps) {
-  let imageUrl: string | null = null;
-  let imageHint: string | undefined;
-
-  if (post.image_url) {
-    imageUrl = post.image_url;
-  } else if (post.image_id) {
-    const placeholder = PlaceHolderImages.find(p => p.id === post.image_id);
-    if (placeholder) {
-      imageUrl = placeholder.imageUrl;
-      imageHint = placeholder.imageHint;
-    }
-  }
-
   return (
     <AnimatedItem>
         <Link href={`/blog/${post.slug}`} className="group block">
@@ -35,22 +21,17 @@ export function PostCard({ post, orientation = "vertical", priority = false }: P
                 "flex gap-6 rounded-lg transition-all",
                 orientation === "vertical" ? "flex-col" : "flex-col md:flex-row items-center",
             )}>
-                {imageUrl && (
                 <div className={cn(
                     "overflow-hidden rounded-lg", 
                     orientation === 'horizontal' ? 'w-full md:w-1/2' : 'w-full'
                 )}>
-                    <Image
-                        src={imageUrl}
-                        alt={post.title}
-                        data-ai-hint={imageHint}
+                    <PostImage 
+                        post={post} 
+                        priority={priority} 
                         width={orientation === 'horizontal' ? 800 : 600}
                         height={orientation === 'horizontal' ? 450 : 400}
-                        className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        priority={priority}
                     />
                 </div>
-                )}
                 <div className={cn(
                     "flex flex-col",
                      orientation === 'horizontal' ? 'w-full md:w-1/2' : 'w-full'
@@ -77,4 +58,35 @@ export function PostCard({ post, orientation = "vertical", priority = false }: P
         </Link>
     </AnimatedItem>
   );
+}
+
+async function PostImage({ post, priority, width, height }: { post: Post, priority: boolean, width: number, height: number }) {
+  let imageUrl: string | null = null;
+  let imageHint: string | undefined;
+
+  if (post.image_url) {
+    imageUrl = post.image_url;
+  } else if (post.image_id) {
+    const image = await getImageById(post.image_id);
+    if (image) {
+      imageUrl = image.image_url;
+      imageHint = image.image_hint || undefined;
+    }
+  }
+
+  if (!imageUrl) {
+    return null; // Or a placeholder div
+  }
+
+  return (
+    <Image
+        src={imageUrl}
+        alt={post.title}
+        data-ai-hint={imageHint}
+        width={width}
+        height={height}
+        className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
+        priority={priority}
+    />
+  )
 }

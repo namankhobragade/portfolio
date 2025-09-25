@@ -2,43 +2,24 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import matter from 'gray-matter';
 import { z } from 'zod';
-import type { ImagePlaceholder } from '@/lib/placeholder-images';
+import { supabase } from '@/lib/supabase/client';
+import { getAllImages } from '@/lib/images';
+import { revalidatePath } from 'next/cache';
 
 const UPLOADS_DIR = 'public/images/uploads';
 const UPLOADS_URL_PATH = '/images/uploads';
-const PLACEHOLDER_JSON_PATH = path.join(process.cwd(), 'src/lib/placeholder-images.json');
-
-// Helper to read the image manifest
-async function readManifest(): Promise<{ placeholderImages: ImagePlaceholder[] }> {
-    try {
-        const file = await fs.readFile(PLACEHOLDER_JSON_PATH, 'utf-8');
-        return JSON.parse(file);
-    } catch (error) {
-        // If file doesn't exist, return a default structure
-        if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-            return { placeholderImages: [] };
-        }
-        throw error;
-    }
-}
-
-// Helper to write to the image manifest
-async function writeManifest(data: { placeholderImages: ImagePlaceholder[] }): Promise<void> {
-    await fs.writeFile(PLACEHOLDER_JSON_PATH, JSON.stringify(data, null, 2), 'utf-8');
-}
 
 
 // GET /api/images - Fetches all images from the manifest
 export async function GET() {
     try {
-        const manifest = await readManifest();
-        const images = manifest.placeholderImages.map(img => ({
-            id: img.id,
-            path: img.imageUrl,
+        const images = await getAllImages();
+        const formattedImages = images.map(img => ({
+            id: img.image_id,
+            path: img.image_url,
         }));
-        return NextResponse.json({ images });
+        return NextResponse.json({ images: formattedImages });
     } catch (error) {
         console.error('Error fetching images:', error);
         return NextResponse.json({ error: 'Failed to fetch images.' }, { status: 500 });
@@ -63,24 +44,31 @@ export async function POST(request: Request) {
         const filename = file.name.replace(/[^a-z0-9_.-]/gi, '_').toLowerCase();
         const uniqueFilename = `${Date.now()}-${filename}`;
         const filePath = path.join(uploadsPath, uniqueFilename);
-        const fileUrl = path.join(UPLOADS_URL_PATH, uniqueFilename);
+        const fileUrl = path.join(UPLOADS_URL_PATH, uniqueFilename).replace(/\\/g, '/');
 
         // Save the file
         const buffer = Buffer.from(await file.arrayBuffer());
         await fs.writeFile(filePath, buffer);
 
         // Add to manifest
-        const manifest = await readManifest();
-        const newImageEntry: ImagePlaceholder = {
-            id: `upload-${path.parse(uniqueFilename).name}`,
+        const newImageEntry = {
+            image_id: `upload-${path.parse(uniqueFilename).name}`,
             description: `User uploaded image: ${filename}`,
-            imageUrl: fileUrl.replace(/\\/g, '/'), // Ensure forward slashes for URL
-            imageHint: 'custom upload',
+            image_url: fileUrl,
+            image_hint: 'custom upload',
         };
-        manifest.placeholderImages.unshift(newImageEntry);
-        await writeManifest(manifest);
+
+        const { data, error } = await supabase
+            .from('images')
+            .insert(newImageEntry)
+            .select()
+            .single();
+
+        if (error) throw error;
         
-        return NextResponse.json({ success: true, image: newImageEntry });
+        revalidatePath('/'); // Revalidate cache for images
+        
+        return NextResponse.json({ success: true, image: data });
     } catch (error) {
         console.error('Error uploading image:', error);
         return NextResponse.json({ error: 'Image upload failed.' }, { status: 500 });
@@ -102,18 +90,20 @@ export async function DELETE(request: Request) {
         }
 
         const { id } = validated.data;
-        const manifest = await readManifest();
-
-        const imageIndex = manifest.placeholderImages.findIndex(img => img.id === id);
-        if (imageIndex === -1) {
-            return NextResponse.json({ error: 'Image not found in manifest.' }, { status: 404 });
+        
+        const { data: imageToDelete, error: selectError } = await supabase
+            .from('images')
+            .select('image_url')
+            .eq('image_id', id)
+            .single();
+        
+        if (selectError || !imageToDelete) {
+            return NextResponse.json({ error: 'Image not found in database.' }, { status: 404 });
         }
-        
-        const [imageToDelete] = manifest.placeholderImages.splice(imageIndex, 1);
-        
+
         // Only attempt to delete file if it's in the uploads directory
-        if (imageToDelete.imageUrl.startsWith(UPLOADS_URL_PATH)) {
-            const filePath = path.join(process.cwd(), 'public', imageToDelete.imageUrl);
+        if (imageToDelete.image_url.startsWith(UPLOADS_URL_PATH)) {
+            const filePath = path.join(process.cwd(), 'public', imageToDelete.image_url);
             try {
                 await fs.unlink(filePath);
             } catch (error) {
@@ -122,7 +112,14 @@ export async function DELETE(request: Request) {
             }
         }
 
-        await writeManifest(manifest);
+        const { error: deleteError } = await supabase
+            .from('images')
+            .delete()
+            .eq('image_id', id);
+
+        if (deleteError) throw deleteError;
+
+        revalidatePath('/'); // Revalidate cache for images
         
         return NextResponse.json({ success: true });
     } catch (error) {

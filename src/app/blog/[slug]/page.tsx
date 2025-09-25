@@ -1,11 +1,9 @@
-
 import { getPostBySlug, getAllPosts } from '@/lib/blog';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { MarkdownContent } from '@/components/markdown-content';
 import { ShareButtons } from '@/components/share-buttons';
 import { format } from 'date-fns';
@@ -13,6 +11,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { Separator } from '@/components/ui/separator';
 import { NewsletterModal } from '@/components/newsletter-modal';
 import { PostCard } from '@/components/post-card';
+import { getImageById } from '@/lib/images';
 
 type Props = {
   params: { slug: string };
@@ -33,9 +32,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
   if (post.image_url) {
       imageUrl = post.image_url.startsWith('http') ? post.image_url : `${siteUrl}${post.image_url}`;
   } else if (post.image_id) {
-      const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
+      const postImage = await getImageById(post.image_id);
       if (postImage) {
-          imageUrl = `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`;
+          imageUrl = `${siteUrl}${postImage.image_url.startsWith('/') ? '' : '/'}${postImage.image_url}`;
       }
   }
 
@@ -80,20 +79,17 @@ export default async function BlogPostPage({ params }: Props) {
     .filter(p => p.slug !== post.slug) // Exclude current post
     .slice(0, 2); // Get the next 2 posts
     
-  let postImageUrl: string | null = null;
-  let imageHint: string | undefined;
-
+  let postImage: { image_url: string; image_hint?: string | null } | null = null;
   if (post.image_url) {
-      postImageUrl = post.image_url;
+    postImage = { image_url: post.image_url };
   } else if (post.image_id) {
-      const placeholder = PlaceHolderImages.find((p) => p.id === post.image_id);
-      if (placeholder) {
-          postImageUrl = placeholder.imageUrl;
-          imageHint = placeholder.imageHint;
-      }
+    const fetchedImage = await getImageById(post.image_id);
+    if (fetchedImage) {
+        postImage = { image_url: fetchedImage.image_url, image_hint: fetchedImage.image_hint };
+    }
   }
   
-  const schemaImageUrl = postImageUrl ? (postImageUrl.startsWith('http') ? postImageUrl : `${siteUrl}${postImageUrl}`) : `${siteUrl}/og-image.png`;
+  const schemaImageUrl = postImage ? (postImage.image_url.startsWith('http') ? postImage.image_url : `${siteUrl}${postImage.image_url}`) : `${siteUrl}/og-image.png`;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -140,11 +136,11 @@ export default async function BlogPostPage({ params }: Props) {
           Posted on {format(new Date(post.created_at), 'MMMM d, yyyy')}
         </p>
         
-        {postImageUrl && (
+        {postImage && (
           <Image
-            src={postImageUrl}
+            src={postImage.image_url}
             alt={post.title}
-            data-ai-hint={imageHint}
+            data-ai-hint={postImage.image_hint || ''}
             width={1200}
             height={675}
             className="aspect-video w-full object-cover rounded-lg mb-8"

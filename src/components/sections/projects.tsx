@@ -1,14 +1,13 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Github, ExternalLink, BookText } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { BookText, Github, ExternalLink } from "lucide-react";
 import { AnimatedItem } from "../animated-item";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/lib/supabase/client";
+import { getImageById } from "@/lib/images";
 
 export async function Projects() {
   const { data: projectsData, error } = await supabase
@@ -42,21 +41,11 @@ export async function Projects() {
             >
               <CarouselContent>
                 {projectsData.map((project, index) => {
-                  const projectImage = PlaceHolderImages.find(p => p.id === project.image_id);
                   return (
                     <CarouselItem key={project.title} className="md:basis-1/2 lg:basis-1/3">
                       <AnimatedItem delay={index * 0.1} className="h-full p-2" direction={index % 2 === 0 ? 'left' : 'right'}>
                         <Card className="flex flex-col h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 bg-transparent border-2">
-                          {projectImage && (
-                            <Image
-                              src={projectImage.imageUrl}
-                              alt={projectImage.description}
-                              data-ai-hint={projectImage.imageHint}
-                              width={600}
-                              height={400}
-                              className="aspect-video w-full object-cover"
-                            />
-                          )}
+                           <ProjectImage imageId={project.image_id} />
                           <CardHeader>
                             <CardTitle className="font-headline">{project.title}</CardTitle>
                           </CardHeader>
@@ -78,15 +67,13 @@ export async function Projects() {
                           <CardFooter className="flex flex-wrap gap-2 mt-auto pt-4">
                             <Button asChild variant="default" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={`/projects/${project.slug}`}>
-                                    <BookText />
-                                    Case Study
+                                    <BookText className="mr-2 h-4 w-4" /> Case Study
                                 </Link>
                             </Button>
                             {project.demo_url && (
                               <Button asChild variant="outline" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={project.demo_url} target="_blank" rel="noopener noreferrer">
-                                  <ExternalLink />
-                                  View Demo
+                                  <ExternalLink className="mr-2 h-4 w-4" /> Demo
                                 </Link>
 
                               </Button>
@@ -94,8 +81,7 @@ export async function Projects() {
                             {project.github_url && (
                               <Button asChild variant="secondary" size="sm" className="flex-1 min-w-[120px]">
                                 <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
-                                  <Github />
-                                  View on GitHub
+                                  <Github className="mr-2 h-4 w-4" /> GitHub
                                 </Link>
                               </Button>
                             )}
@@ -113,4 +99,20 @@ export async function Projects() {
       </div>
     </section>
   );
+}
+
+async function ProjectImage({ imageId }: { imageId: string | null }) {
+    if (!imageId) return null;
+    const image = await getImageById(imageId);
+    if (!image) return null;
+    return (
+        <Image
+          src={image.image_url}
+          alt={image.description}
+          data-ai-hint={image.image_hint || ''}
+          width={600}
+          height={400}
+          className="aspect-video w-full object-cover"
+        />
+    )
 }
