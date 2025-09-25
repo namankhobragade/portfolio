@@ -51,22 +51,12 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
   const selectedPurpose = form.watch('purpose');
 
   useEffect(() => {
-    if (form.formState.isSubmitSuccessful && state?.message) {
-      if (!state.success) {
+    if (state.message && !state.success) {
         toast({ description: state.message, variant: 'destructive' });
-      }
     }
-  }, [form.formState.isSubmitSuccessful, state, toast]);
+  }, [state, toast]);
 
   const handleOpenChange = (open: boolean) => {
-    if (!open) {
-        form.reset();
-        // Manually reset the action state when closing the dialog
-        // This is a workaround to reset the form state completely on close
-        if (state?.success) {
-           window.location.reload(); // not ideal, but ensures state is fresh
-        }
-    }
     onOpenChange(open);
   };
   

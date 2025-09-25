@@ -41,7 +41,7 @@ export function Contact() {
     });
 
     useEffect(() => {
-      if (form.formState.isSubmitSuccessful && state.message) {
+      if (state.message) {
         if (state.success) {
           toast({
             description: state.message,
@@ -54,7 +54,7 @@ export function Contact() {
           });
         }
       }
-    }, [form.formState.isSubmitSuccessful, state, toast, form]);
+    }, [state, toast, form]);
 
 
     return (

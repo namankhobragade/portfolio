@@ -1,3 +1,4 @@
+
 'use client';
 import { useActionState, useEffect, useState } from 'react';
 import { useForm, useFieldArray, FormProvider, useFormContext } from 'react-hook-form';
@@ -83,14 +84,14 @@ export default function SkillsManagerPage() {
     });
 
     useEffect(() => {
-        if (formState.isSubmitSuccessful && state.message) {
+        if (state.message) {
             if (state.success) {
                 toast({ description: state.message });
             } else {
                 toast({ description: state.message, variant: 'destructive' });
             }
         }
-    }, [formState.isSubmitSuccessful, state, toast]);
+    }, [state, toast]);
     
     if (isLoadingData) {
         return (
@@ -104,7 +105,7 @@ export default function SkillsManagerPage() {
         <Card className="bg-transparent border">
             <CardHeader>
                 <CardTitle>Skills Manager</CardTitle>
-                <CardDescription>Add, edit, or remove skill categories and individual skills. (Note: Saving is simulated and does not persist to the database yet)</CardDescription>
+                <CardDescription>Add, edit, or remove skill categories and individual skills.</CardDescription>
             </CardHeader>
             <CardContent>
                 <FormProvider {...formMethods}>

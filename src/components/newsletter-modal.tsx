@@ -44,7 +44,7 @@ export function NewsletterModal() {
   });
   
   useEffect(() => {
-    if (form.formState.isSubmitSuccessful && state.message) {
+    if (state.message) {
         if (state.success) {
             toast({
                 description: state.message,
@@ -58,7 +58,7 @@ export function NewsletterModal() {
             });
         }
     }
-  }, [form.formState.isSubmitSuccessful, state, toast, form]);
+  }, [state, toast, form]);
 
 
   const handleOpenChange = (open: boolean) => {

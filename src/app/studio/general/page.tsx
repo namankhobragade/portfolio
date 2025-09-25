@@ -1,3 +1,4 @@
+
 'use client';
 import { useActionState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -47,14 +48,14 @@ export default function GeneralSettingsPage() {
     });
     
     useEffect(() => {
-        if (form.formState.isSubmitSuccessful && state.message) {
+        if (state.message) {
             if (state.success) {
                 toast({ description: state.message });
             } else {
                 toast({ description: state.message, variant: 'destructive' });
             }
         }
-    }, [form.formState.isSubmitSuccessful, state, toast]);
+    }, [state, toast]);
 
     return (
         <Card className="bg-transparent border">
