@@ -1,7 +1,7 @@
 
 # Supabase Table Schemas
 
-To make your portfolio fully dynamic, you need to create the `services`, `experience`, and `testimonials` tables in your Supabase database.
+To make your portfolio fully dynamic, you need to create the `services`, `experience`, `testimonials`, and `visitors` tables in your Supabase database.
 
 ## Instructions
 
@@ -10,7 +10,7 @@ To make your portfolio fully dynamic, you need to create the `services`, `experi
 3.  Click on **+ New query**.
 4.  Copy the SQL code for each table below and paste it into the query editor.
 5.  Click **RUN** to create the table.
-6.  Repeat for all three tables.
+6.  Repeat for all tables.
 7.  After creating the tables, go to the **Table Editor** to add your content into the newly created tables.
 
 ---
@@ -104,4 +104,39 @@ INSERT INTO public.testimonials ("order", name, title, quote, avatar) VALUES
 (1, 'Amir Ahmed', 'Senior DevSecOps Engineer', 'Sunil’s mastery in full-stack development and unwavering dedication to security truly sets him apart. He consistently delivers code that is not only functional but also fortified against modern threats.', '/images/avatar-1.png'),
 (2, 'Priya Sharma', 'Product Manager, Ed-Tech Startup', 'Working with Sunil was a game-changer for our platform. He single-handedly built our secure e-learning portal, and his proactive approach to security saved us from potential vulnerabilities down the line.', '/images/avatar-2.png'),
 (3, 'Dr. Rajesh Gupta', 'Cybersecurity Professor', 'As a student in my Information Security program, Sunil shows a rare aptitude for bridging theoretical knowledge with practical application. His insights into AI''s role in cybersecurity are particularly impressive.', '/images/avatar-3.png');
+```
+
+---
+
+### 4. Visitors Table
+
+This table stores a log of visitor sessions for analytics.
+
+```sql
+-- Create the visitors table
+CREATE TABLE public.visitors (
+  id bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  user_agent text,
+  platform text,
+  language text,
+  ip text,
+  geolocation jsonb,
+  connection_type text
+);
+
+-- Enable Row Level Security (RLS)
+ALTER TABLE public.visitors ENABLE ROW LEVEL SECURITY;
+
+-- Create a policy to allow anonymous inserts
+CREATE POLICY "Enable anon insert for all users" ON public.visitors
+  FOR INSERT WITH CHECK (true);
+
+-- Create a policy to allow admin read access
+-- IMPORTANT: This policy assumes you have a way to identify admins.
+-- If you are reading this data from the client-side studio, you may need a more open read policy.
+-- For a secure setup, you would typically use a service role key on the server to read this data.
+-- For simplicity in the studio, we will allow all reads for now.
+CREATE POLICY "Enable read access for all users" ON public.visitors
+  FOR SELECT USING (true);
 ```
