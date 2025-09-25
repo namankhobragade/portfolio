@@ -1,11 +1,24 @@
-
 import { AnimatedItem } from "../animated-item";
 import { Badge } from "../ui/badge";
-import { EXPERIENCE_DATA } from "@/lib/dynamic-data";
+import { supabase } from "@/lib/supabase/client";
 
 export async function Experience() {
-  const experienceData = EXPERIENCE_DATA;
+  const { data: experienceData, error } = await supabase
+    .from('experience')
+    .select('*')
+    .order('order', { ascending: true });
 
+  if (error) {
+    console.error('Error fetching experience data:', error);
+    return (
+        <section className="w-full py-12 md:py-24 lg:py-32">
+            <div className="container px-4 md:px-6">
+                <p className="text-center text-destructive">Failed to load work experience.</p>
+            </div>
+        </section>
+    );
+  }
+  
   return (
     <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
