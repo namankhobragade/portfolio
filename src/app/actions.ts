@@ -25,8 +25,8 @@ const resumeRequestSchema = z.object({
   }),
 });
 
-export async function submitResumeRequest(prevState: any, formData: z.infer<typeof resumeRequestSchema>) {
-    const validatedFields = resumeRequestSchema.safeParse(formData);
+export async function submitResumeRequest(prevState: any, data: z.infer<typeof resumeRequestSchema>) {
+    const validatedFields = resumeRequestSchema.safeParse(data);
 
     if (!validatedFields.success) {
         const errorMessages = Object.values(validatedFields.error.flatten().fieldErrors).flat().join(' ');
@@ -68,8 +68,8 @@ const contactFormSchema = z.object({
   message: z.string().min(10, "Message must be at least 10 characters."),
 });
 
-export async function submitContactForm(prevState: any, formData: FormData) {
-    const validatedFields = contactFormSchema.safeParse(Object.fromEntries(formData));
+export async function submitContactForm(prevState: any, data: z.infer<typeof contactFormSchema>) {
+    const validatedFields = contactFormSchema.safeParse(data);
 
     if (!validatedFields.success) {
         return {
@@ -110,8 +110,8 @@ const newsletterFormSchema = z.object({
   email: z.string().email("Invalid email address."),
 });
 
-export async function subscribeToNewsletter(prevState: any, formData: FormData) {
-  const validatedFields = newsletterFormSchema.safeParse(Object.fromEntries(formData));
+export async function subscribeToNewsletter(prevState: any, data: z.infer<typeof newsletterFormSchema>) {
+  const validatedFields = newsletterFormSchema.safeParse(data);
 
   if (!validatedFields.success) {
     return {
