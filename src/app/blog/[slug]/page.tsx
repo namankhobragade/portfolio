@@ -28,9 +28,16 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
       title: 'Post Not Found',
     };
   }
-
-  const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
-  const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
+  
+  let imageUrl = `${siteUrl}/og-image.png`;
+  if (post.image_url) {
+      imageUrl = post.image_url.startsWith('http') ? post.image_url : `${siteUrl}${post.image_url}`;
+  } else if (post.image_id) {
+      const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
+      if (postImage) {
+          imageUrl = `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}`;
+      }
+  }
 
   return {
     title: post.title,
@@ -72,15 +79,27 @@ export default async function BlogPostPage({ params }: Props) {
   const relatedPosts = allPosts
     .filter(p => p.slug !== post.slug) // Exclude current post
     .slice(0, 2); // Get the next 2 posts
+    
+  let postImageUrl: string | null = null;
+  let imageHint: string | undefined;
 
-  const postImage = PlaceHolderImages.find((p) => p.id === post.image_id);
-  const imageUrl = postImage ? `${siteUrl}${postImage.imageUrl.startsWith('/') ? '' : '/'}${postImage.imageUrl}` : `${siteUrl}/og-image.png`;
+  if (post.image_url) {
+      postImageUrl = post.image_url;
+  } else if (post.image_id) {
+      const placeholder = PlaceHolderImages.find((p) => p.id === post.image_id);
+      if (placeholder) {
+          postImageUrl = placeholder.imageUrl;
+          imageHint = placeholder.imageHint;
+      }
+  }
+  
+  const schemaImageUrl = postImageUrl ? (postImageUrl.startsWith('http') ? postImageUrl : `${siteUrl}${postImageUrl}`) : `${siteUrl}/og-image.png`;
 
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": post.title,
-    "image": imageUrl,
+    "image": schemaImageUrl,
     "author": {
       "@type": "Person",
       "name": "Sunil Khobragade",
@@ -121,11 +140,11 @@ export default async function BlogPostPage({ params }: Props) {
           Posted on {format(new Date(post.created_at), 'MMMM d, yyyy')}
         </p>
         
-        {postImage && (
+        {postImageUrl && (
           <Image
-            src={postImage.imageUrl}
+            src={postImageUrl}
             alt={post.title}
-            data-ai-hint={postImage.imageHint}
+            data-ai-hint={imageHint}
             width={1200}
             height={675}
             className="aspect-video w-full object-cover rounded-lg mb-8"

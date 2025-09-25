@@ -129,14 +129,17 @@ interface Database {
             title: string;
             slug: string;
             description: string;
-            image_id: string;
+            image_id: string | null;
+            image_url: string | null;
             content: string;
         };
         Insert: {
+            created_at?: string;
             title: string;
             slug: string;
             description: string;
-            image_id: string;
+            image_id?: string | null;
+            image_url?: string | null;
             content: string;
         };
       };

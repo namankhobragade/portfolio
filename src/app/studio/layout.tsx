@@ -1,9 +1,8 @@
-
 // src/app/studio/layout.tsx
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Settings, Brush, Type, Bot, LayoutDashboard, Code, LogOut, Send, Users } from 'lucide-react';
+import { Home, Settings, Brush, Type, Bot, LayoutDashboard, Code, LogOut, Send, Users, Library } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { logoutStudio } from '@/app/actions';
@@ -16,6 +15,7 @@ const studioNavLinks = [
     { href: '/studio/theme', label: 'Theme', icon: Brush },
     { href: '/studio/typography', label: 'Typography', icon: Type },
     { href: '/studio/content', label: 'Content AI', icon: Bot },
+    { href: '/studio/images', label: 'Image Library', icon: Library },
     { href: '/studio/submissions', label: 'Submissions', icon: Send },
     { href: '/studio/visitors', label: 'Visitors', icon: Users },
 ];

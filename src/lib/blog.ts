@@ -6,7 +6,8 @@ export type Post = {
   title: string;
   slug: string;
   description: string;
-  image_id: string;
+  image_id: string | null;
+  image_url: string | null;
   content: string;
 };
 

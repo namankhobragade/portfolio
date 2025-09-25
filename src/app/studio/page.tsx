@@ -1,6 +1,6 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Bot, Brush, Code, Settings, Type } from 'lucide-react';
+import { Bot, Brush, Code, Settings, Type, Library } from 'lucide-react';
 import Link from 'next/link';
 
 const features = [
@@ -33,6 +33,12 @@ const features = [
     description: 'Generate new blog posts, complete with unique images, using AI.',
     icon: Bot,
     href: '/studio/content',
+  },
+   {
+    title: 'Image Library',
+    description: 'View, upload, and manage all the images for your website.',
+    icon: Library,
+    href: '/studio/images',
   },
 ];
 

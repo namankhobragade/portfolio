@@ -15,7 +15,18 @@ type PostCardProps = {
 };
 
 export function PostCard({ post, orientation = "vertical", priority = false }: PostCardProps) {
-  const postImage = PlaceHolderImages.find(p => p.id === post.image_id);
+  let imageUrl: string | null = null;
+  let imageHint: string | undefined;
+
+  if (post.image_url) {
+    imageUrl = post.image_url;
+  } else if (post.image_id) {
+    const placeholder = PlaceHolderImages.find(p => p.id === post.image_id);
+    if (placeholder) {
+      imageUrl = placeholder.imageUrl;
+      imageHint = placeholder.imageHint;
+    }
+  }
 
   return (
     <AnimatedItem>
@@ -24,15 +35,15 @@ export function PostCard({ post, orientation = "vertical", priority = false }: P
                 "flex gap-6 rounded-lg transition-all",
                 orientation === "vertical" ? "flex-col" : "flex-col md:flex-row items-center",
             )}>
-                {postImage && (
+                {imageUrl && (
                 <div className={cn(
                     "overflow-hidden rounded-lg", 
                     orientation === 'horizontal' ? 'w-full md:w-1/2' : 'w-full'
                 )}>
                     <Image
-                        src={postImage.imageUrl}
+                        src={imageUrl}
                         alt={post.title}
-                        data-ai-hint={postImage.imageHint}
+                        data-ai-hint={imageHint}
                         width={orientation === 'horizontal' ? 800 : 600}
                         height={orientation === 'horizontal' ? 450 : 400}
                         className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"

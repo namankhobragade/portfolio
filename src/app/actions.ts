@@ -145,11 +145,7 @@ export async function subscribeToNewsletter(prevState: any, data: z.infer<typeof
 
 
 // ========= Blog Post Saving Logic =========
-
-const blogPostSchema = z.object({
-  topic: z.string(),
-  imageUrl: z.string().optional(),
-});
+const placeholderImagesPath = path.join(process.cwd(), 'src/lib/placeholder-images.json');
 
 const generatedPostSchema = z.object({
   title: z.string(),
@@ -171,57 +167,36 @@ export async function saveBlogPost(post: z.infer<typeof generatedPostSchema>) {
   }
 
   const { title, slug, description, content, imageDataUri, imagePrompt } = validatedPost.data;
-  const postsDirectory = path.join(process.cwd(), 'content/blog');
-  const imagesDirectory = path.join(process.cwd(), 'public/images/blog');
-  const placeholderImagesPath = path.join(process.cwd(), 'src/lib/placeholder-images.json');
   
-  const mdFilePath = path.join(postsDirectory, `${slug}.md`);
-  const imageFileName = `${slug}.png`;
-  const imageFilePath = path.join(imagesDirectory, imageFileName);
-  const publicImageUrl = `/images/blog/${imageFileName}`;
-  const imageId = `blog-${slug}`;
+  const { data: existingPost, error: selectError } = await supabase
+    .from('posts')
+    .select('slug')
+    .eq('slug', slug)
+    .single();
 
-  try {
-    // Check if markdown file already exists
-    await fs.access(mdFilePath);
+  if (existingPost) {
     return {
         success: false,
         message: `A post with the slug "${slug}" already exists.`,
     };
-  } catch (error) {
-    // File does not exist, which is good.
   }
-  
-  try {
-     // Check if image file already exists
-     await fs.access(imageFilePath);
-     return {
-         success: false,
-         message: `An image with the name "${imageFileName}" already exists.`,
-     };
-   } catch (error) {
-     // File does not exist, which is good.
-   }
 
+  const uploadsDir = path.join(process.cwd(), 'public/images/uploads');
+  const imageFileName = `${slug}.png`;
+  const imageFilePath = path.join(uploadsDir, imageFileName);
+  const publicImageUrl = `/images/uploads/${imageFileName}`;
+  const imageId = `blog-${slug}`;
 
-  // 1. Save the image file
   try {
-    await fs.mkdir(imagesDirectory, { recursive: true });
+    // 1. Save the image file to the server
+    await fs.mkdir(uploadsDir, { recursive: true });
     const base64Data = imageDataUri.split(';base64,').pop();
     if (!base64Data) throw new Error('Invalid image data URI.');
     await fs.writeFile(imageFilePath, base64Data, 'base64');
-  } catch (error: any) {
-    console.error('Failed to write image file:', error);
-    return {
-      success: false,
-      message: `Failed to save image file: ${error.message}`,
-    };
-  }
-
-  // 2. Update placeholder-images.json
-  try {
-    const placeholderImagesFile = await fs.readFile(placeholderImagesPath, 'utf-8');
-    const placeholderData = JSON.parse(placeholderImagesFile);
+    
+    // 2. Update placeholder-images.json manifest
+    const manifestFile = await fs.readFile(placeholderImagesPath, 'utf-8');
+    const manifestData = JSON.parse(manifestFile);
     
     const newImageEntry: ImagePlaceholder = {
         id: imageId,
@@ -230,40 +205,35 @@ export async function saveBlogPost(post: z.infer<typeof generatedPostSchema>) {
         imageHint: imagePrompt.split(' ').slice(0, 2).join(' '),
     };
 
-    placeholderData.placeholderImages.unshift(newImageEntry); // Add to the beginning
+    manifestData.placeholderImages.unshift(newImageEntry);
+    await fs.writeFile(placeholderImagesPath, JSON.stringify(manifestData, null, 2));
 
-    await fs.writeFile(placeholderImagesPath, JSON.stringify(placeholderData, null, 2));
+    // 3. Save the blog post to Supabase
+    const { error: insertError } = await supabase
+        .from('posts')
+        .insert({
+            title,
+            slug,
+            description,
+            content,
+            image_id: imageId,
+            image_url: publicImageUrl, // Save both for flexibility
+            created_at: new Date().toISOString(),
+        });
 
-  } catch (error: any) {
-     console.error('Failed to update placeholder-images.json:', error);
-     return {
-       success: false,
-       message: `Failed to update image manifest: ${error.message}`,
-     };
-  }
+    if (insertError) {
+        throw insertError;
+    }
 
-  // 3. Save the blog post markdown file
-  const frontmatter = {
-    title,
-    slug,
-    date: format(new Date(), 'yyyy-MM-dd'),
-    imageId: imageId,
-    description,
-  };
-
-  const fileContent = matter.stringify(content, frontmatter);
-
-  try {
-    await fs.writeFile(mdFilePath, fileContent);
     return {
       success: true,
       message: 'Blog post saved successfully!',
     };
   } catch (error: any) {
-    console.error('Failed to write blog post file:', error);
+    console.error('Failed to save blog post:', error);
     return {
       success: false,
-      message: `Failed to save markdown file: ${error.message}`,
+      message: `Failed to save post: ${error.message}`,
     };
   }
 }
@@ -405,7 +375,7 @@ const themeColorSchema = z.object({
     primary: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
     background: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 100%"),
     accent: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 5.9% 10%"),
-    primaryDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1.3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
+    primaryDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
     backgroundDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 240 10% 3.9%"),
     accentDark: z.string().regex(/^(\d{1,3})\s(\d{1,3})%\s(\d{1,3})%$/, "Invalid HSL format. Example: 0 0% 98%"),
 });
