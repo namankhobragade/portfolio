@@ -452,3 +452,8 @@ export async function authenticateStudio(prevState: any, formData: FormData) {
     return { success: false, message: 'Invalid password.' };
   }
 }
+
+export async function logoutStudio() {
+    cookies().delete(STUDIO_PASSWORD_COOKIE);
+    redirect('/studio/login');
+}

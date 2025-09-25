@@ -1,10 +1,13 @@
+
 // src/app/studio/layout.tsx
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Settings, Brush, Type, Bot, LayoutDashboard, Code } from 'lucide-react';
+import { Home, Settings, Brush, Type, Bot, LayoutDashboard, Code, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { logoutStudio } from '@/app/actions';
+import { Button } from '@/components/ui/button';
 
 const studioNavLinks = [
     { href: '/studio', label: 'Dashboard', icon: LayoutDashboard },
@@ -49,14 +52,22 @@ export default function StudioLayout({
             </Link>
           ))}
         </nav>
-        <div className="mt-auto">
+        <div className="mt-auto flex flex-col gap-2">
             <div className="flex justify-between items-center">
-                <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary">
-                    <Home className="h-4 w-4" />
-                    Back to Site
-                </Link>
+                 <Button variant="ghost" className="flex items-center gap-3 justify-start px-3 py-2 text-muted-foreground transition-all hover:text-primary" asChild>
+                    <Link href="/">
+                        <Home className="h-4 w-4" />
+                        Back to Site
+                    </Link>
+                </Button>
                 <ThemeToggle />
             </div>
+            <form action={logoutStudio}>
+                <Button variant="outline" className="w-full justify-start">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log Out
+                </Button>
+            </form>
         </div>
       </aside>
       <main className="flex-1 p-6 lg:p-8 overflow-auto">
