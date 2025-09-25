@@ -18,6 +18,7 @@ import { Github, Linkedin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Preloader } from '@/components/preloader';
 import { SITE_CONFIG } from '@/lib/data';
+import { CopyProtection } from '@/components/copy-protection';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -142,6 +143,7 @@ export default function RootLayout({
             <ScrollProgress />
             <QuoteRotator />
             <Header />
+            <CopyProtection />
             <div className="relative flex min-h-dvh flex-col">
                 <main className="flex-1 pt-32">{children}</main>
                 <Footer />

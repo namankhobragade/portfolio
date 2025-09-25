@@ -22,11 +22,7 @@ const resumeRequestSchema = z.object({
 });
 
 export async function submitResumeRequest(prevState: any, formData: FormData) {
-    const validatedFields = resumeRequestSchema.safeParse({
-        name: formData.get('name'),
-        email: formData.get('email'),
-        purpose: formData.get('purpose'),
-    });
+    const validatedFields = resumeRequestSchema.safeParse(Object.fromEntries(formData));
 
     if (!validatedFields.success) {
         const errorMessages = Object.values(validatedFields.error.flatten().fieldErrors).flat().join(' ');
@@ -49,6 +45,7 @@ export async function submitResumeRequest(prevState: any, formData: FormData) {
         return {
             success: true,
             message: "Thank you! You can now download the resume.",
+            purpose: validatedFields.data.purpose,
         };
     } catch (error: any) {
         return {
@@ -68,11 +65,7 @@ const contactFormSchema = z.object({
 });
 
 export async function submitContactForm(prevState: any, formData: FormData) {
-    const validatedFields = contactFormSchema.safeParse({
-        name: formData.get('name'),
-        email: formData.get('email'),
-        message: formData.get('message'),
-    });
+    const validatedFields = contactFormSchema.safeParse(Object.fromEntries(formData));
 
     if (!validatedFields.success) {
         return {
@@ -113,9 +106,7 @@ const newsletterFormSchema = z.object({
 });
 
 export async function subscribeToNewsletter(prevState: any, formData: FormData) {
-  const validatedFields = newsletterFormSchema.safeParse({
-    email: formData.get('email'),
-  });
+  const validatedFields = newsletterFormSchema.safeParse(Object.fromEntries(formData));
 
   if (!validatedFields.success) {
     return {
@@ -584,5 +575,3 @@ export async function logoutStudio() {
     cookies().delete(STUDIO_PASSWORD_COOKIE);
     redirect('/studio/login');
 }
-
-    

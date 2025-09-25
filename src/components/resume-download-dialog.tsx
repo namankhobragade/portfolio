@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useActionState } from 'react';
+import { useEffect, useActionState, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Download, Loader2, Send } from 'lucide-react';
+import { Download, Loader2, Send, FileText } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { submitResumeRequest } from '@/app/actions';
 
@@ -22,7 +22,9 @@ const resumeRequestSchema = z.object({
   }),
 });
 
-const resumeFiles = {
+type FormSchema = z.infer<typeof resumeRequestSchema>;
+
+const resumeFiles: Record<FormSchema['purpose'], string> = {
     developer: '/resumes/Sunil_Khobragade_Developer.pdf',
     fullstack: '/resumes/Sunil_Khobragade_FullStack.pdf',
     'cyber-security': '/resumes/Sunil_Khobragade_CyberSecurity.pdf',
@@ -38,8 +40,10 @@ interface ResumeDownloadDialogProps {
 export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDialogProps) {
   const { toast } = useToast();
   const [state, formAction, isPending] = useActionState(submitResumeRequest, { success: false, message: "" });
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [resumeToShow, setResumeToShow] = useState<string | null>(null);
   
-  const form = useForm<z.infer<typeof resumeRequestSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(resumeRequestSchema),
     defaultValues: {
       name: "",
@@ -48,34 +52,31 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
     },
   });
 
-  const selectedPurpose = form.watch('purpose');
-
   useEffect(() => {
-    if (state.message && !state.success) {
+    if (state.message) {
+      if (state.success && state.purpose) {
+        toast({ description: state.message });
+        setIsSuccess(true);
+        setResumeToShow(resumeFiles[state.purpose as FormSchema['purpose']]);
+      } else if (!state.success) {
         toast({ description: `Submission failed: ${state.message}`, variant: 'destructive' });
+      }
     }
   }, [state, toast]);
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
     if (!open) {
+      // Reset form and state when closing the dialog
       form.reset();
-      // A bit of a hack to reset the action state. In newer react versions, useFormState has a reset function.
-      if (state.success) {
-        (state as any).success = false;
-        (state as any).message = "";
-      }
+      setIsSuccess(false);
+      setResumeToShow(null);
     }
   };
   
-  const handleDownload = () => {
-    if (selectedPurpose) {
-        const link = document.createElement('a');
-        link.href = resumeFiles[selectedPurpose];
-        link.download = `Sunil_Khobragade_Resume_${selectedPurpose}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+  const handleViewResume = () => {
+    if (resumeToShow) {
+        window.open(resumeToShow, '_blank');
         handleOpenChange(false);
     }
   }
@@ -84,17 +85,17 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Download Resume</DialogTitle>
+          <DialogTitle>View Resume</DialogTitle>
           <DialogDescription>
-            Please provide your information to download a resume tailored for the role you're interested in.
+            Please provide your information to view a resume tailored for the role you're interested in.
           </DialogDescription>
         </DialogHeader>
 
-        {state?.success ? (
+        {isSuccess ? (
           <div className="space-y-4 text-center">
-            <p className="text-green-600">{state.message}</p>
-            <Button onClick={handleDownload} className="w-full">
-              <Download className="mr-2 h-4 w-4" /> Download Now
+            <p className="text-green-600 dark:text-green-400">Thank you! Click the button below to view the resume.</p>
+            <Button onClick={handleViewResume} className="w-full">
+              <FileText className="mr-2 h-4 w-4" /> View Now
             </Button>
           </div>
         ) : (
@@ -163,7 +164,7 @@ export function ResumeDownloadDialog({ isOpen, onOpenChange }: ResumeDownloadDia
               <DialogFooter>
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
-                  Submit & Get Resume
+                  Submit & View Resume
                 </Button>
               </DialogFooter>
             </form>
