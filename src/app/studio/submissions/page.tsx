@@ -5,20 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { supabase } from '@/lib/supabase/client';
-import { Loader2, Mail } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
 
 type Contact = { id: number; name: string; email: string; message: string; created_at: string; };
 type Subscriber = { id: number; email: string; created_at: string; };
 type ResumeDownload = { id: number; name: string; email: string; purpose: string; created_at: string; };
-
-const MailLink = ({ email }: { email: string }) => (
-    <a href={`mailto:${email}`} className="flex items-center gap-2 hover:text-primary transition-colors">
-        <Mail className="h-4 w-4" />
-        {email}
-    </a>
-);
 
 export default function SubmissionsPage() {
     const [contacts, setContacts] = useState<Contact[]>([]);
@@ -89,19 +81,19 @@ export default function SubmissionsPage() {
                     <TabsContent value="contacts">
                         <DataTable 
                             headers={['Name', 'Email', 'Message', 'Date']} 
-                            data={contacts.map(c => [c.name, <MailLink key={c.id} email={c.email} />, c.message, formatDate(c.created_at)])} 
+                            data={contacts.map(c => [c.name, c.email, c.message, formatDate(c.created_at)])} 
                         />
                     </TabsContent>
                     <TabsContent value="resume">
                         <DataTable 
                             headers={['Name', 'Email', 'Purpose', 'Date']} 
-                            data={resumeDownloads.map(r => [r.name, <MailLink key={r.id} email={r.email} />, r.purpose, formatDate(r.created_at)])} 
+                            data={resumeDownloads.map(r => [r.name, r.email, r.purpose, formatDate(r.created_at)])} 
                         />
                     </TabsContent>
                     <TabsContent value="newsletter">
                         <DataTable 
                             headers={['Email', 'Date']} 
-                            data={subscribers.map(s => [<MailLink key={s.id} email={s.email} />, formatDate(s.created_at)])} 
+                            data={subscribers.map(s => [s.email, formatDate(s.created_at)])} 
                         />
                     </TabsContent>
                 </Tabs>
@@ -110,7 +102,7 @@ export default function SubmissionsPage() {
     );
 }
 
-function DataTable({ headers, data }: { headers: string[], data: (React.ReactNode)[][] }) {
+function DataTable({ headers, data }: { headers: string[], data: (string | number)[][] }) {
     if (data.length === 0) {
         return <p className="text-center text-muted-foreground py-8">No submissions yet.</p>;
     }
